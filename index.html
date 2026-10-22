@@ -1,0 +1,1136 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="方塊學習島">
+<meta name="theme-color" content="#5fb0ff">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<title>方塊學習島</title>
+<style>
+:root{--b:clamp(30px,4.6vw,58px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+html,body{margin:0;height:100%;overflow:hidden;touch-action:manipulation;background:#7ec8ff;
+  font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:#fff}
+input{user-select:text;-webkit-user-select:text}
+#app{position:fixed;inset:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden}
+.sky{background:linear-gradient(#5fb0ff,#b6e0ff)}
+.sky.sunset{background:linear-gradient(#ff8a4c,#ffb98a 55%,#ffe0b8)}
+.night{background:linear-gradient(#0b1640,#28306b 70%,#3c3f86)}
+.px{image-rendering:pixelated}
+.blk{display:inline-block;background-size:100% 100%;image-rendering:pixelated;position:relative}
+.tiled{background-size:var(--tile,64px) var(--tile,64px);image-rendering:pixelated}
+.b{width:var(--b);height:var(--b);box-shadow:inset 0 0 0 2px rgba(0,0,0,.22)}
+.b>b,.nb>b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:calc(var(--b)*.48);
+  color:#fff;text-shadow:2px 2px 0 #000,-1px -1px 0 #000;animation:pop .3s both}
+.s{width:calc(var(--b)*.42);height:calc(var(--b)*.42)}
+
+.btn{font:inherit;font-weight:900;color:#fff;border:0;cursor:pointer;background:#8b8b8b;padding:.45em .9em;
+  text-shadow:2px 2px 0 rgba(0,0,0,.5);font-size:clamp(16px,2.2vw,24px);
+  box-shadow:inset -4px -4px 0 rgba(0,0,0,.3),inset 4px 4px 0 rgba(255,255,255,.3),0 0 0 3px #1e1e1e}
+.btn:active{transform:translateY(2px);filter:brightness(.9)}
+.btn.green{background:#4caf50}.btn.blue{background:#3d7bd9}.btn.orange{background:#e8892b}
+.btn.small{padding:.2em .6em}.btn.big{font-size:clamp(22px,3.2vw,34px)}
+
+/* 登入 */
+.login{align-items:center;justify-content:center;gap:2vh}
+.title{font-size:clamp(36px,7vw,80px);font-weight:900;text-shadow:5px 5px 0 #2f4f2f;letter-spacing:.06em;z-index:1}
+.title.sm{font-size:clamp(32px,5vw,56px)}
+.sub{font-size:clamp(18px,2.6vw,28px);font-weight:900;text-shadow:2px 2px 0 #335;z-index:1}
+.kids{display:flex;gap:5vw;z-index:1;margin-bottom:14vh}
+.kid{background:rgba(0,0,0,.28);border:0;padding:18px 22px 14px;color:#fff;font:inherit;font-weight:900;position:relative;cursor:pointer;
+  box-shadow:0 0 0 4px #1e1e1e,inset -5px -5px 0 rgba(0,0,0,.3),inset 5px 5px 0 rgba(255,255,255,.2);animation:bob 3s ease-in-out infinite}
+.kid:nth-child(2){animation-delay:-1.5s}
+.kid .face{width:clamp(110px,16vw,180px);height:clamp(110px,16vw,180px);display:block;box-shadow:0 0 0 4px #1e1e1e}
+.kname{font-size:clamp(20px,3vw,32px);margin-top:10px;text-shadow:2px 2px 0 #000}
+.kmeta{font-size:18px;opacity:.9}
+.kid.sleep .face{filter:grayscale(.6) brightness(.6)}
+.zzz{position:absolute;top:8px;right:12px;font-size:34px;font-weight:900;color:#cfe3ff;text-shadow:2px 2px 0 #000;animation:float 2s ease-in-out infinite}
+.ground{position:absolute;left:0;right:0;bottom:0;height:16vh;--tile:64px}
+.grassrow{height:64px}.dirtrow{position:absolute;top:64px;bottom:0;left:0;right:0}
+.gear{position:absolute;right:16px;bottom:16px;z-index:2;font-size:18px}
+.cloud{position:absolute;left:-220px;width:180px;height:44px;background:#fff;opacity:.9;animation:drift linear infinite}
+.cloud::after{content:"";position:absolute;left:36px;top:-26px;width:90px;height:26px;background:#fff}
+
+/* HUD */
+.hud{display:flex;align-items:center;gap:12px;padding:10px 16px;background:rgba(0,0,0,.35);font-weight:900;font-size:clamp(16px,2.2vw,24px);flex:none}
+.hface{width:44px;height:44px;box-shadow:0 0 0 3px #1e1e1e}
+.hname{text-shadow:2px 2px 0 #000;white-space:nowrap}
+.daybar{flex:1;height:18px;background:#1d2b4a;position:relative;box-shadow:0 0 0 3px #1e1e1e;margin:0 18px}
+.dayfill{height:100%;background:linear-gradient(90deg,#ffd166,#ffe9a8);transition:width 1s linear}
+.daybar.late .dayfill{background:linear-gradient(90deg,#ff6b2a,#ffae5c)}
+.sunico{position:absolute;top:-9px;width:30px;height:30px;transition:left 1s linear}
+.pill{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.35);padding:4px 10px;box-shadow:0 0 0 2px #1e1e1e;text-shadow:2px 2px 0 #000}
+.ico{width:26px;height:26px}
+.pulse{animation:pop .4s}
+.banner{position:absolute;top:78px;left:50%;transform:translateX(-50%);background:#e8692b;padding:8px 22px;font-weight:900;
+  font-size:clamp(18px,2.4vw,26px);box-shadow:0 0 0 3px #1e1e1e;z-index:6;white-space:nowrap;text-shadow:2px 2px 0 #000;animation:pop .4s}
+
+/* 地圖 */
+.mapgrid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:18px;padding:18px 24px 8px;min-height:0}
+.biome{position:relative;border:0;font:inherit;color:#fff;cursor:pointer;--tile:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;overflow:hidden;
+  box-shadow:0 0 0 4px #1e1e1e,inset 0 -10px 0 rgba(0,0,0,.25)}
+.biome:active{transform:translateY(3px)}
+.biome .sym{font-size:clamp(40px,7vw,84px);font-weight:900;text-shadow:5px 5px 0 rgba(0,0,0,.55);line-height:1}
+.bname{font-size:clamp(20px,3vw,32px);font-weight:900;background:rgba(0,0,0,.45);padding:2px 14px;text-shadow:2px 2px 0 #000}
+.lv{font-size:clamp(14px,1.8vw,18px);font-weight:900;background:rgba(0,0,0,.4);padding:2px 10px}
+.biome.locked .sym{opacity:.55}
+.biome.locked::after{content:"🔒 即將開放";position:absolute;top:10px;right:10px;background:rgba(0,0,0,.6);padding:4px 10px;font-size:16px;font-weight:900}
+.mapbar{display:flex;gap:16px;justify-content:center;padding:8px 0 16px;flex:none}
+
+/* 遊戲 */
+.gtop{display:flex;justify-content:space-between;align-items:center;padding:12px 24px 6px;flex:none}
+.pips{display:flex;gap:8px}
+.pip{width:34px;height:34px;background:rgba(0,0,0,.3);box-shadow:0 0 0 3px #1e1e1e}
+.pip.cur{outline:3px solid #ffd83a;outline-offset:3px}
+.hintbtn{display:flex;align-items:center;gap:6px;background:#e8a72b}
+.qcard{margin:4px auto 0;display:flex;align-items:center;gap:18px;background:rgba(0,0,0,.35);padding:8px 28px;box-shadow:0 0 0 4px #1e1e1e;flex:none}
+.qtext{font-size:clamp(34px,6vw,72px);font-weight:900;text-shadow:4px 4px 0 #000;letter-spacing:.04em}
+.visual{flex:1;display:flex;align-items:center;justify-content:center;padding:10px;min-height:0;overflow:hidden}
+.answers{display:flex;justify-content:center;gap:clamp(12px,3vw,36px);padding:0 16px 3vh;flex:none}
+.ans{min-width:clamp(90px,15vw,170px);font-size:clamp(34px,5.5vw,64px);padding:.2em .4em;background:#3d7bd9}
+.ans.off{opacity:.3;filter:grayscale(1);pointer-events:none}
+.ans.good{background:#4caf50;animation:pop .4s}
+.ans.reveal{background:#4caf50;animation:pulse 1s infinite}
+.bubble{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) scale(.6);opacity:0;background:#fff;color:#2b2b2b;
+  font-size:clamp(28px,4.5vw,52px);font-weight:900;padding:14px 30px;box-shadow:0 0 0 4px #1e1e1e,8px 8px 0 rgba(0,0,0,.3);
+  transition:.25s;pointer-events:none;z-index:5;white-space:nowrap}
+.bubble.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.bgrid{display:grid;gap:4px}
+.addv{display:flex;align-items:center;gap:20px}
+.op{font-size:calc(var(--b)*1.1);font-weight:900;text-shadow:3px 3px 0 #000}
+.rods{display:flex;gap:6px;align-items:flex-end}
+.rod{display:flex;flex-direction:column;gap:1px}
+.ones{display:grid;grid-template-columns:repeat(5,calc(var(--b)*.42));gap:1px}
+.cmp{display:flex;gap:clamp(16px,4vw,48px);align-items:flex-end}
+.cmpc{display:flex;flex-direction:column;align-items:center;gap:8px}
+.cmpn{font-size:clamp(26px,4vw,44px);font-weight:900;text-shadow:3px 3px 0 #000}
+.nline{display:flex;gap:10px}
+.nb{width:calc(var(--b)*1.5);height:calc(var(--b)*1.2);box-shadow:inset 0 0 0 3px rgba(0,0,0,.3)}
+.nb>b{font-size:calc(var(--b)*.55)}
+.steps{background:rgba(0,0,0,.45);padding:14px 26px;font-size:clamp(22px,3.4vw,38px);font-weight:900;line-height:1.6;box-shadow:0 0 0 4px #1e1e1e;text-shadow:2px 2px 0 #000}
+.mrows{display:flex;flex-direction:column;gap:4px}
+.mrow{display:flex;align-items:center;gap:3px}
+.mrow span{margin-left:12px;font-size:clamp(18px,2.6vw,28px);font-weight:900;text-shadow:2px 2px 0 #000;min-width:2.2em}
+
+/* 結果 / 家 / 晚安 */
+.panel{margin:auto;background:rgba(0,0,0,.45);padding:26px 40px;box-shadow:0 0 0 4px #1e1e1e;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;position:relative;z-index:1}
+.rewards{display:flex;gap:40px;font-size:clamp(30px,4.5vw,48px);font-weight:900;text-shadow:3px 3px 0 #000}
+.rw{display:flex;align-items:center;gap:10px}
+.rw img,.rw .blk{width:60px;height:60px}
+.row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.badge{background:#c9932a;padding:6px 16px;font-weight:900;font-size:22px;box-shadow:0 0 0 3px #1e1e1e;animation:pop .5s}
+.lvup{font-size:24px;font-weight:900;color:#ffe14d;text-shadow:2px 2px 0 #000}
+.house{display:grid;grid-template-columns:repeat(12,var(--hb));--hb:min(5vw,5.8vh);margin:0 auto}
+.hc{width:var(--hb);height:var(--hb)}
+.hc.need{outline:2px dashed rgba(255,255,255,.7);outline-offset:-4px;background:rgba(255,255,255,.12)}
+.hc.new{animation:pop .5s}
+.hmsg{font-size:clamp(20px,3vw,32px);font-weight:900;text-shadow:2px 2px 0 #000;text-align:center;margin:10px 0}
+.badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:6px 0}
+.badges .bd{background:#c9932a;padding:4px 12px;font-weight:900;box-shadow:0 0 0 3px #1e1e1e}
+.badges .bd.no{background:#555;opacity:.6}
+.tw{position:absolute;width:6px;height:6px;background:#fff;animation:tw 2.4s infinite}
+.moon{position:absolute;top:8%;right:10%;width:96px;height:96px}
+.byeface{width:120px;height:120px;box-shadow:0 0 0 4px #1e1e1e;filter:brightness(.85)}
+
+/* 家長 */
+.parent{background:#ece6d9;color:#2b2b2b;overflow:auto;display:block;-webkit-overflow-scrolling:touch}
+.ptop{position:sticky;top:0;background:#5d4a33;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;z-index:2;font-weight:900;font-size:22px}
+.pcards{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px}
+@media (max-width:800px){.pcards{grid-template-columns:1fr}}
+.pcard{background:#fff;box-shadow:0 0 0 3px #3b2f22;padding:14px 16px}
+.pcard h3{margin:0 0 6px;display:flex;align-items:center;gap:10px}
+.pname{font:inherit;font-size:22px;font-weight:900;border:2px solid #cbbfa8;padding:4px 8px;width:60%}
+.psec{margin-top:14px;padding:4px 8px;background:#5d4a33;color:#fff;font-weight:900}
+.prow{display:flex;align-items:center;justify-content:space-between;padding:8px 2px;border-bottom:1px solid #eee;gap:8px;flex-wrap:wrap}
+.pbtn{font:inherit;font-weight:700;border:0;background:#8b6f4e;color:#fff;padding:7px 12px;box-shadow:0 0 0 2px #3b2f22;cursor:pointer;min-width:40px}
+.pbtn.light{background:#ddd2bd;color:#2b2b2b}.pbtn.red{background:#b84a3a}
+.pnote{font-size:14px;color:#7a6a55;padding:6px 2px}
+.av{width:40px;height:40px;cursor:pointer;opacity:.45;box-shadow:0 0 0 2px #3b2f22}
+.av.sel{opacity:1;box-shadow:0 0 0 3px #e8892b}
+.avs{display:flex;gap:8px}
+.bars{display:flex;gap:8px;align-items:flex-end;height:90px;padding:6px 2px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;font-size:12px;height:100%}
+.bar i{display:block;width:100%;background:#6aa84f;min-height:2px}
+.ptable{width:100%;border-collapse:collapse;font-size:15px;margin-top:6px}
+.ptable td,.ptable th{border-bottom:1px solid #eee;padding:4px;text-align:left}
+.mist{font-size:15px;padding:4px 2px;border-bottom:1px dashed #ddd}
+.gate{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:10}
+.gbox{background:#ece6d9;color:#2b2b2b;padding:20px 26px;box-shadow:0 0 0 4px #3b2f22;text-align:center}
+.dots{font-size:36px;letter-spacing:12px;margin:8px 0 12px;min-height:44px}
+.keys{display:grid;grid-template-columns:repeat(3,72px);gap:10px}
+.keys .pbtn{font-size:26px;height:60px}
+
+/* 專注力礦洞 */
+.cavegrid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:18px;padding:18px 24px 20px;min-height:0}
+.fgame{border:0;font:inherit;color:#fff;cursor:pointer;background:rgba(255,255,255,.08);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 0 0 4px #1e1e1e,inset 0 -8px 0 rgba(0,0,0,.35)}
+.fgame:active{transform:translateY(3px)}
+.ficon{display:flex;gap:10px;align-items:center;height:clamp(60px,12vh,110px)}
+.ficon>img,.ficon>.blk{height:100%;width:auto;aspect-ratio:1;box-shadow:0 0 0 3px #1e1e1e}
+.mini{display:grid;gap:2px;height:100%;aspect-ratio:1}
+.mini i{width:100%;height:100%}
+.mini .lit{filter:brightness(1.8)}
+.cap{font-size:clamp(22px,3.4vw,38px);font-weight:900;text-shadow:3px 3px 0 #000;background:rgba(0,0,0,.4);padding:6px 20px;box-shadow:0 0 0 3px #1e1e1e}
+.farea{flex:1;display:flex;align-items:center;justify-content:center;gap:28px;min-height:0;padding:8px 16px 20px}
+.mgrid{display:grid;gap:12px}
+.card{width:var(--cw);height:var(--cw);border:0;padding:0;position:relative;cursor:pointer;background:none;box-shadow:0 0 0 3px #1e1e1e}
+.card .back,.card .front{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.card .back{font-size:calc(var(--cw)*.45);font-weight:900;color:#ffe9b0;text-shadow:3px 3px 0 #000}
+.card .front{background:#f3ead7;display:none}
+.card.open .front{display:flex}.card.open .back{display:none}
+.card .front>*{width:70%;height:70%}
+.card.flip{animation:flip .25s}
+.card.done{box-shadow:0 0 0 5px #4caf50}
+.sgrid{display:grid;gap:14px}
+.tile{width:var(--tw);height:var(--tw);border:0;cursor:pointer;box-shadow:0 0 0 4px #1e1e1e,inset 0 0 0 4px rgba(0,0,0,.25);transition:transform .1s,filter .1s}
+.tile.lit{filter:brightness(1.8) saturate(1.4);transform:scale(1.08);box-shadow:0 0 0 5px #fff,0 0 36px 8px rgba(255,255,255,.8)}
+.tile.guide{outline:6px dashed #ffe14d;outline-offset:5px}
+.demo{display:flex;gap:40px;align-items:center;flex-wrap:wrap;justify-content:center}
+.demo>div{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:clamp(22px,3vw,34px);font-weight:900;text-shadow:2px 2px 0 #000}
+.demo img{width:clamp(90px,14vw,150px);height:clamp(90px,14vw,150px);box-shadow:0 0 0 4px #1e1e1e}
+.okc{color:#7dff8a}.ngc{color:#ff8a8a}
+.holes{display:grid;gap:clamp(14px,3vw,36px)}
+.hole{width:var(--hw);height:var(--hw);position:relative;box-shadow:0 0 0 4px #1e1e1e;cursor:pointer}
+.pit{position:absolute;left:12%;right:12%;top:20%;bottom:8%;background:#1a120a;overflow:hidden;box-shadow:inset 0 8px 0 rgba(0,0,0,.6)}
+.crt{position:absolute;left:5%;width:90%;height:90%;bottom:0;transform:translateY(110%);transition:transform .15s}
+.crt.up{transform:translateY(5%)}
+.maze{display:grid;touch-action:none;box-shadow:0 0 0 4px #1e1e1e}
+.mc{width:var(--mc);height:var(--mc);position:relative}
+.mc.seen::after{content:"";position:absolute;inset:32%;background:rgba(255,236,150,.8)}
+.mc.hp::after{content:"";position:absolute;inset:22%;background:#ffe14d;box-shadow:0 0 10px #fff;animation:pulse .8s infinite}
+.mc>img{position:absolute;inset:4%;width:92%;height:92%;z-index:1}
+.pad{display:grid;grid-template-columns:repeat(3,clamp(56px,7vw,80px));grid-template-rows:repeat(3,clamp(56px,7vw,80px));gap:6px}
+.pad .btn{padding:0;font-size:clamp(24px,3.4vw,38px)}
+
+.shake{animation:shake .4s}
+@keyframes flip{50%{transform:scaleX(0)}}
+@keyframes pop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+@keyframes pulse{50%{transform:scale(1.08)}}
+@keyframes bob{50%{transform:translateY(-10px)}}
+@keyframes float{50%{transform:translateY(-8px)}}
+@keyframes drift{to{transform:translateX(calc(100vw + 440px))}}
+@keyframes tw{50%{opacity:.2}}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+'use strict';
+const app = document.getElementById('app');
+const KEY = 'blockIsland.v1';
+const S = { data: null, child: null, screen: 'login', game: null, warned: false, sunset: false, endPending: false, pinBuf: '' };
+
+/* ---------- 工具 ---------- */
+const ri = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const fmt = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const today = () => fmt(new Date());
+
+/* ---------- 資料 ---------- */
+function mkChild(id, name, age, avatar, level, minLevel, maxLevel) {
+  return { id, name, age, avatar, limit: 30, level, minLevel, maxLevel, stars: 0, wood: 0, badges: [], log: [], totalCorrect: 0 };
+}
+function defaultData() {
+  return { pin: '1234', children: [mkChild('c1', '小探險家', 5, 0, 1, 1, 6), mkChild('c2', '大探險家', 9, 1, 7, 5, 9)], usage: {} };
+}
+function load() {
+  let d = null;
+  try { d = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+  if (!d || !d.children) d = defaultData();
+  d.children.forEach(c => {
+    c.stone = c.stone || 0;
+    const L = c.age >= 8 ? 3 : 1;
+    c.focus = c.focus || { memory: L, seq: L, react: L, maze: L };
+  });
+  return d;
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S.data)); } catch (e) {} }
+function U(c) {
+  const u = S.data.usage, d = today();
+  u[d] = u[d] || {};
+  return u[d][c.id] = u[d][c.id] || { sec: 0, extra: 0, stars: 0, q: 0 };
+}
+const remaining = c => (c.limit + U(c).extra) * 60 - U(c).sec;
+
+/* ---------- 聲音 ---------- */
+let AC = null;
+function beep(freqs, dur = .12, type = 'square', vol = .07) {
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const t = AC.currentTime;
+    freqs.forEach((f, i) => {
+      const o = AC.createOscillator(), g = AC.createGain();
+      o.type = type; o.frequency.value = f;
+      g.gain.setValueAtTime(vol, t + i * dur);
+      g.gain.exponentialRampToValueAtTime(.001, t + (i + 1) * dur);
+      o.connect(g); g.connect(AC.destination);
+      o.start(t + i * dur); o.stop(t + (i + 1) * dur);
+    });
+  } catch (e) {}
+}
+const SFX = {
+  tap: () => beep([520], .05),
+  ok: () => beep([660, 880, 1320], .09),
+  no: () => beep([240, 190], .14, 'triangle', .1),
+  win: () => beep([523, 659, 784, 1046], .13),
+};
+let ZH = null;
+function pickVoice() {
+  if (!window.speechSynthesis) return;
+  const vs = speechSynthesis.getVoices();
+  ZH = vs.find(v => /zh[-_]TW/i.test(v.lang)) || vs.find(v => /^zh/i.test(v.lang)) || null;
+}
+if (window.speechSynthesis) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+// 原型先用裝置內建語音；正式版會換成事先錄好的台灣口音音檔
+function speak(text, opt = {}) {
+  try {
+    if (!opt.queue) speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'zh-TW'; if (ZH) u.voice = ZH;
+    u.rate = .9; u.pitch = 1.1;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+
+/* ---------- 像素材質 ---------- */
+function rng(seed) { return () => (seed = (seed * 16807) % 2147483647, (seed - 1) / 2147483646); }
+function noise(x, r, cols) { for (let i = 0; i < 16; i++) for (let j = 0; j < 16; j++) { x.fillStyle = cols[Math.floor(r() * cols.length)]; x.fillRect(i, j, 1, 1); } }
+function spots(x, r, cols) {
+  for (let k = 0; k < 5; k++) {
+    const sx = 1 + Math.floor(r() * 12), sy = 1 + Math.floor(r() * 12);
+    for (const [dx, dy] of [[0, 0], [1, 0], [0, 1], [1, 1], [2, 1]]) if (r() < .85) { x.fillStyle = cols[Math.floor(r() * cols.length)]; x.fillRect(sx + dx, sy + dy, 1, 1); }
+  }
+}
+const DIRT = ['#8b5a2b', '#7a4e25', '#94643a', '#6e4521'], GRASS = ['#5fa83a', '#6bb544', '#57a033', '#4e952d', '#72bd4b'];
+const STONE = ['#8a8a8a', '#7d7d7d', '#959595', '#727272'], PLANK = ['#b8945f', '#a98653', '#c29d68', '#ae8a57'];
+const TEXDEF = {
+  grass: (x, r) => noise(x, r, GRASS),
+  grassside: (x, r) => { noise(x, r, DIRT); for (let i = 0; i < 16; i++) { const h = 3 + Math.floor(r() * 3); for (let j = 0; j < h; j++) { x.fillStyle = GRASS[Math.floor(r() * 3)]; x.fillRect(i, j, 1, 1); } } },
+  dirt: (x, r) => noise(x, r, DIRT),
+  stone: (x, r) => noise(x, r, STONE),
+  cobble: (x, r) => {
+    noise(x, r, ['#8f8f8f', '#7a7a7a', '#a3a3a3', '#6c6c6c']); x.fillStyle = '#4f4f4f';
+    [[0, 4, 6, 1], [6, 0, 1, 5], [9, 6, 7, 1], [11, 0, 1, 6], [3, 5, 1, 6], [0, 11, 9, 1], [8, 7, 1, 9], [12, 11, 4, 1]].forEach(a => x.fillRect(...a));
+  },
+  planks: (x, r) => { noise(x, r, PLANK); x.fillStyle = '#7d5f37'; for (let y = 3; y < 16; y += 4) x.fillRect(0, y, 16, 1); for (let k = 0; k < 4; k++) x.fillRect(k % 2 ? 3 : 11, k * 4, 1, 3); },
+  log: (x, r) => { for (let i = 0; i < 16; i++) { const c = i % 4 === 0 ? '#4d371c' : ['#6b4f2a', '#5a4122', '#76582f'][Math.floor(r() * 3)]; for (let j = 0; j < 16; j++) { x.fillStyle = r() < .12 ? '#4d371c' : c; x.fillRect(i, j, 1, 1); } } },
+  sand: (x, r) => noise(x, r, ['#e8d9a0', '#dccb8c', '#f0e2ac', '#d6c584']),
+  snow: (x, r) => noise(x, r, ['#ffffff', '#f2f7fb', '#e6eef6']),
+  deep: (x, r) => { noise(x, r, ['#3c3c46', '#34343d', '#45454f', '#2e2e36']); spots(x, r, ['#5ee8e0', '#2fb8b0']); },
+  gold: (x, r) => { noise(x, r, STONE); spots(x, r, ['#ffd83a', '#e0a91c', '#fff1a0']); },
+  glass: x => { x.fillStyle = '#cfeefa'; x.fillRect(0, 0, 16, 16); x.fillStyle = '#fff'; x.fillRect(0, 0, 16, 1); x.fillRect(0, 0, 1, 16); x.fillRect(15, 0, 1, 16); x.fillRect(0, 15, 16, 1); for (let d = 0; d < 4; d++) x.fillRect(3 + d, 3 + d, 1, 1); },
+  door: (x, r) => { noise(x, r, ['#8a6234', '#7d5a2f', '#946a3a']); x.fillStyle = '#4d371c'; x.fillRect(0, 0, 16, 1); x.fillRect(0, 0, 1, 16); x.fillRect(15, 0, 1, 16); x.fillRect(7, 0, 2, 16); x.fillStyle = '#2b2b2b'; x.fillRect(11, 8, 2, 2); },
+};
+function sprite(rows, pal) {
+  const c = document.createElement('canvas'); c.width = rows[0].length; c.height = rows.length;
+  const x = c.getContext('2d');
+  rows.forEach((row, j) => [...row].forEach((ch, i) => { if (ch !== '.') { x.fillStyle = pal[ch]; x.fillRect(i, j, 1, 1); } }));
+  return c.toDataURL();
+}
+const FACE_A = ['hhhhhhhh', 'hhhhhhhh', 'hssssssh', 'swessews', 'ssssssss', 'sssnnsss', 'ssmmmmss', 'ssssssss'];
+const FACE_B = ['hhhhhhhh', 'hhhhhhhh', 'hssssssh', 'hwessewh', 'hssssssh', 'hssnnssh', 'hsmmmmsh', 'hssssssh'];
+const AVATARS = [
+  [FACE_A, { h: '#5a3a1e', s: '#f0b98a', w: '#fff', e: '#3b5bdb', n: '#d8996a', m: '#a5524a' }],
+  [FACE_B, { h: '#1f1f1f', s: '#f3c49b', w: '#fff', e: '#5a3a1e', n: '#dba57a', m: '#c0505a' }],
+  [FACE_A, { h: '#e9c46a', s: '#f6cfa6', w: '#fff', e: '#2a9d4a', n: '#e0ae84', m: '#b5524a' }],
+  [FACE_B, { h: '#c0392b', s: '#eab48a', w: '#fff', e: '#6b3fa0', n: '#d29a6e', m: '#9c3f3f' }],
+];
+const SPR = {};
+const avatarURL = i => SPR['av' + i];
+function initArt() {
+  let css = '';
+  for (const [name, fn] of Object.entries(TEXDEF)) {
+    const c = document.createElement('canvas'); c.width = c.height = 16;
+    let h = 7; for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) % 2147483647;
+    fn(c.getContext('2d'), rng(h));
+    css += `.t-${name}{background-image:url(${c.toDataURL()})}`;
+    if (name === 'deep') css += `.cave{background:linear-gradient(rgba(16,16,24,.8),rgba(16,16,24,.8)),url(${c.toDataURL()}) 0 0/64px 64px;image-rendering:pixelated}`;
+  }
+  const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+  SPR.star = sprite(['....y....', '...yYy...', '...yYy...', 'yyyyYyyyy', '.yYYYYYy.', '..yYYYy..', '..yYyYy..', '.yYy.yYy.', '.yy...yy.'], { y: '#e0a000', Y: '#ffe14d' });
+  SPR.sun = sprite(['yyyyyyyy', 'yYYYYYYy', 'yYWWWWYy', 'yYWWWWYy', 'yYWWWWYy', 'yYWWWWYy', 'yYYYYYYy', 'yyyyyyyy'], { y: '#ffb000', Y: '#ffd84a', W: '#fff6b0' });
+  SPR.moon = sprite(['mmmmmmmm', 'mMMmmmMm', 'mMMmmmmm', 'mmmmmMMm', 'mmmmmMMm', 'mMmmmmmm', 'mmmmMmmm', 'mmmmmmmm'], { m: '#e6e8f0', M: '#b8bcc8' });
+  SPR.heart = sprite(['.rr.rr.', 'rRrrrrr', 'rrrrrrr', '.rrrrr.', '..rrr..', '...r...'], { r: '#e03a3a', R: '#ff9a9a' });
+  SPR.pig = sprite(['pppppppp', 'pppppppp', 'pkwppwkp', 'pppppppp', 'ppnnnnpp', 'ppknnkpp', 'ppnnnnpp', 'pppppppp'], { p: '#f4a6b4', n: '#e8869a', k: '#3a2a2a', w: '#fff' });
+  SPR.mon = sprite(['gGgggGgg', 'ggGggggG', 'gkkggkkg', 'gkkggkkg', 'gggkkggg', 'ggkkkkgg', 'ggkkkkgg', 'ggkggkgg'], { g: '#5cbf4a', G: '#8fdc7a', k: '#1e2a1a' });
+  AVATARS.forEach(([rows, pal], i) => SPR['av' + i] = sprite(rows, pal));
+}
+
+/* ---------- 題目 ---------- */
+const LEVELS = [null, '數數 1–10', '數數 11–30', '下一個數字（到 100）', '比大小', '加法（看方塊）', '加法 10 以內', '二位數加法', '二位數減法', '九九乘法'];
+function opts(ans, lo, hi, spread = 3, n = 4, extra = []) {
+  const s = new Set([ans]);
+  extra.forEach(v => { if (v >= lo && v <= hi && s.size < n) s.add(v); });
+  for (let t = 0; s.size < n && t < 300; t++) { const v = ans + ri(-spread, spread); if (v >= lo && v <= hi) s.add(v); }
+  for (let v = lo; s.size < n && v <= hi; v++) s.add(v);
+  return shuffle([...s]);
+}
+function grid(n, tex, perRow, labels, start = 1, tex2 = null, split = 0) {
+  let h = `<div class="bgrid" style="grid-template-columns:repeat(${Math.min(n, perRow)},var(--b))">`;
+  for (let i = 0; i < n; i++) {
+    const t = tex2 && i >= split ? tex2 : tex;
+    h += `<i class="blk b t-${t}">${labels ? `<b style="animation-delay:${i * .12}s">${start + i}</b>` : ''}</i>`;
+  }
+  return h + '</div>';
+}
+function rods(n) {
+  const t = Math.floor(n / 10), o = n % 10;
+  let h = '<div class="rods">';
+  for (let i = 0; i < t; i++) h += '<div class="rod">' + '<i class="blk s t-planks"></i>'.repeat(10) + '</div>';
+  return h + '<div class="ones">' + '<i class="blk s t-grass"></i>'.repeat(o) + '</div></div>';
+}
+const addVis = (a, b, lab) => `<div class="addv">${grid(a, 'grass', 5, lab, 1)}<span class="op">+</span>${grid(b, 'planks', 5, lab, a + 1)}</div>`;
+
+function genQ(L) {
+  switch (L) {
+    case 1: { const n = ri(1, 10); return { say: '數數看，有幾個方塊？', display: '有幾個方塊？', rec: `數 ${n} 個方塊`, visual: grid(n, 'grass', 5), hint: grid(n, 'grass', 5, true), answer: n, options: opts(n, 1, 12) }; }
+    case 2: { const n = ri(11, 30); return { say: '數數看，有幾個方塊？十個排成一排喔！', display: '有幾個方塊？', rec: `數 ${n} 個方塊`, visual: grid(n, 'planks', 10), hint: grid(n, 'planks', 10, true), answer: n, options: opts(n, 10, 32) }; }
+    case 3: {
+      const n = ri(1, 99), line = [n - 2, n - 1, n].filter(v => v >= 1);
+      return { say: `${n} 的下一個數字是多少？`, display: `${n} ➜ ?`, visual: '', answer: n + 1,
+        hint: `<div class="nline">${line.map(v => `<i class="blk nb t-stone"><b>${v}</b></i>`).join('')}<i class="blk nb t-gold"><b>?</b></i></div>`,
+        options: opts(n + 1, 1, 100, 2, 4, [n - 1, n + 10]) };
+    }
+    case 4: {
+      const max = S.child.age < 7 ? 50 : 99, s = new Set();
+      while (s.size < 3) s.add(ri(1, max));
+      const arr = [...s], ans = Math.max(...arr);
+      return { say: '這三個數字，哪一個最大？', display: '哪一個最大？', rec: `比大小 ${arr.join('、')}`, visual: '', answer: ans, options: arr,
+        hint: `<div class="cmp">${arr.map(v => `<div class="cmpc">${rods(v)}<div class="cmpn">${v}</div></div>`).join('')}</div>` };
+    }
+    case 5: case 6: {
+      const a = ri(1, 9), b = ri(1, 10 - a);
+      return { say: `${a} 加 ${b} 等於多少？`, display: `${a} + ${b} = ?`, visual: L === 5 ? addVis(a, b, false) : '', hint: addVis(a, b, true), answer: a + b, options: opts(a + b, 1, 12) };
+    }
+    case 7: {
+      const a = ri(11, 79), b = ri(11, Math.min(89, 100 - a)), ta = a - a % 10, tb = b - b % 10;
+      return { say: `${a} 加 ${b} 等於多少？`, display: `${a} + ${b} = ?`, visual: '', answer: a + b, options: opts(a + b, 0, 100, 2, 4, [a + b + 10, a + b - 10]),
+        hint: `<div class="steps">先加十位：${ta} + ${tb} = ${ta + tb}<br>再加個位：${a % 10} + ${b % 10} = ${a % 10 + b % 10}<br>合起來：${ta + tb} + ${a % 10 + b % 10} = ?</div>` };
+    }
+    case 8: {
+      const a = ri(25, 99), b = ri(11, a - 5), tb = b - b % 10;
+      return { say: `${a} 減 ${b} 等於多少？`, display: `${a} − ${b} = ?`, visual: '', answer: a - b, options: opts(a - b, 0, 100, 2, 4, [a - b + 10, a - b - 10]),
+        hint: `<div class="steps">先減十位：${a} − ${tb} = ${a - tb}<br>再減個位：${a - tb} − ${b % 10} = ?</div>` };
+    }
+    case 9: {
+      const a = ri(2, 9), b = ri(2, 9);
+      let rows = '';
+      for (let i = 1; i <= a; i++) rows += `<div class="mrow">${'<i class="blk s t-gold"></i>'.repeat(b)}<span>${i < a ? i * b : '?'}</span></div>`;
+      return { say: `${a} 乘以 ${b} 等於多少？`, display: `${a} × ${b} = ?`, visual: '', answer: a * b, options: opts(a * b, 1, 90, 3, 4, [a * b + b, a * b - a, (a + 1) * b]),
+        hint: `<div class="mrows">${rows}</div>` };
+    }
+  }
+}
+
+/* ---------- 地區與獎勵 ---------- */
+const BIOMES = [
+  { id: 'math', name: '數學草原', sym: '123', tex: 'grass', open: true, say: '數學草原，出發！' },
+  { id: 'zhuyin', name: '注音沙漠', sym: 'ㄅㄆㄇ', tex: 'sand' },
+  { id: 'eng', name: '英文雪原', sym: 'ABC', tex: 'snow' },
+  { id: 'focus', name: '專注力礦洞', sym: '◆', tex: 'deep', open: true, say: '專注力礦洞，出發！' },
+];
+const HOUSE = ['.........C..', '....RRRR.C..', '...RRRRRRC..', '..RRRRRRRR..', '...LPPPPL...', '...LPGGPL...', '...LPPPPL...', '...LPDDPL...', '..SSSSSSSS..', 'gggggggggggg'];
+const HTEX = { R: 'log', L: 'cobble', P: 'planks', G: 'glass', D: 'door', S: 'stone', C: 'cobble', g: 'grassside' };
+// 木頭從數學草原來，石頭從專注力礦洞來
+const HOUSE_ORDER = { wood: [], stone: [] };
+for (let r = HOUSE.length - 1; r >= 0; r--) for (let c = 0; c < 12; c++) {
+  const ch = HOUSE[r][c];
+  if (!'.g'.includes(ch)) HOUSE_ORDER['LSC'.includes(ch) ? 'stone' : 'wood'].push(r * 12 + c);
+}
+const BADGES = [
+  { id: 'first', name: '第一次過關', test: () => true },
+  { id: 'count', name: '數數高手', test: c => c.level >= 4 },
+  { id: 'add', name: '加法小達人', test: c => c.level >= 7 },
+  { id: 'q50', name: '答對 50 題', test: c => c.totalCorrect >= 50 },
+  { id: 'cave', name: '礦洞探險家', test: c => new Set(c.log.filter(x => x.s === 'focus').map(x => x.g)).size >= 4 },
+  { id: 'house', name: '蓋好第一間房子', test: c => c.wood >= HOUSE_ORDER.wood.length && c.stone >= HOUSE_ORDER.stone.length },
+];
+
+/* ---------- 畫面 ---------- */
+function hud(back) {
+  const c = S.child;
+  return `<div class="hud"><button class="btn small" data-act="${back}">⬅</button>
+    <img class="hface px" src="${avatarURL(c.avatar)}"><span class="hname">${esc(c.name)}</span>
+    <div class="daybar"><div class="dayfill"></div><img class="sunico px" src="${SPR.sun}"></div>
+    <span class="pill"><img class="px ico" src="${SPR.star}"><b id="hStars">${c.stars}</b></span>
+    <span class="pill"><i class="blk ico t-planks"></i><b>${c.wood}</b></span>
+    <span class="pill"><i class="blk ico t-cobble"></i><b>${c.stone}</b></span></div>`;
+}
+function updateHud() {
+  const c = S.child, f = document.querySelector('.dayfill');
+  if (!c || !f) return;
+  const total = (c.limit + U(c).extra) * 60, rem = Math.max(0, remaining(c)), pct = total ? rem / total * 100 : 0;
+  f.style.width = pct + '%';
+  document.querySelector('.sunico').style.left = `calc(${pct}% - 15px)`;
+  document.querySelector('.daybar').classList.toggle('late', rem <= 180);
+  const hs = document.getElementById('hStars'); if (hs) hs.textContent = c.stars;
+}
+// 跟著畫面走的計時器：換畫面時一起清掉，避免離開遊戲後還在動作
+const TM = new Set();
+function later(fn, ms) { const id = setTimeout(() => { TM.delete(id); fn(); }, ms); TM.add(id); return id; }
+function clearLater() { TM.forEach(clearTimeout); TM.clear(); }
+function mount(html) {
+  clearLater();
+  app.innerHTML = html;
+  if (S.child) updateHud();
+  if (S.sunset && app.firstElementChild) app.firstElementChild.classList.add('sunset');
+}
+function showBanner() {
+  const sc = app.firstElementChild; if (!sc) return;
+  sc.classList.add('sunset');
+  sc.insertAdjacentHTML('beforeend', '<div class="banner" id="banner">🌇 太陽快下山了，再玩一下下就要休息囉！</div>');
+  setTimeout(() => { const b = document.getElementById('banner'); if (b) b.remove(); }, 8000);
+}
+function bubble(text, ms = 1500) {
+  const b = document.getElementById('bubble'); if (!b) return;
+  b.textContent = text; b.classList.add('show');
+  clearTimeout(bubble.t); bubble.t = setTimeout(() => b.classList.remove('show'), ms);
+}
+
+function renderLogin() {
+  S.screen = 'login'; S.child = null; S.game = null; S.sunset = false;
+  const clouds = [[8, 70, 0], [22, 95, -40], [14, 120, -80]].map(([t, d, dl]) => `<div class="cloud" style="top:${t}%;animation-duration:${d}s;animation-delay:${dl}s"></div>`).join('');
+  mount(`<div class="screen sky login">${clouds}
+    <div class="title">方塊學習島</div>
+    <div class="sub">點你的頭像，開始冒險！</div>
+    <div class="kids">${S.data.children.map(c => {
+      const done = remaining(c) <= 0;
+      return `<button class="kid ${done ? 'sleep' : ''}" data-act="login" data-id="${c.id}"><img class="face px" src="${avatarURL(c.avatar)}">
+        ${done ? '<div class="zzz">Zzz</div>' : ''}<div class="kname">${esc(c.name)}</div>
+        <div class="kmeta"><img class="px" src="${SPR.star}" style="width:18px;vertical-align:-2px"> ${c.stars}</div></button>`;
+    }).join('')}</div>
+    <div class="ground"><div class="grassrow t-grassside tiled"></div><div class="dirtrow t-dirt tiled"></div></div>
+    <button class="btn small gear" data-act="parent">⚙ 家長</button></div>`);
+}
+
+function renderMap() {
+  S.screen = 'map'; S.game = null;
+  const c = S.child;
+  mount(`<div class="screen sky">${hud('logout')}
+    <div class="mapgrid">${BIOMES.map(b => `<button class="biome tiled t-${b.tex} ${b.open ? '' : 'locked'}" data-act="biome" data-v="${b.id}">
+      <div class="sym">${b.sym}</div><div class="bname">${b.name}</div>${b.id === 'math' ? `<div class="lv">Lv${c.level} ${LEVELS[c.level]}</div>` : ''}</button>`).join('')}</div>
+    <div class="mapbar"><button class="btn orange big" data-act="house">🏠 我的家</button><button class="btn big" data-act="village">🏘 家族村莊</button></div></div>`);
+}
+
+function startGame() {
+  S.again = startGame;
+  S.game = { idx: 0, total: 5, correctFirst: 0, starsEarned: 0, fs: 0, ff: 0, levelUp: false };
+  nextQ(true);
+}
+function nextQ(queueSpeech) {
+  const g = S.game;
+  if (S.endPending && g.idx < g.total) return goodbye();
+  if (g.idx >= g.total) return finishRound();
+  g.q = genQ(S.child.level); g.q.L = S.child.level;
+  g.attempts = 0; g.wrong = []; g.hintShown = false; g.state = 'asking';
+  renderGame();
+  speak(g.q.say, { queue: queueSpeech });
+}
+function renderGame() {
+  S.screen = 'game';
+  const g = S.game, q = g.q;
+  mount(`<div class="screen sky">${hud('tomap')}
+    <div class="gtop"><div class="pips">${Array.from({ length: g.total }, (_, i) => `<i class="blk pip ${i < g.idx ? 't-grass' : ''} ${i === g.idx ? 'cur' : ''}"></i>`).join('')}</div>
+      <button class="btn hintbtn" data-act="buyhint">💡 提示 <img class="px ico" src="${SPR.star}">×2</button></div>
+    <div class="qcard"><button class="btn small blue" data-act="say">🔊</button><div class="qtext">${q.display}</div></div>
+    <div class="visual">${g.hintShown ? q.hint : q.visual}</div>
+    <div class="answers">${q.options.map(o => `<button class="btn ans ${g.wrong.includes(o) ? 'off' : ''}" data-act="ans" data-v="${o}">${o}</button>`).join('')}</div>
+    <div id="bubble" class="bubble"></div></div>`);
+}
+function showHint() {
+  S.game.hintShown = true;
+  document.querySelector('.visual').innerHTML = S.game.q.hint;
+}
+function logQ(ok) {
+  const c = S.child, g = S.game, q = g.q;
+  c.log.push({ t: Date.now(), L: q.L, q: q.rec || q.display, ans: q.answer, ok, picks: g.wrong.slice() });
+  if (c.log.length > 500) c.log.shift();
+  U(c).q++;
+}
+function adapt(kind) {
+  const g = S.game, c = S.child;
+  if (kind === 'first') { g.fs++; g.ff = 0; } else if (kind === 'ok') { g.fs = 0; g.ff = 0; } else { g.ff++; g.fs = 0; }
+  if (g.fs >= 3 && c.level < c.maxLevel) {
+    c.level++; g.fs = 0; g.levelUp = true;
+    setTimeout(() => { bubble('題目升級了！⬆'); speak('你變厲害了，題目升級囉！', { queue: true }); }, 800);
+  }
+  // 降級時不特別告訴孩子，避免挫折感
+  if (g.ff >= 2 && c.level > c.minLevel) { c.level--; g.ff = 0; }
+}
+function onAnswer(v, el) {
+  const g = S.game, q = g.q, c = S.child;
+  if (!g || g.state !== 'asking') return;
+  g.attempts++;
+  if (v === q.answer) {
+    g.state = 'done'; SFX.ok(); el.classList.add('good');
+    const first = g.attempts === 1;
+    c.totalCorrect++;
+    if (first) { c.stars++; U(c).stars++; g.starsEarned++; g.correctFirst++; }
+    const praise = first ? pick(['答對了！', '好厲害！', '太棒了！', '完全正確！']) : pick(['答對了！你沒有放棄，好棒！', '對了！越來越厲害！']);
+    bubble(first ? praise + ' +1 ⭐' : praise); speak(praise);
+    logQ(first); adapt(first ? 'first' : 'ok');
+    later(() => { g.idx++; nextQ(); }, 1500);
+  } else {
+    SFX.no(); g.wrong.push(v); el.classList.add('off', 'shake');
+    if (g.attempts === 1) { bubble('再想想看喔！'); speak('再想想看喔！'); }
+    else if (g.attempts === 2) { showHint(); bubble('一起看提示 💡'); speak('沒關係，我們一起看提示！'); }
+    else {
+      g.state = 'done';
+      document.querySelectorAll('.ans').forEach(b => { if (+b.dataset.v === q.answer) { b.classList.remove('off'); b.classList.add('reveal'); } });
+      bubble(`答案是 ${q.answer}`, 2400); speak(`答案是 ${q.answer}，下次一定可以！`);
+      logQ(false); adapt('fail');
+      later(() => { g.idx++; nextQ(); }, 2800);
+    }
+  }
+  updateHud(); save();
+}
+function buyHint() {
+  const g = S.game, c = S.child;
+  if (!g || g.state !== 'asking') return;
+  if (g.hintShown) return speak('提示已經打開囉！');
+  if (c.stars < 2) return speak('星星不夠喔，先自己試試看！');
+  c.stars -= 2; SFX.tap(); showHint(); updateHud(); save();
+  speak('用兩顆星星換到提示了！');
+}
+function finishRound() {
+  const g = S.game, c = S.child;
+  const bonus = g.correctFirst >= 4 ? 2 : 0;
+  c.stars += bonus; U(c).stars += bonus; c.wood += 3;
+  S.game = null;
+  showResult({ stars: g.starsEarned + bonus, mat: 'planks', back: 'tomap', bonus: bonus ? '幾乎全對！額外 +2 ⭐' : '',
+    up: g.levelUp ? `⬆ 升級到 Lv${c.level} ${LEVELS[c.level]}` : '', say: `過關了！你得到 ${g.starsEarned + bonus} 顆星星，還有 3 個木頭！` });
+}
+function showResult(r) {
+  const c = S.child;
+  const newBadges = BADGES.filter(b => !c.badges.includes(b.id) && b.test(c));
+  newBadges.forEach(b => c.badges.push(b.id));
+  save(); SFX.win();
+  S.screen = 'result'; S.resultAt = Date.now();
+  mount(`<div class="screen sky">${hud(r.back)}
+    <div class="panel"><div class="title sm">過關了！🎉</div>
+      <div class="rewards"><div class="rw"><img class="px" src="${SPR.star}">+${r.stars}</div><div class="rw"><i class="blk t-${r.mat}"></i>+3</div></div>
+      ${r.bonus ? `<div class="lvup">${r.bonus}</div>` : ''}${r.up ? `<div class="lvup">${r.up}</div>` : ''}
+      ${newBadges.map(b => `<div class="badge">🏅 ${b.name}</div>`).join('')}
+      <div class="row"><button class="btn green big" data-act="again">再玩一次 ▶</button><button class="btn orange" data-act="house">🏠 我的家</button><button class="btn" data-act="${r.back}">返回</button></div>
+    </div></div>`);
+  speak(r.say + (newBadges.length ? `還拿到新徽章：${newBadges.map(b => b.name).join('、')}！` : ''));
+}
+
+function renderHouse() {
+  S.screen = 'house';
+  const c = S.child, W = HOUSE_ORDER.wood, St = HOUSE_ORDER.stone;
+  const bw = Math.min(c.wood, W.length), bs = Math.min(c.stone, St.length);
+  const filled = new Set([...W.slice(0, bw), ...St.slice(0, bs)]);
+  const fresh = new Set([...W.slice(Math.max(0, bw - 3), bw), ...St.slice(Math.max(0, bs - 3), bs)]);
+  let cells = '';
+  HOUSE.forEach((row, r) => [...row].forEach((ch, col) => {
+    const i = r * 12 + col;
+    if (ch === '.') cells += '<i class="hc"></i>';
+    else if (ch === 'g' || filled.has(i)) cells += `<i class="blk hc t-${HTEX[ch]} ${fresh.has(i) ? 'new' : ''}"></i>`;
+    else cells += '<i class="hc need"></i>';
+  }));
+  const need = [W.length - bw ? `${W.length - bw} 個木頭` : '', St.length - bs ? `${St.length - bs} 個石頭` : ''].filter(Boolean).join('、');
+  const msg = need ? `還需要 ${need}，就能蓋好房子！` : '房子蓋好了！好漂亮！🎉';
+  mount(`<div class="screen sky">${hud('tomap')}
+    <div class="hmsg">${msg}</div><div class="house">${cells}</div>
+    <div class="badges">${BADGES.map(b => `<span class="bd ${c.badges.includes(b.id) ? '' : 'no'}">🏅 ${b.name}</span>`).join('')}</div>
+    <div class="mapbar"><button class="btn green big" data-act="tomap">去冒險拿材料 ▶</button></div></div>`);
+  speak(need ? `這是你的家！還需要 ${need}，就能蓋好囉！數學草原可以拿木頭，專注力礦洞可以拿石頭。` : '你的房子蓋好了，好漂亮！');
+}
+
+function goodbye() {
+  const c = S.child, u = U(c);
+  clearLater();
+  S.screen = 'bye'; S.game = null; S.fg = null; S.endPending = false; save();
+  const tws = Array.from({ length: 24 }, () => `<i class="tw" style="left:${ri(2, 98)}%;top:${ri(2, 60)}%;animation-delay:-${ri(0, 24) / 10}s"></i>`).join('');
+  app.innerHTML = `<div class="screen night">${tws}<img class="moon px" src="${SPR.moon}">
+    <div class="panel"><div style="position:relative"><img class="byeface px" src="${avatarURL(c.avatar)}"><div class="zzz">Zzz</div></div>
+      <div class="title sm">今天玩得好棒！</div><div class="sub">太陽下山了，我們明天見 🌙</div>
+      <div class="rewards"><div class="rw"><img class="px" src="${SPR.star}">+${u.stars}</div><div class="rw">${[u.q ? `答了 ${u.q} 題` : '', u.g ? `玩了 ${u.g} 局` : ''].filter(Boolean).join('・') || '明天繼續'}</div></div>
+      <button class="btn green big" data-act="logout">晚安 👋</button></div></div>`;
+  speak(`${c.name}，今天玩得好棒！太陽下山了，我們明天見，晚安！`);
+}
+
+/* ---------- 專注力礦洞 ---------- */
+const FGAMES = {
+  memory: { name: '記憶翻牌', say: '記憶翻牌！翻開卡片，找出一樣的兩張！' },
+  seq: { name: '依序點擊', say: '依序點擊！看清楚方塊亮起來的順序，再照順序點一次！' },
+  react: { name: '小豬快點', say: '看到小豬就趕快點牠，看到綠色怪怪不要點喔！' },
+  maze: { name: '礦洞迷宮', say: '礦洞迷宮！用手指帶著你走到星星那裡！' },
+};
+const flv = id => S.child.focus[id];
+const mini = (texs, k, lit) => `<div class="mini" style="grid-template-columns:repeat(${k},1fr)">${texs.map((t, i) => `<i class="blk t-${t} ${i === lit ? 'lit' : ''}"></i>`).join('')}</div>`;
+
+function renderCave() {
+  S.screen = 'cave'; S.fg = null;
+  const c = S.child, m = genMaze(3);
+  const icons = {
+    memory: `<i class="blk t-dirt"></i><img class="px" src="${SPR.star}">`,
+    seq: mini(SEQTEX, 3, 4),
+    react: `<img class="px" src="${SPR.pig}"><img class="px" src="${SPR.mon}">`,
+    maze: mini(m.m.map(v => v ? 'cobble' : 'grass'), m.W, -1),
+  };
+  mount(`<div class="screen cave">${hud('tomap')}
+    <div class="cavegrid">${Object.entries(FGAMES).map(([id, g]) => `<button class="fgame" data-act="fgame" data-v="${id}">
+      <div class="ficon">${icons[id]}</div><div class="bname">${g.name}</div><div class="lv">Lv${c.focus[id]}</div></button>`).join('')}</div></div>`);
+}
+function startFocus(id) {
+  S.again = () => startFocus(id);
+  ({ memory: startMemory, seq: startSeq, react: startReact, maze: startMaze })[id]();
+}
+function focusShell(cap, hint, inner) {
+  S.screen = 'focus';
+  mount(`<div class="screen cave">${hud('tocave')}
+    <div class="gtop"><div class="cap" id="cap">${cap}</div>${hint ? `<button class="btn hintbtn" data-act="fhint">💡 提示 <img class="px ico" src="${SPR.star}">×2</button>` : ''}</div>
+    <div class="farea">${inner}</div><div id="bubble" class="bubble"></div></div>`);
+}
+const setCap = t => { const e = document.getElementById('cap'); if (e) e.textContent = t; };
+function payHint() {
+  const c = S.child;
+  if (c.stars < 2) { speak('星星不夠喔，先自己試試看！'); return false; }
+  c.stars -= 2; SFX.tap(); updateHud(); save();
+  return true;
+}
+function focusHint() {
+  const g = S.fg; if (!g) return;
+  if (g.game === 'memory' && !g.lock && payHint()) peek(1500);
+  if (g.game === 'seq' && g.input && !g.guide && payHint()) { g.guide = true; playSeq(); }
+  if (g.game === 'maze' && !g.done && payHint()) { g.hints++; showPath(8); }
+}
+// good：表現好就升一級；bad：太吃力就悄悄降一級
+function endFocus(stars, good, bad, rec) {
+  const c = S.child, g = S.fg, id = g.game;
+  S.fg = null;
+  let up = false;
+  if (good && c.focus[id] < 5) { c.focus[id]++; up = true; }
+  else if (bad && c.focus[id] > 1) c.focus[id]--;
+  c.stars += stars; U(c).stars += stars; c.stone += 3; U(c).g = (U(c).g || 0) + 1;
+  c.log.push({ t: Date.now(), s: 'focus', g: id, L: g.L, q: rec, ok: good });
+  if (c.log.length > 500) c.log.shift();
+  showResult({ stars, mat: 'cobble', back: 'tocave', up: up ? `⬆ ${FGAMES[id].name} 升級到 Lv${c.focus[id]}` : '', say: `完成了！你得到 ${stars} 顆星星，還有 3 個石頭！` });
+}
+
+/* 記憶翻牌 */
+const FACES = ['t-grass', 't-planks', 't-sand', 't-gold', 't-deep', 't-log', 't-snow', 's-star', 's-sun', 's-moon', 's-heart', 's-pig', 's-mon'];
+const faceHTML = f => f[0] === 't' ? `<i class="blk ${f}"></i>` : `<img class="px" src="${SPR[f.slice(2)]}">`;
+function startMemory() {
+  const L = flv('memory'), pairs = [3, 4, 6, 8, 10][L - 1], cols = [3, 4, 4, 4, 5][L - 1], rows = pairs * 2 / cols;
+  const faces = shuffle(FACES.slice()).slice(0, pairs);
+  const cards = shuffle([...faces, ...faces]).map(f => ({ f, open: false, done: false }));
+  S.fg = { game: 'memory', L, pairs, cards, first: null, lock: false, moves: 0, matched: 0, miss: 0, freePeek: false };
+  const cw = `min(calc((100vw - 80px) / ${cols} - 12px), calc((100vh - 200px) / ${rows} - 12px), 150px)`;
+  focusShell('找出一樣的兩張！', true, `<div class="mgrid" style="grid-template-columns:repeat(${cols},var(--cw));--cw:${cw}">${cards.map((c, i) =>
+    `<button class="card" data-act="mcard" data-v="${i}"><span class="back blk t-dirt">?</span><span class="front">${faceHTML(c.f)}</span></button>`).join('')}</div>`);
+  speak(FGAMES.memory.say);
+  // 低等級開場先讓孩子看 3 秒再蓋起來
+  if (L <= 2) peek(3000);
+}
+function peek(ms) {
+  const g = S.fg; g.lock = true;
+  document.querySelectorAll('.card').forEach(e => e.classList.add('open'));
+  later(() => {
+    document.querySelectorAll('.card').forEach((e, i) => e.classList.toggle('open', g.cards[i].open || g.cards[i].done));
+    g.lock = false;
+  }, ms);
+}
+function memTap(i) {
+  const g = S.fg, c = g && g.cards && g.cards[i];
+  if (!c || g.lock || c.open || c.done) return;
+  const el = document.querySelectorAll('.card');
+  c.open = true; el[i].classList.add('open', 'flip'); SFX.tap();
+  if (g.first === null) { g.first = i; return; }
+  const j = g.first, a = g.cards[j];
+  g.first = null; g.moves++;
+  if (a.f === c.f) {
+    a.done = c.done = true; g.matched++; g.miss = 0;
+    el[i].classList.add('done'); el[j].classList.add('done'); SFX.ok();
+    bubble(pick(['一樣的！', '找到了！', '好眼力！']), 900);
+    if (g.matched === g.pairs) later(() => {
+      const r = g.moves / g.pairs;
+      endFocus(r <= 1.5 ? 3 : r <= 2.5 ? 2 : 1, r <= 2, r > 3.5, `${g.pairs} 對，翻了 ${g.moves} 次`);
+    }, 1000);
+  } else {
+    g.lock = true; g.miss++;
+    later(() => {
+      a.open = c.open = false;
+      el[i].classList.remove('open', 'flip'); el[j].classList.remove('open', 'flip');
+      g.lock = false;
+      if (g.miss >= 4 && !g.freePeek) { g.freePeek = true; g.miss = 0; bubble('偷看一下 👀'); speak('沒關係，我們偷看一下！'); peek(1500); }
+    }, 1000);
+  }
+}
+
+/* 依序點擊 */
+const TONES = [262, 294, 330, 349, 392, 440, 494, 523, 587];
+const SEQTEX = ['grass', 'sand', 'deep', 'planks', 'gold', 'log', 'snow', 'glass', 'cobble'];
+function startSeq() {
+  const L = flv('seq'), size = L <= 2 ? 2 : 3;
+  S.fg = { game: 'seq', L, size, len: L + 1, round: 0, rounds: 3, firstOK: 0, fails: 0, input: false };
+  const tw = `min(calc((100vh - 230px) / ${size} - 14px), 170px)`;
+  focusShell('仔細看…', true, `<div class="sgrid" style="grid-template-columns:repeat(${size},var(--tw));--tw:${tw}">${SEQTEX.slice(0, size * size).map((t, i) =>
+    `<button class="tile blk t-${t}" data-act="tile" data-v="${i}"></button>`).join('')}</div>`);
+  speak(FGAMES.seq.say);
+  later(newSeq, 4500);
+}
+function newSeq() {
+  const g = S.fg, n = g.size * g.size, len = g.len + (g.round === 2 ? 1 : 0);
+  g.seq = [];
+  while (g.seq.length < len) { const v = ri(0, n - 1); if (v !== g.seq[g.seq.length - 1]) g.seq.push(v); }
+  g.tries = 0; g.guide = false;
+  playSeq();
+}
+function flash(i, ms) {
+  const el = document.querySelectorAll('.tile')[i]; if (!el) return;
+  el.classList.add('lit'); beep([TONES[i]], ms / 1000 * .8, 'triangle', .12);
+  later(() => el.classList.remove('lit'), ms);
+}
+const setGuide = i => document.querySelectorAll('.tile').forEach((e, k) => e.classList.toggle('guide', k === i));
+function playSeq() {
+  const g = S.fg, gap = (g.L <= 2 ? 1000 : 800) * (g.guide ? 1.3 : 1);
+  g.input = false; setCap('仔細看…'); setGuide(-1);
+  g.seq.forEach((v, k) => later(() => flash(v, gap * .6), 600 + k * gap));
+  later(() => { g.input = true; g.pos = 0; setCap('換你了！'); speak('換你了！'); if (g.guide) setGuide(g.seq[0]); }, 600 + g.seq.length * gap);
+}
+function seqTap(i) {
+  const g = S.fg; if (!g || !g.input) return;
+  flash(i, 250);
+  if (i === g.seq[g.pos]) {
+    g.pos++;
+    if (g.guide) setGuide(g.pos < g.seq.length ? g.seq[g.pos] : -1);
+    if (g.pos < g.seq.length) return;
+    g.input = false;
+    if (g.tries === 0) g.firstOK++;
+    later(() => { SFX.ok(); bubble(pick(['記得好清楚！', '完全正確！', '好厲害！']), 1000); }, 300);
+    nextSeqRound(1600);
+  } else {
+    g.input = false; g.tries++; SFX.no(); setGuide(-1);
+    if (g.tries === 1) { bubble('再看一次喔！'); speak('再看一次喔！'); later(playSeq, 1500); }
+    else if (g.tries === 2) { g.guide = true; bubble('跟著發亮的方塊點 💡'); speak('沒關係，跟著發亮的方塊點！'); later(playSeq, 2000); }
+    else { g.fails++; bubble('沒關係，下一題！'); speak('沒關係，我們換下一題！'); nextSeqRound(1800); }
+  }
+}
+function nextSeqRound(ms) {
+  const g = S.fg; g.round++;
+  if (g.round >= g.rounds) later(() => endFocus(Math.max(1, g.firstOK), g.firstOK === 3, g.fails >= 2, `${g.len} 個方塊，一次記住 ${g.firstOK}/3`), ms);
+  else later(newSeq, ms);
+}
+
+/* 小豬快點（看到小豬點、看到怪怪不點） */
+// [出現次數, 停留毫秒, 間隔毫秒, 怪怪比例, 洞數]
+const REACT = [null, [10, 1700, 700, .2, 3], [12, 1450, 600, .25, 3], [14, 1250, 500, .3, 6], [16, 1050, 450, .35, 6], [18, 880, 380, .4, 6]];
+function startReact() {
+  const L = flv('react'), [N, show, gap, ratio, holes] = REACT[L];
+  S.fg = { game: 'react', L, N, show, gap, ratio, holes, k: 0, pigs: 0, hits: 0, errors: 0, cur: null, last: -1 };
+  focusShell('看到小豬就點！', false, `<div class="demo"><div><img class="px" src="${SPR.pig}"><span class="okc">✔ 點牠</span></div>
+    <div><img class="px" src="${SPR.mon}"><span class="ngc">✘ 不要點</span></div><button class="btn green big" data-act="rstart">準備好了 ▶</button></div>`);
+  speak(FGAMES.react.say);
+}
+function runReact() {
+  const g = S.fg; if (!g || g.started) return;
+  g.started = true;
+  const rows = g.holes / 3, hw = `min(${rows === 1 ? 26 : 20}vw, calc((100vh - 250px) / ${rows} - 30px), 200px)`;
+  document.querySelector('.farea').innerHTML = `<div class="holes" style="grid-template-columns:repeat(3,var(--hw));--hw:${hw}">${Array.from({ length: g.holes }, (_, i) =>
+    `<div class="hole blk t-grassside" data-act="hole" data-v="${i}"><div class="pit"><img class="crt px" src="${SPR.pig}"></div></div>`).join('')}</div>`;
+  setCap('抓到 0 隻小豬'); speak('開始！');
+  later(popNext, 1200);
+}
+function popNext() {
+  const g = S.fg;
+  if (g.k >= g.N) return later(() => {
+    const r = g.pigs ? g.hits / g.pigs : 1;
+    endFocus(r >= .8 && g.errors <= 1 ? 3 : r >= .5 ? 2 : 1, r >= .85 && g.errors <= 1, r < .5 || g.errors >= 3, `抓到小豬 ${g.hits}/${g.pigs}，誤點怪怪 ${g.errors} 次`);
+  }, 700);
+  g.k++;
+  let h; do h = ri(0, g.holes - 1); while (h === g.last);
+  g.last = h;
+  // 前兩隻一定是小豬，讓孩子先熟悉
+  const type = g.k > 2 && Math.random() < g.ratio ? 'mon' : 'pig';
+  if (type === 'pig') g.pigs++;
+  const img = document.querySelectorAll('.crt')[h];
+  img.src = SPR[type]; img.classList.add('up');
+  const cur = g.cur = { h, type, done: false };
+  later(() => { cur.done = true; img.classList.remove('up'); later(popNext, g.gap); }, g.show);
+}
+function hitHole(i) {
+  const g = S.fg, cur = g && g.cur;
+  if (!cur || cur.done || cur.h !== i) return;
+  cur.done = true;
+  const img = document.querySelectorAll('.crt')[i];
+  if (cur.type === 'pig') { g.hits++; SFX.ok(); img.src = SPR.star; setCap(`抓到 ${g.hits} 隻小豬`); }
+  else {
+    g.errors++; SFX.no(); bubble('噢！是怪怪 😵', 900);
+    const h = document.querySelectorAll('.hole')[i];
+    h.classList.remove('shake'); void h.offsetWidth; h.classList.add('shake');
+  }
+  later(() => img.classList.remove('up'), 250);
+}
+
+/* 礦洞迷宮 */
+function genMaze(n) {
+  const W = 2 * n + 1, m = Array(W * W).fill(1), st = [[0, 0]], seen = new Set(['0,0']);
+  m[W + 1] = 0;
+  while (st.length) {
+    const [x, y] = st[st.length - 1];
+    const nb = [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([dx, dy]) => [x + dx, y + dy])
+      .filter(([a, b]) => a >= 0 && b >= 0 && a < n && b < n && !seen.has(a + ',' + b));
+    if (!nb.length) { st.pop(); continue; }
+    const [a, b] = pick(nb);
+    seen.add(a + ',' + b);
+    m[(2 * b + 1) * W + 2 * a + 1] = 0; m[(y + b + 1) * W + x + a + 1] = 0;
+    st.push([a, b]);
+  }
+  return { W, m };
+}
+function startMaze() {
+  const L = flv('maze'), n = L + 3, { W, m } = genMaze(n), goal = W * W - W - 2;
+  const g = S.fg = { game: 'maze', L, n, W, m, goal, pos: W + 1, hints: 0, freeHint: false, t0: Date.now(), done: false, drag: false };
+  const mc = `min(calc((100vh - 220px) / ${W}), calc((100vw - 330px) / ${W}), 60px)`;
+  const cells = m.map((v, i) => `<div class="mc blk ${i === goal ? 't-gold' : v ? 't-cobble' : 't-grass'}" data-i="${i}">${i === goal ? `<img class="px" src="${SPR.star}">` : ''}</div>`).join('');
+  const arrow = (d, s) => `<button class="btn" data-act="mz" data-d="${d}">${s}</button>`;
+  focusShell('走到星星那裡！', true, `<div class="maze" id="maze" style="grid-template-columns:repeat(${W},var(--mc));--mc:${mc}">${cells}</div>
+    <div class="pad"><span></span>${arrow(-W, '▲')}<span></span>${arrow(-1, '◀')}<span></span>${arrow(1, '▶')}<span></span>${arrow(W, '▼')}<span></span></div>`);
+  drawPlayer();
+  const mz = document.getElementById('maze');
+  const at = e => { const el = document.elementFromPoint(e.clientX, e.clientY), c = el && el.closest('.mc'); return c ? +c.dataset.i : -1; };
+  mz.addEventListener('pointerdown', e => { g.drag = true; mazeTo(at(e)); });
+  mz.addEventListener('pointermove', e => { if (g.drag) mazeTo(at(e)); });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => mz.addEventListener(t, () => g.drag = false));
+  speak(FGAMES.maze.say);
+  // 卡太久就免費給一次提示
+  const tick = () => {
+    if (g.done || S.fg !== g) return;
+    if (!g.freeHint && Date.now() - g.t0 > n * 10000) { g.freeHint = true; speak('我們看一下要往哪裡走！'); showPath(6); }
+    later(tick, 1000);
+  };
+  later(tick, 1000);
+}
+function drawPlayer() {
+  const g = S.fg, old = document.getElementById('me');
+  if (old) old.remove();
+  document.querySelector(`.mc[data-i="${g.pos}"]`).insertAdjacentHTML('beforeend', `<img id="me" class="px" src="${avatarURL(S.child.avatar)}">`);
+}
+// 點同一排或同一列的格子，會一路走過去直到碰到牆
+function mazeTo(t) {
+  const g = S.fg;
+  if (!g || g.game !== 'maze' || g.done || t < 0 || t === g.pos) return;
+  const W = g.W, px = g.pos % W, py = (g.pos / W) | 0, tx = t % W, ty = (t / W) | 0;
+  let d;
+  if (py === ty) d = tx > px ? 1 : -1; else if (px === tx) d = ty > py ? W : -W; else return;
+  let moved = false;
+  while (g.pos !== t && !g.m[g.pos + d]) {
+    g.pos += d; moved = true;
+    document.querySelector(`.mc[data-i="${g.pos}"]`).classList.add('seen');
+  }
+  if (!moved) return;
+  drawPlayer(); beep([620], .03);
+  if (g.pos === g.goal) {
+    g.done = true; SFX.ok(); bubble('找到星星了！⭐', 1200);
+    const secs = Math.round((Date.now() - g.t0) / 1000), helped = g.hints + (g.freeHint ? 1 : 0);
+    later(() => endFocus(helped === 0 ? 3 : helped === 1 ? 2 : 1, helped === 0, g.freeHint, `${g.n}×${g.n} 迷宮，${secs} 秒`), 1300);
+  }
+}
+function mazePath() {
+  const g = S.fg, prev = new Map([[g.pos, -1]]), q = [g.pos];
+  while (q.length) {
+    const c = q.shift(); if (c === g.goal) break;
+    for (const d of [1, -1, g.W, -g.W]) { const n = c + d; if (!g.m[n] && !prev.has(n)) { prev.set(n, c); q.push(n); } }
+  }
+  const path = [];
+  for (let c = g.goal; c !== g.pos && c !== undefined; c = prev.get(c)) path.unshift(c);
+  return path;
+}
+function showPath(k) {
+  mazePath().slice(0, k).forEach(i => document.querySelector(`.mc[data-i="${i}"]`).classList.add('hp'));
+  later(() => document.querySelectorAll('.mc.hp').forEach(e => e.classList.remove('hp')), 3500);
+}
+
+/* ---------- 家長後台 ---------- */
+function renderGate() {
+  S.pinBuf = '';
+  app.insertAdjacentHTML('beforeend', `<div class="gate" id="gate"><div class="gbox"><b style="font-size:22px">家長專區</b>
+    <div class="dots" id="dots"></div>
+    <div class="keys">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button class="pbtn" data-act="pin" data-v="${n}">${n}</button>`).join('')}
+      <button class="pbtn light" data-act="gateclose">取消</button><button class="pbtn" data-act="pin" data-v="0">0</button><button class="pbtn light" data-act="pin" data-v="del">⌫</button></div>
+    <div class="pnote">試用版預設密碼：1234</div></div></div>`);
+}
+const pb = (act, id, d, label, cls = 'light', v = '') => `<button class="pbtn ${cls}" data-act="${act}" data-id="${id}" data-d="${d}" data-v="${v}">${label}</button>`;
+function pCard(c) {
+  const u = U(c), rem = Math.max(0, remaining(c)), log = c.log.filter(x => x.s !== 'focus'), ok = log.filter(x => x.ok).length;
+  const fl = c.log.filter(x => x.s === 'focus');
+  const byL = {};
+  log.forEach(x => { byL[x.L] = byL[x.L] || [0, 0]; byL[x.L][0]++; if (x.ok) byL[x.L][1]++; });
+  const days = [];
+  for (let i = 6; i >= 0; i--) { const dt = new Date(); dt.setDate(dt.getDate() - i); const k = fmt(dt); days.push([k.slice(5), Math.round(((S.data.usage[k] || {})[c.id] || { sec: 0 }).sec / 60)]); }
+  const maxM = Math.max(30, ...days.map(d => d[1]));
+  const mistakes = log.filter(x => !x.ok).slice(-8).reverse();
+  return `<div class="pcard">
+    <h3><img class="px" src="${avatarURL(c.avatar)}" width="40" height="40"><input class="pname" data-act="p-name" data-id="${c.id}" value="${esc(c.name)}"></h3>
+    <div class="psec">基本設定</div>
+    <div class="prow"><span>年齡</span><span>${pb('p-age', c.id, -1, '−')} <b>${c.age} 歲</b> ${pb('p-age', c.id, 1, '+')}</span></div>
+    <div class="prow"><span>頭像</span><span class="avs">${AVATARS.map((_, i) => `<img class="px av ${i === c.avatar ? 'sel' : ''}" data-act="p-avatar" data-id="${c.id}" data-d="${i}" src="${avatarURL(i)}">`).join('')}</span></div>
+    <div class="psec">遊戲時間</div>
+    <div class="prow"><span>每日上限</span><span>${pb('p-limit', c.id, -5, '−5')} <b>${c.limit} 分鐘</b> ${pb('p-limit', c.id, 5, '+5')}</span></div>
+    <div class="prow"><span>今天</span><b>已玩 ${Math.floor(u.sec / 60)} 分，剩 ${Math.ceil(rem / 60)} 分${u.extra ? `（含加時 ${u.extra} 分）` : ''}</b></div>
+    <div class="prow">${pb('p-extra', c.id, 10, '今天多 10 分鐘', '')}${pb('p-resettoday', c.id, 0, '重設今天時間')}${pb('p-endtoday', c.id, 0, '今天到此為止', 'red')}</div>
+    <div class="psec">數學程度（會依答題自動升降）</div>
+    <div class="prow"><span>目前</span><span>${pb('p-level', c.id, -1, '−')} <b>Lv${c.level} ${LEVELS[c.level]}</b> ${pb('p-level', c.id, 1, '+')}</span></div>
+    <div class="prow"><span>最低</span><span>${pb('p-min', c.id, -1, '−')} <b>Lv${c.minLevel}</b> ${pb('p-min', c.id, 1, '+')}</span>
+      <span>最高</span><span>${pb('p-max', c.id, -1, '−')} <b>Lv${c.maxLevel}</b> ${pb('p-max', c.id, 1, '+')}</span></div>
+    <div class="pnote">減法是 Lv8：把「最高」調到 8 以上才會出現。</div>
+    <div class="psec">專注力礦洞（會依表現自動升降，Lv1–5）</div>
+    ${Object.entries(FGAMES).map(([id, f]) => {
+      const xs = fl.filter(x => x.g === id);
+      return `<div class="prow"><span>${f.name}</span><span>${pb('p-flv', c.id, -1, '−', 'light', id)} <b>Lv${c.focus[id]}</b> ${pb('p-flv', c.id, 1, '+', 'light', id)}</span>
+        <span>${xs.length} 局${xs.length ? `，表現好 ${Math.round(xs.filter(x => x.ok).length / xs.length * 100)}%` : ''}</span></div>`;
+    }).join('')}
+    <div class="pnote">最近：${fl.slice(-3).reverse().map(x => `${FGAMES[x.g].name}（${esc(x.q)}）`).join('、') || '還沒有紀錄'}</div>
+    <div class="psec">學習紀錄</div>
+    <div class="prow"><span>數學累計</span><b>${log.length} 題，一次答對 ${log.length ? Math.round(ok / log.length * 100) : 0}%　⭐${c.stars}　木頭 ${c.wood}　石頭 ${c.stone}</b></div>
+    <div class="pnote">最近 7 天遊玩分鐘</div>
+    <div class="bars">${days.map(([d, m]) => `<div class="bar"><span>${m}</span><i style="height:${m / maxM * 60}px"></i><span>${d}</span></div>`).join('')}</div>
+    <table class="ptable"><tr><th>題型</th><th>題數</th><th>一次答對</th></tr>
+      ${Object.keys(byL).sort((a, b) => a - b).map(L => `<tr><td>Lv${L} ${LEVELS[L]}</td><td>${byL[L][0]}</td><td>${Math.round(byL[L][1] / byL[L][0] * 100)}%</td></tr>`).join('') || '<tr><td colspan="3">還沒有紀錄</td></tr>'}</table>
+    <div class="pnote">最近答錯的題目</div>
+    ${mistakes.map(m => `<div class="mist">${esc(m.q)}　正確：<b>${m.ans}</b>　選過：${m.picks.join('、') || '—'}</div>`).join('') || '<div class="mist">目前沒有 👍</div>'}
+  </div>`;
+}
+function renderParent() {
+  const prev = document.querySelector('.parent'), top = prev ? prev.scrollTop : 0;
+  S.screen = 'parent';
+  app.innerHTML = `<div class="screen parent"><div class="ptop"><span>⚙ 家長後台</span><button class="pbtn light" data-act="logout">回到遊戲 ▶</button></div>
+    <div class="pcards">${S.data.children.map(pCard).join('')}
+      <div class="pcard"><h3>其他設定</h3>
+        <div class="prow"><span>家長密碼</span>${pb('p-pin', '', 0, '變更密碼')}</div>
+        <div class="prow"><span>清除所有進度與紀錄</span>${pb('p-reset', '', 0, '全部重設', 'red')}</div>
+        <div class="pnote">資料存在這台 iPad 上。之後的正式版會加上雲端同步，讓兩台 iPad 的進度和家族村莊能互通。</div></div>
+    </div></div>`;
+  document.querySelector('.parent').scrollTop = top;
+}
+function parentAct(a, c, d, v) {
+  const u = c ? U(c) : null;
+  switch (a) {
+    case 'p-flv': c.focus[v] = Math.max(1, Math.min(5, c.focus[v] + d)); break;
+    case 'p-age': c.age = Math.max(3, Math.min(12, c.age + d)); break;
+    case 'p-avatar': c.avatar = d; break;
+    case 'p-limit': c.limit = Math.max(5, Math.min(120, c.limit + d)); break;
+    case 'p-extra': u.extra += d; break;
+    case 'p-resettoday': u.sec = 0; u.extra = 0; break;
+    case 'p-endtoday': u.sec = (c.limit + u.extra) * 60; break;
+    case 'p-level': c.level = Math.max(1, Math.min(9, c.level + d)); c.minLevel = Math.min(c.minLevel, c.level); c.maxLevel = Math.max(c.maxLevel, c.level); break;
+    case 'p-min': c.minLevel = Math.max(1, Math.min(c.maxLevel, c.minLevel + d)); c.level = Math.max(c.level, c.minLevel); break;
+    case 'p-max': c.maxLevel = Math.max(c.minLevel, Math.min(9, c.maxLevel + d)); c.level = Math.min(c.level, c.maxLevel); break;
+    case 'p-pin': {
+      const p = prompt('輸入新的 4 位數密碼');
+      if (p === null) return;
+      if (!/^\d{4}$/.test(p)) { alert('請輸入 4 位數字'); return; }
+      S.data.pin = p; alert('密碼已更新'); break;
+    }
+    case 'p-reset':
+      if (!confirm('確定要清除所有孩子的進度和學習紀錄嗎？這個動作無法復原。')) return;
+      S.data = defaultData(); break;
+  }
+  save(); renderParent();
+}
+
+/* ---------- 事件 ---------- */
+app.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const a = el.dataset.act, v = el.dataset.v, d = +el.dataset.d || 0;
+  const ch = el.dataset.id ? S.data.children.find(c => c.id === el.dataset.id) : null;
+  if (a.startsWith('p-') && a !== 'p-name') return parentAct(a, ch, d, v);
+  switch (a) {
+    case 'login':
+      SFX.tap();
+      if (remaining(ch) <= 0) { speak(`${ch.name}，今天的時間用完囉，明天再一起玩吧！`); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); return; }
+      S.child = ch; S.warned = false; S.sunset = false; S.endPending = false;
+      renderMap(); speak(`${ch.name}，歡迎回來！今天要去哪裡冒險呢？`);
+      if (remaining(ch) <= 180) warnSunset();
+      break;
+    case 'logout': save(); renderLogin(); break;
+    case 'tomap': SFX.tap(); if (remaining(S.child) <= 0) return goodbye(); renderMap(); break;
+    case 'biome': {
+      const b = BIOMES.find(x => x.id === v);
+      if (!b.open) { speak(`${b.name}還在建造中，快要開放囉！`); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); return; }
+      SFX.tap(); speak(b.say);
+      if (b.id === 'math') startGame(); else renderCave();
+      break;
+    }
+    case 'again': if (remaining(S.child) <= 0) return goodbye(); S.again(); break;
+    case 'tocave': SFX.tap(); if (remaining(S.child) <= 0) return goodbye(); renderCave(); break;
+    case 'fgame': SFX.tap(); startFocus(v); break;
+    case 'fhint': focusHint(); break;
+    case 'mcard': memTap(+v); break;
+    case 'tile': seqTap(+v); break;
+    case 'rstart': runReact(); break;
+    case 'hole': hitHole(+v); break;
+    case 'mz': if (S.fg && S.fg.game === 'maze') mazeTo(S.fg.pos + d); break;
+    case 'house': SFX.tap(); renderHouse(); break;
+    case 'village': speak('家族村莊還在建造中，之後大家蓋的房子都會住在一起喔！'); break;
+    case 'say': speak(S.game.q.say); break;
+    case 'ans': onAnswer(+v, el); break;
+    case 'buyhint': buyHint(); break;
+    case 'parent': renderGate(); break;
+    case 'gateclose': document.getElementById('gate').remove(); break;
+    case 'pin':
+      S.pinBuf = v === 'del' ? S.pinBuf.slice(0, -1) : (S.pinBuf + v).slice(0, 4);
+      document.getElementById('dots').textContent = '●'.repeat(S.pinBuf.length);
+      if (S.pinBuf.length === 4) {
+        if (S.pinBuf === S.data.pin) renderParent();
+        else { S.pinBuf = ''; const g = document.querySelector('.gbox'); g.classList.remove('shake'); void g.offsetWidth; g.classList.add('shake'); setTimeout(() => { const dd = document.getElementById('dots'); if (dd) dd.textContent = ''; }, 300); }
+      }
+      break;
+  }
+});
+app.addEventListener('change', e => {
+  const el = e.target;
+  if (el.dataset.act === 'p-name') {
+    const c = S.data.children.find(x => x.id === el.dataset.id);
+    c.name = el.value.trim().slice(0, 8) || c.name; save();
+  }
+});
+document.addEventListener('gesturestart', e => e.preventDefault());
+
+function warnSunset() {
+  S.warned = true; S.sunset = true;
+  showBanner();
+  speak('太陽快下山了，再玩一下下，我們就要回家休息囉！', { queue: true });
+}
+
+/* ---------- 計時 ---------- */
+setInterval(() => {
+  const c = S.child;
+  if (!c || !['map', 'game', 'result', 'house', 'cave', 'focus'].includes(S.screen) || document.hidden) return;
+  const u = U(c);
+  u.sec++;
+  if (u.sec % 5 === 0) save();
+  updateHud();
+  const rem = remaining(c);
+  if (rem <= 180 && !S.warned) warnSunset();
+  if (rem <= 0) {
+    // 讓孩子把手上這題／這局做完再道別；超時 3 分鐘仍未結束就直接道別
+    if (S.screen === 'game' || S.screen === 'focus') { S.endPending = true; if (rem < -180) goodbye(); }
+    else if (!(S.screen === 'result' && Date.now() - S.resultAt < 6000)) goodbye();
+  }
+}, 1000);
+document.addEventListener('visibilitychange', save);
+
+S.data = load();
+initArt();
+renderLogin();
+
+// 放到網址上才會啟用離線快取；直接開檔案時略過
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+// 請瀏覽器不要自動清掉孩子的進度
+if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+</script>
+</body>
+</html>
