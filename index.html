@@ -65,8 +65,8 @@ input{user-select:text;-webkit-user-select:text}
 .dayfill{height:100%;background:linear-gradient(90deg,#ffd166,#ffe9a8);transition:width 1s linear}
 .daybar.late .dayfill{background:linear-gradient(90deg,#ff6b2a,#ffae5c)}
 .sunico{position:absolute;top:-9px;width:30px;height:30px;transition:left 1s linear}
-.pill{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.35);padding:4px 10px;box-shadow:0 0 0 2px #1e1e1e;text-shadow:2px 2px 0 #000}
-.ico{width:26px;height:26px}
+.pill{display:flex;align-items:center;gap:5px;background:rgba(0,0,0,.35);padding:4px 8px;box-shadow:0 0 0 2px #1e1e1e;text-shadow:2px 2px 0 #000}
+.ico{width:24px;height:24px}
 .pulse{animation:pop .4s}
 .banner{position:absolute;top:78px;left:50%;transform:translateX(-50%);background:#e8692b;padding:8px 22px;font-weight:900;
   font-size:clamp(18px,2.4vw,26px);box-shadow:0 0 0 3px #1e1e1e;z-index:6;white-space:nowrap;text-shadow:2px 2px 0 #000;animation:pop .4s}
@@ -166,6 +166,23 @@ input{user-select:text;-webkit-user-select:text}
 .keys{display:grid;grid-template-columns:repeat(3,72px);gap:10px}
 .keys .pbtn{font-size:26px;height:60px}
 
+/* 注音、英文 */
+.ans.emo{font-size:clamp(44px,7vw,80px);background:#f3ead7;text-shadow:none}
+.ans.zy{font-size:clamp(40px,6vw,70px);letter-spacing:.05em}
+.ans.word{font-size:clamp(30px,4.6vw,54px);text-transform:none}
+.listen{font-size:clamp(70px,12vw,140px);animation:bob 2s ease-in-out infinite}
+.bigemo{font-size:clamp(90px,15vw,170px);line-height:1;filter:drop-shadow(4px 4px 0 rgba(0,0,0,.35))}
+.qtext.en{font-family:"Avenir Next","Trebuchet MS",sans-serif;letter-spacing:.12em}
+.tip{display:flex;align-items:center;gap:24px;background:rgba(0,0,0,.45);padding:12px 30px;box-shadow:0 0 0 4px #1e1e1e;font-weight:900;font-size:clamp(28px,4.4vw,52px);text-shadow:3px 3px 0 #000}
+.tip .emo{font-size:1.6em;text-shadow:none}
+.tip .zyb{color:#ffe14d;font-size:1.3em}
+.tones{display:grid;grid-template-columns:repeat(4,auto);gap:10px 26px;background:rgba(0,0,0,.45);padding:14px 26px;box-shadow:0 0 0 4px #1e1e1e;font-weight:900;font-size:clamp(20px,3vw,34px);text-shadow:2px 2px 0 #000;text-align:center}
+.tones b{font-size:1.5em;color:#ffe14d}
+.recgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px;margin:8px 0}
+.recgrid .pbtn{font-size:22px;padding:6px 0}
+.recgrid .pbtn.has{background:#6aa84f;color:#fff}
+.recgrid .pbtn.sel{outline:3px solid #e8892b;outline-offset:2px}
+
 /* 專注力礦洞 */
 .cavegrid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:18px;padding:18px 24px 20px;min-height:0}
 .fgame{border:0;font:inherit;color:#fff;cursor:pointer;background:rgba(255,255,255,.08);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
@@ -247,9 +264,11 @@ function load() {
   try { d = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
   if (!d || !d.children) d = defaultData();
   d.children.forEach(c => {
-    c.stone = c.stone || 0;
-    const L = c.age >= 8 ? 3 : 1;
+    c.stone = c.stone || 0; c.sand = c.sand || 0; c.glass = c.glass || 0;
+    const big = c.age >= 8, L = big ? 3 : 1;
     c.focus = c.focus || { memory: L, seq: L, react: L, maze: L };
+    c.zy = c.zy || (big ? { level: 5, minLevel: 4, maxLevel: 7 } : { level: 1, minLevel: 1, maxLevel: 4 });
+    c.en = c.en || (big ? { level: 3, minLevel: 2, maxLevel: 6 } : { level: 1, minLevel: 1, maxLevel: 4 });
   });
   return d;
 }
@@ -283,22 +302,114 @@ const SFX = {
   no: () => beep([240, 190], .14, 'triangle', .1),
   win: () => beep([523, 659, 784, 1046], .13),
 };
-let ZH = null;
+let ZH = null, EN = null;
 function pickVoice() {
   if (!window.speechSynthesis) return;
   const vs = speechSynthesis.getVoices();
   ZH = vs.find(v => /zh[-_]TW/i.test(v.lang)) || vs.find(v => /^zh/i.test(v.lang)) || null;
+  EN = vs.find(v => /en[-_]US/i.test(v.lang)) || vs.find(v => /^en/i.test(v.lang)) || null;
 }
 if (window.speechSynthesis) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function utter(text, en, rate) {
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = en ? 'en-US' : 'zh-TW';
+  const v = en ? EN : ZH; if (v) u.voice = v;
+  u.rate = rate || (en ? .8 : .9); u.pitch = en ? 1 : 1.1;
+  return u;
+}
+let sayTok = 0, curAudio = null;
+function stopVoice() {
+  sayTok++;
+  if (curAudio) { curAudio.pause(); curAudio = null; }
+  try { speechSynthesis.cancel(); } catch (e) {}
+}
 // 原型先用裝置內建語音；正式版會換成事先錄好的台灣口音音檔
 function speak(text, opt = {}) {
   try {
-    if (!opt.queue) speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'zh-TW'; if (ZH) u.voice = ZH;
-    u.rate = .9; u.pitch = 1.1;
-    speechSynthesis.speak(u);
+    if (!opt.queue) stopVoice();
+    speechSynthesis.speak(utter(text, opt.en, opt.rate));
   } catch (e) {}
+}
+// 依序念出多段：{text} 中文、{text, en:true} 英文、{sym} 注音符號（有家長錄音就播錄音）
+function sayParts(parts) {
+  stopVoice();
+  const tok = sayTok;
+  const next = i => {
+    if (tok !== sayTok || i >= parts.length) return;
+    const p = parts[i];
+    let fired = false;
+    const done = () => { if (!fired) { fired = true; next(i + 1); } };
+    if (p.sym && REC.has(p.sym)) {
+      const a = curAudio = new Audio(REC.get(p.sym));
+      a.onended = done; a.onerror = done; a.play().catch(done);
+      setTimeout(done, 3000);
+      return;
+    }
+    const text = p.sym ? ZY[p.sym][0] : p.text;
+    try {
+      const u = utter(text, p.en, p.rate);
+      u.onend = done; u.onerror = done;
+      speechSynthesis.speak(u);
+    } catch (e) { return done(); }
+    // iPad 偶爾不觸發 onend，用時間保底
+    setTimeout(done, 900 + text.length * (p.en ? 120 : 320) / (p.rate || 1));
+  };
+  next(0);
+}
+
+/* ---------- 家長錄音（注音符號的標準發音） ---------- */
+// 錄音存在這台 iPad 的 IndexedDB，不會上傳
+const REC = new Map();
+let recDB = null;
+function openRecDB() {
+  return recDB ? Promise.resolve(recDB) : new Promise((res, rej) => {
+    const r = indexedDB.open('blockIsland-audio', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('rec');
+    r.onsuccess = () => res(recDB = r.result);
+    r.onerror = () => rej(r.error);
+  });
+}
+async function loadRecs() {
+  try {
+    const db = await openRecDB(), req = db.transaction('rec').objectStore('rec').openCursor();
+    req.onsuccess = () => {
+      const cur = req.result; if (!cur) return;
+      REC.set(cur.key, URL.createObjectURL(new Blob([cur.value.buf], { type: cur.value.type })));
+      cur.continue();
+    };
+  } catch (e) {}
+}
+async function storeRec(sym, blob) {
+  const db = await openRecDB(), buf = await blob.arrayBuffer();
+  await new Promise((res, rej) => {
+    const tx = db.transaction('rec', 'readwrite');
+    if (blob) tx.objectStore('rec').put({ buf, type: blob.type }, sym);
+    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+  });
+  if (REC.has(sym)) URL.revokeObjectURL(REC.get(sym));
+  REC.set(sym, URL.createObjectURL(blob));
+}
+async function deleteRec(sym) {
+  const db = await openRecDB();
+  await new Promise(res => { const tx = db.transaction('rec', 'readwrite'); tx.objectStore('rec').delete(sym); tx.oncomplete = res; tx.onerror = res; });
+  if (REC.has(sym)) URL.revokeObjectURL(REC.get(sym));
+  REC.delete(sym);
+}
+async function recordSym(sym) {
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch (e) { alert('無法使用麥克風。請到 iPad 的「設定 → Safari → 麥克風」允許使用後再試一次。'); return; }
+  const mime = ['audio/mp4', 'audio/webm'].find(t => window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || '';
+  const mr = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined), chunks = [];
+  mr.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+  mr.onstop = async () => {
+    stream.getTracks().forEach(t => t.stop());
+    try { await storeRec(sym, new Blob(chunks, { type: mr.mimeType || mime || 'audio/mp4' })); } catch (e) { alert('錄音儲存失敗，請再試一次。'); }
+    S.recBusy = false; renderParent(); sayParts([{ sym }]);
+  };
+  S.recBusy = true; renderParent();
+  mr.start();
+  setTimeout(() => mr.stop(), 1800);
 }
 
 /* ---------- 像素材質 ---------- */
@@ -324,6 +435,7 @@ const TEXDEF = {
   planks: (x, r) => { noise(x, r, PLANK); x.fillStyle = '#7d5f37'; for (let y = 3; y < 16; y += 4) x.fillRect(0, y, 16, 1); for (let k = 0; k < 4; k++) x.fillRect(k % 2 ? 3 : 11, k * 4, 1, 3); },
   log: (x, r) => { for (let i = 0; i < 16; i++) { const c = i % 4 === 0 ? '#4d371c' : ['#6b4f2a', '#5a4122', '#76582f'][Math.floor(r() * 3)]; for (let j = 0; j < 16; j++) { x.fillStyle = r() < .12 ? '#4d371c' : c; x.fillRect(i, j, 1, 1); } } },
   sand: (x, r) => noise(x, r, ['#e8d9a0', '#dccb8c', '#f0e2ac', '#d6c584']),
+  sandstone: (x, r) => { noise(x, r, ['#e0cf94', '#d8c487', '#e8d9a0']); x.fillStyle = '#c4ad6e'; x.fillRect(0, 0, 16, 2); x.fillRect(0, 7, 16, 1); x.fillRect(0, 14, 16, 2); },
   snow: (x, r) => noise(x, r, ['#ffffff', '#f2f7fb', '#e6eef6']),
   deep: (x, r) => { noise(x, r, ['#3c3c46', '#34343d', '#45454f', '#2e2e36']); spots(x, r, ['#5ee8e0', '#2fb8b0']); },
   gold: (x, r) => { noise(x, r, STONE); spots(x, r, ['#ffd83a', '#e0a91c', '#fff1a0']); },
@@ -431,20 +543,173 @@ function genQ(L) {
   }
 }
 
+/* ---------- 注音 ---------- */
+// 符號 → [語音合成時用來念這個音的字, 例詞, 圖]；家長有錄音時改播錄音
+const ZY = {
+  'ㄅ': ['玻', '爸爸', '👨'], 'ㄆ': ['坡', '葡萄', '🍇'], 'ㄇ': ['摸', '貓咪', '🐱'], 'ㄈ': ['佛', '飛機', '✈️'],
+  'ㄉ': ['得', '大象', '🐘'], 'ㄊ': ['特', '兔子', '🐰'], 'ㄋ': ['訥', '牛', '🐮'], 'ㄌ': ['勒', '老虎', '🐯'],
+  'ㄍ': ['哥', '小狗', '🐶'], 'ㄎ': ['科', '恐龍', '🦖'], 'ㄏ': ['喝', '花朵', '🌸'],
+  'ㄐ': ['基', '小雞', '🐔'], 'ㄑ': ['七', '汽車', '🚗'], 'ㄒ': ['西', '西瓜', '🍉'],
+  'ㄓ': ['知', '小豬', '🐷'], 'ㄔ': ['吃', '帆船', '⛵'], 'ㄕ': ['師', '獅子', '🦁'], 'ㄖ': ['日', '日出', '🌅'],
+  'ㄗ': ['資', '嘴巴', '👄'], 'ㄘ': ['疵', '草莓', '🍓'], 'ㄙ': ['思', '雨傘', '☂️'],
+  'ㄧ': ['衣', '衣服', '👕'], 'ㄨ': ['屋', '烏龜', '🐢'], 'ㄩ': ['迂', '小魚', '🐟'],
+  'ㄚ': ['啊', '鴨子', '🦆'], 'ㄛ': ['喔', '公雞喔喔叫', '🐓'], 'ㄜ': ['鵝', '白鵝', '🦢'], 'ㄝ': ['欸', '椰子', '🥥'],
+  'ㄞ': ['哀', '愛心', '❤️'], 'ㄟ': ['誒', '杯子', '🥤'], 'ㄠ': ['凹', '書包', '🎒'], 'ㄡ': ['歐', '猴子', '🐵'],
+  'ㄢ': ['安', '白飯', '🍚'], 'ㄣ': ['恩', '大門', '🚪'], 'ㄤ': ['骯', '綿羊', '🐑'], 'ㄥ': ['鞥', '蜜蜂', '🐝'], 'ㄦ': ['兒', '耳朵', '👂'],
+};
+const ZY_INIT = 'ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙ', ZY_FIN = 'ㄧㄨㄩㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦ';
+// 容易搞混的符號，出題時會放在一起
+const ZY_CONF = ['ㄅㄆ', 'ㄉㄊ', 'ㄍㄎ', 'ㄐㄑ', 'ㄓㄗ', 'ㄔㄘ', 'ㄕㄙ', 'ㄋㄌ', 'ㄈㄏ', 'ㄢㄤ', 'ㄣㄥ', 'ㄟㄝ', 'ㄛㄜ', 'ㄡㄠ'];
+const zyList = s => s.split(' ').map(w => [w[0], w.slice(1)]);
+// 二拼、三拼都只用一聲字，選項不必標聲調
+const ZY2 = zyList('媽ㄇㄚ 八ㄅㄚ 他ㄊㄚ 拉ㄌㄚ 發ㄈㄚ 哈ㄏㄚ 哥ㄍㄜ 喝ㄏㄜ 車ㄔㄜ 書ㄕㄨ 豬ㄓㄨ 哭ㄎㄨ 姑ㄍㄨ 粗ㄘㄨ 蘇ㄙㄨ 摸ㄇㄛ 坡ㄆㄛ 雞ㄐㄧ 七ㄑㄧ 西ㄒㄧ 貓ㄇㄠ 刀ㄉㄠ 包ㄅㄠ 高ㄍㄠ 飛ㄈㄟ 杯ㄅㄟ 黑ㄏㄟ 開ㄎㄞ 拍ㄆㄞ 偷ㄊㄡ 收ㄕㄡ 溝ㄍㄡ 山ㄕㄢ 三ㄙㄢ 分ㄈㄣ 跟ㄍㄣ 森ㄙㄣ 湯ㄊㄤ 幫ㄅㄤ 張ㄓㄤ 風ㄈㄥ 燈ㄉㄥ 生ㄕㄥ');
+const ZY3 = zyList('花ㄏㄨㄚ 家ㄐㄧㄚ 瓜ㄍㄨㄚ 抓ㄓㄨㄚ 刷ㄕㄨㄚ 天ㄊㄧㄢ 先ㄒㄧㄢ 邊ㄅㄧㄢ 偏ㄆㄧㄢ 冬ㄉㄨㄥ 空ㄎㄨㄥ 心ㄒㄧㄣ 金ㄐㄧㄣ 光ㄍㄨㄤ 窗ㄔㄨㄤ 雙ㄕㄨㄤ 星ㄒㄧㄥ 聽ㄊㄧㄥ 香ㄒㄧㄤ 江ㄐㄧㄤ 春ㄔㄨㄣ 秋ㄑㄧㄡ 推ㄊㄨㄟ 吹ㄔㄨㄟ 說ㄕㄨㄛ 多ㄉㄨㄛ 飄ㄆㄧㄠ 標ㄅㄧㄠ 歡ㄏㄨㄢ 官ㄍㄨㄢ 軍ㄐㄩㄣ');
+// 同一個拼法的一到四聲
+const ZY_TONES = [
+  ['媽麻馬罵', 'ㄇㄚ'], ['八拔把爸', 'ㄅㄚ'], ['書熟鼠樹', 'ㄕㄨ'], ['湯糖躺燙', 'ㄊㄤ'], ['雞急幾記', 'ㄐㄧ'],
+  ['迂魚雨玉', 'ㄩ'], ['烏無五霧', 'ㄨ'], ['妻騎起氣', 'ㄑㄧ'], ['師十使是', 'ㄕ'], ['蛙娃瓦襪', 'ㄨㄚ'], ['鍋國果過', 'ㄍㄨㄛ'],
+  ['通同桶痛', 'ㄊㄨㄥ'], ['灰回毀會', 'ㄏㄨㄟ'], ['方房訪放', 'ㄈㄤ'],
+];
+const TONE_MK = ['', 'ˊ', 'ˇ', 'ˋ'], TONE_NAME = ['一聲', '二聲', '三聲', '四聲'];
+const ZY_LEVELS = [null, '聽音找注音（ㄅ–ㄌ）', '聽音找注音（全部聲母）', '聽音找注音（韻母）', '37 個注音大挑戰', '拼音（兩個符號）', '聲調', '拼音（三個符號）'];
+const LISTEN = '<div class="listen">👂</div>';
+
+function zySymQ(pool, n) {
+  const s = pick([...pool]), o = new Set([s]), mate = ZY_CONF.find(p => p.includes(s));
+  if (mate && n > 3) for (const m of mate) if (pool.includes(m)) o.add(m);
+  while (o.size < n) o.add(pick([...pool]));
+  return { parts: [{ text: '聽聽看，是哪一個注音？' }, { sym: s }], replay: [{ sym: s }], display: '是哪一個？', visual: LISTEN,
+    hint: `<div class="tip"><span class="emo">${ZY[s][2]}</span><span>${ZY[s][1]}</span></div>`, hintParts: [{ sym: s }, { text: `，${ZY[s][1]}的` }, { sym: s }],
+    answer: s, options: shuffle([...o]), optClass: 'zy', ansParts: [{ sym: s }], rec: `聽音找 ${s}` };
+}
+// 拼錯的選項：換成容易搞混的符號、換介音，或隨機換一個聲母／韻母
+function zyVariants(arr) {
+  const out = new Set(), swap = (i, m) => out.add(arr.map((x, j) => j === i ? m : x).join(''));
+  arr.forEach((s, i) => {
+    const mate = ZY_CONF.find(p => p.includes(s));
+    if (mate) for (const m of mate) if (m !== s) swap(i, m);
+    if ('ㄧㄨㄩ'.includes(s) && i > 0 && i < arr.length - 1) for (const m of 'ㄧㄨㄩ') if (m !== s) swap(i, m);
+  });
+  for (let t = 0; t < 30 && out.size < 8; t++) { const i = ri(0, arr.length - 1); swap(i, pick([...(ZY_INIT.includes(arr[i]) ? ZY_INIT : ZY_FIN)])); }
+  out.delete(arr.join(''));
+  return shuffle([...out]);
+}
+function zySpellQ(list) {
+  const [ch, sp] = pick(list), arr = [...sp];
+  return { parts: [{ text: '聽聽看，' }, { text: ch, rate: .7 }, { text: '要怎麼拼？' }], replay: [{ text: ch, rate: .7 }],
+    display: `「${ch}」怎麼拼？`, visual: LISTEN,
+    hint: `<div class="tip">第一個音是 <span class="zyb">${arr[0]}</span></div>`, hintParts: [{ text: '第一個音是' }, { sym: arr[0] }],
+    answer: sp, options: shuffle([sp, ...zyVariants(arr).slice(0, 3)]), optClass: 'zy', ansParts: [{ text: ch }], rec: `拼「${ch}」` };
+}
+function zyToneQ() {
+  const [chars, base] = pick(ZY_TONES), t = ri(0, 3), ch = chars[t];
+  return { parts: [{ text: '聽聽看，' }, { text: ch, rate: .7 }, { text: '是哪一個？' }], replay: [{ text: ch, rate: .7 }],
+    display: `「${ch}」怎麼拼？`, visual: LISTEN,
+    hint: `<div class="tones">${TONE_NAME.map(n => `<span>${n}</span>`).join('')}${TONE_MK.map(m => `<b>${base}${m}</b>`).join('')}</div>`,
+    hintParts: [...chars].flatMap((c, i) => [{ text: TONE_NAME[i] }, { text: c, rate: .7 }]),
+    answer: base + TONE_MK[t], options: TONE_MK.map(m => base + m), optClass: 'zy', ansParts: [{ text: ch }], rec: `「${ch}」的聲調` };
+}
+function genZY(L) {
+  return [null, () => zySymQ(ZY_INIT.slice(0, 8), 3), () => zySymQ(ZY_INIT, 4), () => zySymQ(ZY_FIN, 4), () => zySymQ(ZY_INIT + ZY_FIN, 4),
+    () => zySpellQ(ZY2), zyToneQ, () => zySpellQ(ZY3)][L]();
+}
+
+/* ---------- 英文 ---------- */
+const ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const lname = L => L === 'A' ? 'ay' : L;
+// 每個字母的例字（X 用結尾是 x 的 fox）
+const LWORD = { A: 'apple', B: 'ball', C: 'cat', D: 'dog', E: 'egg', F: 'fish', G: 'grapes', H: 'hat', I: 'insect', J: 'juice', K: 'kite', L: 'lion', M: 'moon',
+  N: 'nose', O: 'octopus', P: 'pig', Q: 'queen', R: 'rabbit', S: 'sun', T: 'tree', U: 'umbrella', V: 'van', W: 'watch', X: 'fox', Y: 'yo-yo', Z: 'zebra' };
+const EMO = { apple: '🍎', ball: '⚽', cat: '🐱', dog: '🐶', egg: '🥚', fish: '🐟', grapes: '🍇', hat: '🎩', insect: '🐞', juice: '🧃', kite: '🪁', lion: '🦁', moon: '🌙',
+  nose: '👃', octopus: '🐙', pig: '🐷', queen: '👸', rabbit: '🐰', sun: '☀️', tree: '🌳', umbrella: '☂️', van: '🚐', watch: '⌚', fox: '🦊', 'yo-yo': '🪀', zebra: '🦓',
+  cow: '🐮', bird: '🐦', duck: '🦆', frog: '🐸', bee: '🐝', bear: '🐻', banana: '🍌', cake: '🎂', milk: '🥛', star: '⭐', car: '🚗', bus: '🚌', bed: '🛏️', cup: '🥤',
+  book: '📖', box: '📦', key: '🔑', hand: '✋', shoe: '👟', house: '🏠', flower: '🌸', bike: '🚲', bug: '🐛', hen: '🐔', map: '🗺️', pen: '🖊️', bat: '🦇', net: '🥅', log: '🪵', web: '🕸️', jet: '✈️', ten: '🔟' };
+const CVC = ['cat', 'dog', 'pig', 'hat', 'sun', 'bus', 'bed', 'cup', 'box', 'fox', 'bug', 'hen', 'map', 'pen', 'bat', 'van', 'net', 'log', 'web', 'jet', 'ten'];
+const LETTER_CONF = ['bdpq', 'mn', 'uvw', 'ijl', 'ceo', 'hn', 'ft'];
+const EN_LEVELS = [null, '聽音找字母', '大小寫配對', '第一個字母（自然發音）', '聽單字選圖', '看圖選單字', '少了哪個字母'];
+const tipWord = (w, cap) => `<div class="tip"><span class="emo">${EMO[w]}</span><span class="en">${cap ? w[0].toUpperCase() + w.slice(1) : w}</span></div>`;
+// 選項：正確答案＋容易搞混的字母＋隨機字母
+function letterOpts(l, n, pool) {
+  const o = new Set([l]), conf = LETTER_CONF.find(c => c.includes(l.toLowerCase()));
+  if (conf) for (const m of shuffle([...conf])) if (o.size < n) o.add(l === l.toUpperCase() ? m.toUpperCase() : m);
+  while (o.size < n) o.add(pick([...pool]));
+  return shuffle([...o]);
+}
+function wordOpts(w, pool, n = 4) {
+  // 優先挑跟答案有相同字母的字，練習仔細看
+  const near = shuffle(pool.filter(x => x !== w && [...x].filter((ch, i) => w[i] === ch).length >= 1));
+  const o = new Set([w, ...near.slice(0, n - 1)]);
+  while (o.size < n) o.add(pick(pool));
+  return shuffle([...o]);
+}
+function genEN(L) {
+  switch (L) {
+    case 1: {
+      const l = pick([...ABC]);
+      return { parts: [{ text: '聽聽看，是哪一個字母？' }, { text: lname(l), en: true }], replay: [{ text: lname(l), en: true }], display: '是哪個字母？', visual: LISTEN,
+        hint: tipWord(LWORD[l], true), hintParts: [{ text: lname(l), en: true }, { text: LWORD[l], en: true }],
+        answer: l, options: letterOpts(l, 3, ABC), optClass: 'word', ansParts: [{ text: lname(l), en: true }], rec: `聽音找 ${l}` };
+    }
+    case 2: {
+      const l = pick([...ABC]), s = l.toLowerCase();
+      return { parts: [{ text: '找出小寫的' }, { text: lname(l), en: true }], replay: [{ text: lname(l), en: true }], display: `${l} → ?`, dispClass: 'en', visual: '',
+        hint: tipWord(LWORD[l]), hintParts: [{ text: LWORD[l], en: true }],
+        answer: s, options: letterOpts(s, 4, ABC.toLowerCase()), optClass: 'word', ansParts: [{ text: lname(l), en: true }], rec: `${l} 的小寫` };
+    }
+    case 3: {
+      const l = pick([...ABC.replace('X', '')]), w = LWORD[l];
+      return { parts: [{ text: '這是' }, { text: w, en: true }, { text: '。第一個字母是什麼？' }], replay: [{ text: w, en: true }], display: '第一個字母？', visual: `<div class="bigemo">${EMO[w]}</div>`,
+        hint: tipWord(w), hintParts: [{ text: w, en: true, rate: .45 }],
+        answer: l.toLowerCase(), options: letterOpts(l.toLowerCase(), 4, ABC.toLowerCase()), optClass: 'word', ansParts: [{ text: w, en: true }], rec: `${w} 的第一個字母` };
+    }
+    case 4: {
+      const pool = Object.keys(EMO).filter(w => w !== 'yo-yo'), w = pick(pool);
+      return { parts: [{ text: '聽聽看，是哪一個？' }, { text: w, en: true }], replay: [{ text: w, en: true }], display: '是哪一個？', visual: LISTEN,
+        hint: `<div class="tip"><span class="en">${w}</span></div>`, hintParts: [{ text: w, en: true, rate: .5 }],
+        answer: w, options: shuffle([w, ...shuffle(pool.filter(x => x !== w)).slice(0, 3)]), optClass: 'emo', optLabel: x => EMO[x],
+        ansParts: [{ text: w, en: true }], ansLabel: EMO[w], rec: `聽 ${w} 選圖` };
+    }
+    case 5: {
+      const w = pick(CVC);
+      return { parts: [{ text: '這是什麼？選出正確的英文。' }], display: '這是什麼？', visual: `<div class="bigemo">${EMO[w]}</div>`,
+        hint: `<div class="tip"><span class="emo">${EMO[w]}</span><span>🔊</span></div>`, hintParts: [{ text: w, en: true, rate: .6 }],
+        answer: w, options: wordOpts(w, CVC), optClass: 'word', ansParts: [{ text: w, en: true }], rec: `看圖選 ${w}` };
+    }
+    case 6: {
+      const w = pick(CVC), i = ri(0, 2), l = w[i], vowel = 'aeiou'.includes(l);
+      return { parts: [{ text: '少了哪一個字母？' }, { text: w, en: true }], replay: [{ text: w, en: true }],
+        display: [...w].map((c, k) => k === i ? '_' : c).join(' '), dispClass: 'en', visual: `<div class="bigemo">${EMO[w]}</div>`,
+        hint: `<div class="tip"><span class="emo">${EMO[w]}</span><span>🔊 慢慢聽</span></div>`, hintParts: [{ text: w, en: true, rate: .4 }],
+        answer: l, options: letterOpts(l, 4, vowel ? 'aeiou' : 'bcdfghjklmnprstvwz'), optClass: 'word', ansParts: [{ text: w, en: true }], rec: `${w} 少了 ${l}` };
+    }
+  }
+}
+
+/* ---------- 各科共用設定 ---------- */
+const SUBJ = {
+  math: { levels: LEVELS, gen: L => genQ(L), mat: 'wood', tex: 'planks', matName: '木頭' },
+  zhuyin: { levels: ZY_LEVELS, gen: genZY, mat: 'sand', tex: 'sandstone', matName: '沙岩' },
+  eng: { levels: EN_LEVELS, gen: genEN, mat: 'glass', tex: 'glass', matName: '玻璃' },
+};
+// 數學等級直接存在孩子身上；注音、英文另外存在 zy、en
+const P = (c, s) => s === 'zhuyin' ? c.zy : s === 'eng' ? c.en : c;
+
 /* ---------- 地區與獎勵 ---------- */
 const BIOMES = [
   { id: 'math', name: '數學草原', sym: '123', tex: 'grass', open: true, say: '數學草原，出發！' },
-  { id: 'zhuyin', name: '注音沙漠', sym: 'ㄅㄆㄇ', tex: 'sand' },
-  { id: 'eng', name: '英文雪原', sym: 'ABC', tex: 'snow' },
+  { id: 'zhuyin', name: '注音沙漠', sym: 'ㄅㄆㄇ', tex: 'sand', open: true, say: '注音沙漠，出發！' },
+  { id: 'eng', name: '英文雪原', sym: 'ABC', tex: 'snow', open: true, say: '英文雪原，出發！' },
   { id: 'focus', name: '專注力礦洞', sym: '◆', tex: 'deep', open: true, say: '專注力礦洞，出發！' },
 ];
-const HOUSE = ['.........C..', '....RRRR.C..', '...RRRRRRC..', '..RRRRRRRR..', '...LPPPPL...', '...LPGGPL...', '...LPPPPL...', '...LPDDPL...', '..SSSSSSSS..', 'gggggggggggg'];
-const HTEX = { R: 'log', L: 'cobble', P: 'planks', G: 'glass', D: 'door', S: 'stone', C: 'cobble', g: 'grassside' };
-// 木頭從數學草原來，石頭從專注力礦洞來
-const HOUSE_ORDER = { wood: [], stone: [] };
+const HOUSE = ['.........C..', '....RRRR.C..', '...RRRRRRC..', '..RRRRRRRR..', '...LGPPGL...', '...LPGGPL...', '...LGDDGL...', '...LPDDPL...', '.AAAAAAAAAA.', 'gggggggggggg'];
+const HTEX = { R: 'log', L: 'cobble', P: 'planks', G: 'glass', D: 'door', A: 'sandstone', C: 'cobble', g: 'grassside' };
+const HMAT = { R: 'wood', P: 'wood', D: 'wood', L: 'stone', C: 'stone', G: 'glass', A: 'sand' };
+// [材料, 名稱, 在哪裡拿, 材質]
+const MATS = [['wood', '木頭', '數學草原', 'planks'], ['stone', '石頭', '專注力礦洞', 'cobble'], ['sand', '沙岩', '注音沙漠', 'sandstone'], ['glass', '玻璃', '英文雪原', 'glass']];
+const HOUSE_ORDER = { wood: [], stone: [], sand: [], glass: [] };
 for (let r = HOUSE.length - 1; r >= 0; r--) for (let c = 0; c < 12; c++) {
   const ch = HOUSE[r][c];
-  if (!'.g'.includes(ch)) HOUSE_ORDER['LSC'.includes(ch) ? 'stone' : 'wood'].push(r * 12 + c);
+  if (HMAT[ch]) HOUSE_ORDER[HMAT[ch]].push(r * 12 + c);
 }
 const BADGES = [
   { id: 'first', name: '第一次過關', test: () => true },
@@ -452,7 +717,9 @@ const BADGES = [
   { id: 'add', name: '加法小達人', test: c => c.level >= 7 },
   { id: 'q50', name: '答對 50 題', test: c => c.totalCorrect >= 50 },
   { id: 'cave', name: '礦洞探險家', test: c => new Set(c.log.filter(x => x.s === 'focus').map(x => x.g)).size >= 4 },
-  { id: 'house', name: '蓋好第一間房子', test: c => c.wood >= HOUSE_ORDER.wood.length && c.stone >= HOUSE_ORDER.stone.length },
+  { id: 'zy', name: '注音小達人', test: c => c.zy.level >= 5 },
+  { id: 'abc', name: 'ABC 小達人', test: c => c.en.level >= 4 },
+  { id: 'house', name: '蓋好第一間房子', test: c => MATS.every(([m]) => c[m] >= HOUSE_ORDER[m].length) },
 ];
 
 /* ---------- 畫面 ---------- */
@@ -462,8 +729,7 @@ function hud(back) {
     <img class="hface px" src="${avatarURL(c.avatar)}"><span class="hname">${esc(c.name)}</span>
     <div class="daybar"><div class="dayfill"></div><img class="sunico px" src="${SPR.sun}"></div>
     <span class="pill"><img class="px ico" src="${SPR.star}"><b id="hStars">${c.stars}</b></span>
-    <span class="pill"><i class="blk ico t-planks"></i><b>${c.wood}</b></span>
-    <span class="pill"><i class="blk ico t-cobble"></i><b>${c.stone}</b></span></div>`;
+    ${MATS.map(([m, , , t]) => `<span class="pill"><i class="blk ico t-${t}"></i><b>${c[m]}</b></span>`).join('')}</div>`;
 }
 function updateHud() {
   const c = S.child, f = document.querySelector('.dayfill');
@@ -517,33 +783,35 @@ function renderMap() {
   const c = S.child;
   mount(`<div class="screen sky">${hud('logout')}
     <div class="mapgrid">${BIOMES.map(b => `<button class="biome tiled t-${b.tex} ${b.open ? '' : 'locked'}" data-act="biome" data-v="${b.id}">
-      <div class="sym">${b.sym}</div><div class="bname">${b.name}</div>${b.id === 'math' ? `<div class="lv">Lv${c.level} ${LEVELS[c.level]}</div>` : ''}</button>`).join('')}</div>
+      <div class="sym">${b.sym}</div><div class="bname">${b.name}</div>${SUBJ[b.id] ? `<div class="lv">Lv${P(c, b.id).level} ${SUBJ[b.id].levels[P(c, b.id).level]}</div>` : ''}</button>`).join('')}</div>
     <div class="mapbar"><button class="btn orange big" data-act="house">🏠 我的家</button><button class="btn big" data-act="village">🏘 家族村莊</button></div></div>`);
 }
 
-function startGame() {
-  S.again = startGame;
-  S.game = { idx: 0, total: 5, correctFirst: 0, starsEarned: 0, fs: 0, ff: 0, levelUp: false };
-  nextQ(true);
+// 數學、注音、英文共用同一套出題流程：每關 5 題，題目由 SUBJ[subject].gen 產生
+function startGame(subject = 'math', lead = '') {
+  S.again = () => startGame(subject);
+  S.game = { subject, idx: 0, total: 5, correctFirst: 0, starsEarned: 0, fs: 0, ff: 0, levelUp: false };
+  nextQ(lead);
 }
-function nextQ(queueSpeech) {
-  const g = S.game;
+const qParts = q => q.parts || [{ text: q.say }];
+function nextQ(lead) {
+  const g = S.game, p = P(S.child, g.subject);
   if (S.endPending && g.idx < g.total) return goodbye();
   if (g.idx >= g.total) return finishRound();
-  g.q = genQ(S.child.level); g.q.L = S.child.level;
+  g.q = SUBJ[g.subject].gen(p.level); g.q.L = p.level;
   g.attempts = 0; g.wrong = []; g.hintShown = false; g.state = 'asking';
   renderGame();
-  speak(g.q.say, { queue: queueSpeech });
+  sayParts([...(lead ? [{ text: lead }] : []), ...qParts(g.q)]);
 }
 function renderGame() {
   S.screen = 'game';
-  const g = S.game, q = g.q;
+  const g = S.game, q = g.q, label = q.optLabel || (o => o);
   mount(`<div class="screen sky">${hud('tomap')}
-    <div class="gtop"><div class="pips">${Array.from({ length: g.total }, (_, i) => `<i class="blk pip ${i < g.idx ? 't-grass' : ''} ${i === g.idx ? 'cur' : ''}"></i>`).join('')}</div>
+    <div class="gtop"><div class="pips">${Array.from({ length: g.total }, (_, i) => `<i class="blk pip ${i < g.idx ? 't-' + SUBJ[g.subject].tex : ''} ${i === g.idx ? 'cur' : ''}"></i>`).join('')}</div>
       <button class="btn hintbtn" data-act="buyhint">💡 提示 <img class="px ico" src="${SPR.star}">×2</button></div>
-    <div class="qcard"><button class="btn small blue" data-act="say">🔊</button><div class="qtext">${q.display}</div></div>
+    <div class="qcard"><button class="btn small blue" data-act="say">🔊</button><div class="qtext ${q.dispClass || ''}">${q.display}</div></div>
     <div class="visual">${g.hintShown ? q.hint : q.visual}</div>
-    <div class="answers">${q.options.map(o => `<button class="btn ans ${g.wrong.includes(o) ? 'off' : ''}" data-act="ans" data-v="${o}">${o}</button>`).join('')}</div>
+    <div class="answers">${q.options.map((o, i) => `<button class="btn ans ${q.optClass || ''} ${g.wrong.includes(o) ? 'off' : ''}" data-act="ans" data-v="${i}">${label(o)}</button>`).join('')}</div>
     <div id="bubble" class="bubble"></div></div>`);
 }
 function showHint() {
@@ -552,23 +820,24 @@ function showHint() {
 }
 function logQ(ok) {
   const c = S.child, g = S.game, q = g.q;
-  c.log.push({ t: Date.now(), L: q.L, q: q.rec || q.display, ans: q.answer, ok, picks: g.wrong.slice() });
+  c.log.push({ t: Date.now(), s: g.subject, L: q.L, q: q.rec || q.display, ans: q.answer, ok, picks: g.wrong.slice() });
   if (c.log.length > 500) c.log.shift();
   U(c).q++;
 }
 function adapt(kind) {
-  const g = S.game, c = S.child;
+  const g = S.game, p = P(S.child, g.subject);
   if (kind === 'first') { g.fs++; g.ff = 0; } else if (kind === 'ok') { g.fs = 0; g.ff = 0; } else { g.ff++; g.fs = 0; }
-  if (g.fs >= 3 && c.level < c.maxLevel) {
-    c.level++; g.fs = 0; g.levelUp = true;
+  if (g.fs >= 3 && p.level < p.maxLevel) {
+    p.level++; g.fs = 0; g.levelUp = true;
     setTimeout(() => { bubble('題目升級了！⬆'); speak('你變厲害了，題目升級囉！', { queue: true }); }, 800);
   }
   // 降級時不特別告訴孩子，避免挫折感
-  if (g.ff >= 2 && c.level > c.minLevel) { c.level--; g.ff = 0; }
+  if (g.ff >= 2 && p.level > p.minLevel) { p.level--; g.ff = 0; }
 }
-function onAnswer(v, el) {
-  const g = S.game, q = g.q, c = S.child;
+function onAnswer(i, el) {
+  const g = S.game, c = S.child;
   if (!g || g.state !== 'asking') return;
+  const q = g.q, v = q.options[i];
   g.attempts++;
   if (v === q.answer) {
     g.state = 'done'; SFX.ok(); el.classList.add('good');
@@ -582,11 +851,12 @@ function onAnswer(v, el) {
   } else {
     SFX.no(); g.wrong.push(v); el.classList.add('off', 'shake');
     if (g.attempts === 1) { bubble('再想想看喔！'); speak('再想想看喔！'); }
-    else if (g.attempts === 2) { showHint(); bubble('一起看提示 💡'); speak('沒關係，我們一起看提示！'); }
+    else if (g.attempts === 2) { showHint(); bubble('一起看提示 💡'); sayParts([{ text: '沒關係，我們一起看提示！' }, ...(q.hintParts || [])]); }
     else {
       g.state = 'done';
-      document.querySelectorAll('.ans').forEach(b => { if (+b.dataset.v === q.answer) { b.classList.remove('off'); b.classList.add('reveal'); } });
-      bubble(`答案是 ${q.answer}`, 2400); speak(`答案是 ${q.answer}，下次一定可以！`);
+      document.querySelectorAll('.ans').forEach(b => { if (q.options[+b.dataset.v] === q.answer) { b.classList.remove('off'); b.classList.add('reveal'); } });
+      bubble(`答案是 ${q.ansLabel || q.answer}`, 2400);
+      sayParts([{ text: '答案是' }, ...(q.ansParts || [{ text: String(q.answer) }]), { text: '，下次一定可以！' }]);
       logQ(false); adapt('fail');
       later(() => { g.idx++; nextQ(); }, 2800);
     }
@@ -599,15 +869,15 @@ function buyHint() {
   if (g.hintShown) return speak('提示已經打開囉！');
   if (c.stars < 2) return speak('星星不夠喔，先自己試試看！');
   c.stars -= 2; SFX.tap(); showHint(); updateHud(); save();
-  speak('用兩顆星星換到提示了！');
+  sayParts([{ text: '用兩顆星星換到提示了！' }, ...(g.q.hintParts || [])]);
 }
 function finishRound() {
-  const g = S.game, c = S.child;
+  const g = S.game, c = S.child, m = SUBJ[g.subject], p = P(c, g.subject);
   const bonus = g.correctFirst >= 4 ? 2 : 0;
-  c.stars += bonus; U(c).stars += bonus; c.wood += 3;
+  c.stars += bonus; U(c).stars += bonus; c[m.mat] += 3;
   S.game = null;
-  showResult({ stars: g.starsEarned + bonus, mat: 'planks', back: 'tomap', bonus: bonus ? '幾乎全對！額外 +2 ⭐' : '',
-    up: g.levelUp ? `⬆ 升級到 Lv${c.level} ${LEVELS[c.level]}` : '', say: `過關了！你得到 ${g.starsEarned + bonus} 顆星星，還有 3 個木頭！` });
+  showResult({ stars: g.starsEarned + bonus, mat: m.tex, back: 'tomap', bonus: bonus ? '幾乎全對！額外 +2 ⭐' : '',
+    up: g.levelUp ? `⬆ 升級到 Lv${p.level} ${m.levels[p.level]}` : '', say: `過關了！你得到 ${g.starsEarned + bonus} 顆星星，還有 3 個${m.matName}！` });
 }
 function showResult(r) {
   const c = S.child;
@@ -627,10 +897,13 @@ function showResult(r) {
 
 function renderHouse() {
   S.screen = 'house';
-  const c = S.child, W = HOUSE_ORDER.wood, St = HOUSE_ORDER.stone;
-  const bw = Math.min(c.wood, W.length), bs = Math.min(c.stone, St.length);
-  const filled = new Set([...W.slice(0, bw), ...St.slice(0, bs)]);
-  const fresh = new Set([...W.slice(Math.max(0, bw - 3), bw), ...St.slice(Math.max(0, bs - 3), bs)]);
+  const c = S.child, filled = new Set(), fresh = new Set(), needs = [], where = [];
+  MATS.forEach(([m, name, place]) => {
+    const list = HOUSE_ORDER[m], b = Math.min(c[m], list.length);
+    list.slice(0, b).forEach(i => filled.add(i));
+    list.slice(Math.max(0, b - 3), b).forEach(i => fresh.add(i));
+    if (b < list.length) { needs.push(`${list.length - b} 個${name}`); where.push(`${place}可以拿${name}`); }
+  });
   let cells = '';
   HOUSE.forEach((row, r) => [...row].forEach((ch, col) => {
     const i = r * 12 + col;
@@ -638,13 +911,13 @@ function renderHouse() {
     else if (ch === 'g' || filled.has(i)) cells += `<i class="blk hc t-${HTEX[ch]} ${fresh.has(i) ? 'new' : ''}"></i>`;
     else cells += '<i class="hc need"></i>';
   }));
-  const need = [W.length - bw ? `${W.length - bw} 個木頭` : '', St.length - bs ? `${St.length - bs} 個石頭` : ''].filter(Boolean).join('、');
+  const need = needs.join('、');
   const msg = need ? `還需要 ${need}，就能蓋好房子！` : '房子蓋好了！好漂亮！🎉';
   mount(`<div class="screen sky">${hud('tomap')}
     <div class="hmsg">${msg}</div><div class="house">${cells}</div>
     <div class="badges">${BADGES.map(b => `<span class="bd ${c.badges.includes(b.id) ? '' : 'no'}">🏅 ${b.name}</span>`).join('')}</div>
     <div class="mapbar"><button class="btn green big" data-act="tomap">去冒險拿材料 ▶</button></div></div>`);
-  speak(need ? `這是你的家！還需要 ${need}，就能蓋好囉！數學草原可以拿木頭，專注力礦洞可以拿石頭。` : '你的房子蓋好了，好漂亮！');
+  speak(need ? `這是你的家！還需要 ${need}，就能蓋好囉！${where.join('，')}。` : '你的房子蓋好了，好漂亮！');
 }
 
 function goodbye() {
@@ -963,15 +1236,28 @@ function renderGate() {
     <div class="pnote">試用版預設密碼：1234</div></div></div>`);
 }
 const pb = (act, id, d, label, cls = 'light', v = '') => `<button class="pbtn ${cls}" data-act="${act}" data-id="${id}" data-d="${d}" data-v="${v}">${label}</button>`;
-function pCard(c) {
-  const u = U(c), rem = Math.max(0, remaining(c)), log = c.log.filter(x => x.s !== 'focus'), ok = log.filter(x => x.ok).length;
-  const fl = c.log.filter(x => x.s === 'focus');
+// 數學／注音／英文的程度設定與紀錄（舊的數學紀錄沒有 s 欄位）
+function subjSec(c, s, title, note) {
+  const p = P(c, s), lv = SUBJ[s].levels, log = c.log.filter(x => (x.s || 'math') === s), ok = log.filter(x => x.ok).length;
   const byL = {};
   log.forEach(x => { byL[x.L] = byL[x.L] || [0, 0]; byL[x.L][0]++; if (x.ok) byL[x.L][1]++; });
+  const mistakes = log.filter(x => !x.ok).slice(-5).reverse();
+  return `<div class="psec">${title}（會依答題自動升降）</div>
+    <div class="prow"><span>目前</span><span>${pb('p-level', c.id, -1, '−', 'light', s)} <b>Lv${p.level} ${lv[p.level]}</b> ${pb('p-level', c.id, 1, '+', 'light', s)}</span></div>
+    <div class="prow"><span>最低</span><span>${pb('p-min', c.id, -1, '−', 'light', s)} <b>Lv${p.minLevel}</b> ${pb('p-min', c.id, 1, '+', 'light', s)}</span>
+      <span>最高</span><span>${pb('p-max', c.id, -1, '−', 'light', s)} <b>Lv${p.maxLevel}</b> ${pb('p-max', c.id, 1, '+', 'light', s)}</span></div>
+    ${note ? `<div class="pnote">${note}</div>` : ''}
+    <div class="prow"><span>累計</span><b>${log.length} 題，一次答對 ${log.length ? Math.round(ok / log.length * 100) : 0}%</b></div>
+    ${Object.keys(byL).length ? `<table class="ptable"><tr><th>題型</th><th>題數</th><th>一次答對</th></tr>
+      ${Object.keys(byL).sort((a, b) => a - b).map(L => `<tr><td>Lv${L} ${lv[L]}</td><td>${byL[L][0]}</td><td>${Math.round(byL[L][1] / byL[L][0] * 100)}%</td></tr>`).join('')}</table>` : ''}
+    ${mistakes.length ? `<div class="pnote">最近答錯</div>${mistakes.map(m => `<div class="mist">${esc(m.q)}　正確：<b>${esc(m.ans)}</b>　選過：${m.picks.map(esc).join('、') || '—'}</div>`).join('')}` : ''}`;
+}
+function pCard(c) {
+  const u = U(c), rem = Math.max(0, remaining(c));
+  const fl = c.log.filter(x => x.s === 'focus');
   const days = [];
   for (let i = 6; i >= 0; i--) { const dt = new Date(); dt.setDate(dt.getDate() - i); const k = fmt(dt); days.push([k.slice(5), Math.round(((S.data.usage[k] || {})[c.id] || { sec: 0 }).sec / 60)]); }
   const maxM = Math.max(30, ...days.map(d => d[1]));
-  const mistakes = log.filter(x => !x.ok).slice(-8).reverse();
   return `<div class="pcard">
     <h3><img class="px" src="${avatarURL(c.avatar)}" width="40" height="40"><input class="pname" data-act="p-name" data-id="${c.id}" value="${esc(c.name)}"></h3>
     <div class="psec">基本設定</div>
@@ -981,11 +1267,13 @@ function pCard(c) {
     <div class="prow"><span>每日上限</span><span>${pb('p-limit', c.id, -5, '−5')} <b>${c.limit} 分鐘</b> ${pb('p-limit', c.id, 5, '+5')}</span></div>
     <div class="prow"><span>今天</span><b>已玩 ${Math.floor(u.sec / 60)} 分，剩 ${Math.ceil(rem / 60)} 分${u.extra ? `（含加時 ${u.extra} 分）` : ''}</b></div>
     <div class="prow">${pb('p-extra', c.id, 10, '今天多 10 分鐘', '')}${pb('p-resettoday', c.id, 0, '重設今天時間')}${pb('p-endtoday', c.id, 0, '今天到此為止', 'red')}</div>
-    <div class="psec">數學程度（會依答題自動升降）</div>
-    <div class="prow"><span>目前</span><span>${pb('p-level', c.id, -1, '−')} <b>Lv${c.level} ${LEVELS[c.level]}</b> ${pb('p-level', c.id, 1, '+')}</span></div>
-    <div class="prow"><span>最低</span><span>${pb('p-min', c.id, -1, '−')} <b>Lv${c.minLevel}</b> ${pb('p-min', c.id, 1, '+')}</span>
-      <span>最高</span><span>${pb('p-max', c.id, -1, '−')} <b>Lv${c.maxLevel}</b> ${pb('p-max', c.id, 1, '+')}</span></div>
-    <div class="pnote">減法是 Lv8：把「最高」調到 8 以上才會出現。</div>
+    <div class="psec">學習紀錄</div>
+    <div class="prow"><span>收集</span><b>⭐${c.stars}　木頭 ${c.wood}　石頭 ${c.stone}　沙岩 ${c.sand}　玻璃 ${c.glass}</b></div>
+    <div class="pnote">最近 7 天遊玩分鐘</div>
+    <div class="bars">${days.map(([d, m]) => `<div class="bar"><span>${m}</span><i style="height:${m / maxM * 60}px"></i><span>${d}</span></div>`).join('')}</div>
+    ${subjSec(c, 'math', '數學草原', '減法是 Lv8：把「最高」調到 8 以上才會出現。')}
+    ${subjSec(c, 'zhuyin', '注音沙漠', 'Lv1–4 認 37 個符號，Lv5–7 練拼音和聲調。')}
+    ${subjSec(c, 'eng', '英文雪原', 'Lv1–3 字母與自然發音，Lv4–6 單字。')}
     <div class="psec">專注力礦洞（會依表現自動升降，Lv1–5）</div>
     ${Object.entries(FGAMES).map(([id, f]) => {
       const xs = fl.filter(x => x.g === id);
@@ -993,21 +1281,22 @@ function pCard(c) {
         <span>${xs.length} 局${xs.length ? `，表現好 ${Math.round(xs.filter(x => x.ok).length / xs.length * 100)}%` : ''}</span></div>`;
     }).join('')}
     <div class="pnote">最近：${fl.slice(-3).reverse().map(x => `${FGAMES[x.g].name}（${esc(x.q)}）`).join('、') || '還沒有紀錄'}</div>
-    <div class="psec">學習紀錄</div>
-    <div class="prow"><span>數學累計</span><b>${log.length} 題，一次答對 ${log.length ? Math.round(ok / log.length * 100) : 0}%　⭐${c.stars}　木頭 ${c.wood}　石頭 ${c.stone}</b></div>
-    <div class="pnote">最近 7 天遊玩分鐘</div>
-    <div class="bars">${days.map(([d, m]) => `<div class="bar"><span>${m}</span><i style="height:${m / maxM * 60}px"></i><span>${d}</span></div>`).join('')}</div>
-    <table class="ptable"><tr><th>題型</th><th>題數</th><th>一次答對</th></tr>
-      ${Object.keys(byL).sort((a, b) => a - b).map(L => `<tr><td>Lv${L} ${LEVELS[L]}</td><td>${byL[L][0]}</td><td>${Math.round(byL[L][1] / byL[L][0] * 100)}%</td></tr>`).join('') || '<tr><td colspan="3">還沒有紀錄</td></tr>'}</table>
-    <div class="pnote">最近答錯的題目</div>
-    ${mistakes.map(m => `<div class="mist">${esc(m.q)}　正確：<b>${m.ans}</b>　選過：${m.picks.join('、') || '—'}</div>`).join('') || '<div class="mist">目前沒有 👍</div>'}
   </div>`;
+}
+function recCard() {
+  const sel = S.recSel || 'ㄅ', all = [...ZY_INIT + ZY_FIN];
+  return `<div class="pcard" style="grid-column:1/-1"><h3>🎙 注音錄音</h3>
+    <div class="pnote">電腦語音念單一個注音不太準。點一個符號，按「錄音」後清楚念一次（約 2 秒），孩子玩的時候就會聽到你的聲音。綠色是已經錄好的。錄音只存在這台 iPad，兩台要各錄一次。</div>
+    <div class="recgrid">${all.map(s => `<button class="pbtn light ${REC.has(s) ? 'has' : ''} ${s === sel ? 'sel' : ''}" data-act="p-recsel" data-v="${s}">${s}</button>`).join('')}</div>
+    <div class="prow"><span>目前：<b style="font-size:26px">${sel}</b>（${ZY[sel][1]}的 ${sel}）${S.recBusy ? '　<b style="color:#b84a3a">🔴 錄音中…請念出來</b>' : ''}</span>
+      <span>${pb('p-rec', '', 0, '🎙 錄音', '', sel)} ${pb('p-recplay', '', 0, '▶ 試聽', 'light', sel)} ${REC.has(sel) ? pb('p-recdel', '', 0, '刪除', 'red', sel) : ''}</span></div>
+    <div class="pnote">已錄 ${all.filter(s => REC.has(s)).length} / 37。沒錄的符號會用電腦語音代替。</div></div>`;
 }
 function renderParent() {
   const prev = document.querySelector('.parent'), top = prev ? prev.scrollTop : 0;
   S.screen = 'parent';
   app.innerHTML = `<div class="screen parent"><div class="ptop"><span>⚙ 家長後台</span><button class="pbtn light" data-act="logout">回到遊戲 ▶</button></div>
-    <div class="pcards">${S.data.children.map(pCard).join('')}
+    <div class="pcards">${S.data.children.map(pCard).join('')}${recCard()}
       <div class="pcard"><h3>其他設定</h3>
         <div class="prow"><span>家長密碼</span>${pb('p-pin', '', 0, '變更密碼')}</div>
         <div class="prow"><span>清除所有進度與紀錄</span>${pb('p-reset', '', 0, '全部重設', 'red')}</div>
@@ -1016,8 +1305,12 @@ function renderParent() {
   document.querySelector('.parent').scrollTop = top;
 }
 function parentAct(a, c, d, v) {
-  const u = c ? U(c) : null;
+  const u = c ? U(c) : null, p = c ? P(c, v) : null, top = SUBJ[v] ? SUBJ[v].levels.length - 1 : 9;
   switch (a) {
+    case 'p-recsel': S.recSel = v; break;
+    case 'p-rec': if (!S.recBusy) recordSym(v); return;
+    case 'p-recplay': sayParts([{ sym: v }]); return;
+    case 'p-recdel': deleteRec(v).then(renderParent); return;
     case 'p-flv': c.focus[v] = Math.max(1, Math.min(5, c.focus[v] + d)); break;
     case 'p-age': c.age = Math.max(3, Math.min(12, c.age + d)); break;
     case 'p-avatar': c.avatar = d; break;
@@ -1025,9 +1318,9 @@ function parentAct(a, c, d, v) {
     case 'p-extra': u.extra += d; break;
     case 'p-resettoday': u.sec = 0; u.extra = 0; break;
     case 'p-endtoday': u.sec = (c.limit + u.extra) * 60; break;
-    case 'p-level': c.level = Math.max(1, Math.min(9, c.level + d)); c.minLevel = Math.min(c.minLevel, c.level); c.maxLevel = Math.max(c.maxLevel, c.level); break;
-    case 'p-min': c.minLevel = Math.max(1, Math.min(c.maxLevel, c.minLevel + d)); c.level = Math.max(c.level, c.minLevel); break;
-    case 'p-max': c.maxLevel = Math.max(c.minLevel, Math.min(9, c.maxLevel + d)); c.level = Math.min(c.level, c.maxLevel); break;
+    case 'p-level': p.level = Math.max(1, Math.min(top, p.level + d)); p.minLevel = Math.min(p.minLevel, p.level); p.maxLevel = Math.max(p.maxLevel, p.level); break;
+    case 'p-min': p.minLevel = Math.max(1, Math.min(p.maxLevel, p.minLevel + d)); p.level = Math.max(p.level, p.minLevel); break;
+    case 'p-max': p.maxLevel = Math.max(p.minLevel, Math.min(top, p.maxLevel + d)); p.level = Math.min(p.level, p.maxLevel); break;
     case 'p-pin': {
       const p = prompt('輸入新的 4 位數密碼');
       if (p === null) return;
@@ -1060,8 +1353,8 @@ app.addEventListener('click', e => {
     case 'biome': {
       const b = BIOMES.find(x => x.id === v);
       if (!b.open) { speak(`${b.name}還在建造中，快要開放囉！`); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); return; }
-      SFX.tap(); speak(b.say);
-      if (b.id === 'math') startGame(); else renderCave();
+      SFX.tap();
+      if (SUBJ[b.id]) startGame(b.id, b.say); else { speak(b.say); renderCave(); }
       break;
     }
     case 'again': if (remaining(S.child) <= 0) return goodbye(); S.again(); break;
@@ -1075,7 +1368,7 @@ app.addEventListener('click', e => {
     case 'mz': if (S.fg && S.fg.game === 'maze') mazeTo(S.fg.pos + d); break;
     case 'house': SFX.tap(); renderHouse(); break;
     case 'village': speak('家族村莊還在建造中，之後大家蓋的房子都會住在一起喔！'); break;
-    case 'say': speak(S.game.q.say); break;
+    case 'say': sayParts(S.game.q.replay || qParts(S.game.q)); break;
     case 'ans': onAnswer(+v, el); break;
     case 'buyhint': buyHint(); break;
     case 'parent': renderGate(); break;
@@ -1126,6 +1419,7 @@ document.addEventListener('visibilitychange', save);
 S.data = load();
 initArt();
 renderLogin();
+loadRecs();
 
 // 放到網址上才會啟用離線快取；直接開檔案時略過
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
