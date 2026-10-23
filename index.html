@@ -1530,38 +1530,38 @@ function genEN(L) {
   switch (L) {
     case 1: {
       const l = pick([...ABC]);
-      return { parts: [{ text: '聽聽看，是哪一個字母？' }, { text: lname(l), en: true }], replay: [{ text: lname(l), en: true }], display: '是哪個字母？', visual: LISTEN,
+      return { parts: [{ text: 'Listen. Which letter is it?', en: true }, { text: lname(l), en: true }], replay: [{ text: lname(l), en: true }], display: '是哪個字母？', visual: LISTEN,
         hint: tipWord(LWORD[l], true), hintParts: [{ text: lname(l), en: true }, { text: LWORD[l], en: true }],
         answer: l, options: letterOpts(l, 3, ABC), optClass: 'word', ansParts: [{ text: lname(l), en: true }], rec: `聽音找 ${l}` };
     }
     case 2: {
       const l = pick([...ABC]), s = l.toLowerCase();
-      return { parts: [{ text: '找出小寫的' }, { text: lname(l), en: true }], replay: [{ text: lname(l), en: true }], display: `${l} → ?`, dispClass: 'en', visual: '',
+      return { parts: [{ text: 'Find the small letter', en: true }, { text: lname(l), en: true }], replay: [{ text: lname(l), en: true }], display: `${l} → ?`, dispClass: 'en', visual: '',
         hint: tipWord(LWORD[l]), hintParts: [{ text: LWORD[l], en: true }],
         answer: s, options: letterOpts(s, 4, ABC.toLowerCase()), optClass: 'word', ansParts: [{ text: lname(l), en: true }], rec: `${l} 的小寫` };
     }
     case 3: {
       const l = pick([...ABC.replace('X', '')]), w = LWORD[l];
-      return { parts: [{ text: '這是' }, { text: w, en: true }, { text: '。第一個字母是什麼？' }], replay: [{ text: w, en: true }], display: '第一個字母？', visual: `<div class="bigemo">${EMO[w]}</div>`,
+      return { parts: [{ text: 'This is', en: true }, { text: w, en: true }, { text: 'What is the first letter?', en: true }], replay: [{ text: w, en: true }], display: '第一個字母？', visual: `<div class="bigemo">${EMO[w]}</div>`,
         hint: tipWord(w), hintParts: [{ text: w, en: true, rate: .45 }],
         answer: l.toLowerCase(), options: letterOpts(l.toLowerCase(), 4, ABC.toLowerCase()), optClass: 'word', ansParts: [{ text: w, en: true }], rec: `${w} 的第一個字母` };
     }
     case 4: {
       const pool = Object.keys(EMO).filter(w => w !== 'yo-yo'), w = pick(pool);
-      return { parts: [{ text: '聽聽看，是哪一個？' }, { text: w, en: true }], replay: [{ text: w, en: true }], display: '是哪一個？', visual: LISTEN,
+      return { parts: [{ text: 'Listen. Which one is it?', en: true }, { text: w, en: true }], replay: [{ text: w, en: true }], display: '是哪一個？', visual: LISTEN,
         hint: `<div class="tip"><span class="en">${w}</span></div>`, hintParts: [{ text: w, en: true, rate: .5 }],
         answer: w, options: shuffle([w, ...shuffle(pool.filter(x => x !== w)).slice(0, 3)]), optClass: 'emo', optLabel: x => EMO[x],
         ansParts: [{ text: w, en: true }], ansLabel: EMO[w], rec: `聽 ${w} 選圖` };
     }
     case 5: {
       const w = pick(CVC);
-      return { parts: [{ text: '這是什麼？選出正確的英文。' }], display: '這是什麼？', visual: `<div class="bigemo">${EMO[w]}</div>`,
+      return { parts: [{ text: 'What is this? Choose the right word.', en: true }], display: '這是什麼？', visual: `<div class="bigemo">${EMO[w]}</div>`,
         hint: `<div class="tip"><span class="emo">${EMO[w]}</span><span>🔊</span></div>`, hintParts: [{ text: w, en: true, rate: .6 }],
         answer: w, options: wordOpts(w, CVC), optClass: 'word', ansParts: [{ text: w, en: true }], rec: `看圖選 ${w}` };
     }
     case 6: {
       const w = pick(CVC), i = ri(0, 2), l = w[i], vowel = 'aeiou'.includes(l);
-      return { parts: [{ text: '少了哪一個字母？' }, { text: w, en: true }], replay: [{ text: w, en: true }],
+      return { parts: [{ text: 'Which letter is missing?', en: true }, { text: w, en: true }], replay: [{ text: w, en: true }],
         display: [...w].map((c, k) => k === i ? '_' : c).join(' '), dispClass: 'en', visual: `<div class="bigemo">${EMO[w]}</div>`,
         hint: `<div class="tip"><span class="emo">${EMO[w]}</span><span>🔊 ${zy('慢慢聽')}</span></div>`, hintParts: [{ text: w, en: true, rate: .4 }],
         answer: l, options: letterOpts(l, 4, vowel ? 'aeiou' : 'bcdfghjklmnprstvwz'), optClass: 'word', ansParts: [{ text: w, en: true }], rec: `${w} 少了 ${l}` };
@@ -1795,8 +1795,11 @@ function updateHud() {
 const TM = new Set();
 function later(fn, ms) { const id = setTimeout(() => { TM.delete(id); fn(); }, ms); TM.add(id); return id; }
 function clearLater() { TM.forEach(clearTimeout); TM.clear(); }
+// 換到別的畫面時，上一個畫面還沒念完的話立刻停掉
+let mountedScreen = '';
 function mount(html) {
   clearLater();
+  if (S.screen !== mountedScreen) { stopVoice(); mountedScreen = S.screen; }
   app.innerHTML = html;
   if (S.child) updateHud();
   if (S.sunset && app.firstElementChild) app.firstElementChild.classList.add('sunset');
@@ -2058,8 +2061,11 @@ function onAnswer(i, el) {
   judge(g.q.options[i] === g.q.answer, el, g.q.options[i]);
 }
 // 點選題和口說題共用：答對、第 1 次錯再試、第 2 次錯給提示、第 3 次錯公布答案
+// 英文關卡用英文稱讚和鼓勵（家長指定的句子，畫面上附中文）
+const EN_PRAISE = [['Correct!', '正確！'], ["That's right!", '沒錯！'], ['You got it!', '你答對了！']];
+const EN_TRY = [['Good try!', '很棒的嘗試！'], ['Nice effort!', '很努力喔！'], ['Thank you for trying!', '謝謝你願意試試看！'], ['I love that you tried!', '我好喜歡你勇於嘗試！'], ['Almost! Think about it and try again.', '差一點點！想一下再試一次。']];
 function judge(ok, el, v) {
-  const g = S.game, c = S.child, q = g.q;
+  const g = S.game, c = S.child, q = g.q, en = g.subject === 'eng';
   g.attempts++;
   if (ok) {
     g.state = 'done'; SFX.ok(); el.classList.add('good');
@@ -2067,20 +2073,29 @@ function judge(ok, el, v) {
     c.totalCorrect++;
     if (first) { c.stars++; U(c).stars++; g.starsEarned++; g.correctFirst++; }
     const praise = first ? pick(['答對了！', '好厲害！', '太棒了！', '完全正確！']) : pick(['答對了！你沒有放棄，好棒！', '對了！越來越厲害！']);
-    bubble(first ? praise + ' +1 ⭐' : praise); speak(praise); setDog('happy');
+    if (en) { const [e, zh] = pick(EN_PRAISE); bubble(`${e}（${zh}）${first ? ' +1 ⭐' : ''}`); speak(e, { en: true }); }
+    else { bubble(first ? praise + ' +1 ⭐' : praise); speak(praise); }
+    setDog('happy');
     logQ(first); adapt(first ? 'first' : 'ok');
     later(() => hiFive(() => { g.idx++; nextQ(); }), 900);
   } else {
     SFX.no(); g.wrong.push(v);
     if (!q.speak) el.classList.add('off');
     el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
-    if (g.attempts === 1) { bubble(q.speak ? '再說一次看看！' : '再想想看喔！'); dogSay([{ text: q.speak ? '沒關係，再說一次看看！' : '沒關係，小汪陪你再想想看！' }], null, 'sad'); }
+    if (en && g.attempts < 3) {
+      const [e, zh] = pick(g.attempts === 1 ? EN_TRY : EN_TRY.slice(0, 4));
+      if (g.attempts === 2) showHint();
+      bubble(`${e}（${zh}）${g.attempts === 2 ? ' 💡' : ''}`);
+      dogSay([{ text: e, en: true }, ...(g.attempts === 2 ? q.hintParts || [] : [])], null, 'sad');
+    }
+    else if (g.attempts === 1) { bubble(q.speak ? '再說一次看看！' : '再想想看喔！'); dogSay([{ text: q.speak ? '沒關係，再說一次看看！' : '沒關係，小汪陪你再想想看！' }], null, 'sad'); }
     else if (g.attempts === 2) { showHint(); bubble('一起看提示 💡'); dogSay([{ text: '別擔心，我們一起看提示！' }, ...(q.hintParts || [])], null, 'sad'); }
     else {
       g.state = 'done';
       document.querySelectorAll('.ans').forEach(b => { if (q.options[+b.dataset.v] === q.answer) { b.classList.remove('off'); b.classList.add('reveal'); } });
       bubble(q.speak ? '很棒的嘗試！👍' : `答案是 ${q.ansLabel || q.answer}`, 2400);
-      dogSay(q.revealParts || [{ text: '答案是' }, ...(q.ansParts || [{ text: String(q.answer) }]), { text: '，下次一定可以！' }]);
+      dogSay(q.revealParts || (en ? [{ text: 'The answer is', en: true }, ...(q.ansParts || [{ text: String(q.answer), en: true }]), { text: 'Nice effort!', en: true }]
+        : [{ text: '答案是' }, ...(q.ansParts || [{ text: String(q.answer) }]), { text: '，下次一定可以！' }]));
       logQ(false); adapt('fail');
       later(() => { g.idx++; nextQ(); }, 2800);
     }
@@ -2115,7 +2130,7 @@ function showResult(r) {
       ${r.bonus ? `<div class="lvup">${zy(r.bonus)}</div>` : ''}${r.up ? `<div class="lvup">${zy(r.up)}</div>` : ''}${r.quest ? `<div class="badge">${zy(r.quest)}</div>` : ''}
       ${canPlace(c) ? `<div class="badge">🏠 ${zy('有新材料了！去「我的家」把它蓋上去吧')}</div>` : ''}
       ${newBadges.map(b => `<div class="badge">🏅 ${zy(b.name)}</div>`).join('')}
-      <div class="row"><button class="btn green big" data-act="again">${zy('再玩一次')} ▶</button><button class="btn orange" data-act="house">🏠 ${zy('我的家')}</button><button class="btn" data-act="${r.back}">${zy('返回')}</button></div>
+      <div class="row"><button class="btn green big" data-act="again">▶ ${zy('再玩一次')}</button><button class="btn orange" data-act="house">🏠 ${zy('我的家')}</button><button class="btn" data-act="${r.back}">${zy('返回')}</button></div>
     </div></div>`);
   speak(r.say + (r.quest ? '今天四個地方都冒險過了，任務完成！打開寶箱！' : '') + (canPlace(c) ? '有新材料了，可以去我的家蓋房子喔！' : '') + (newBadges.length ? `還拿到新徽章：${newBadges.map(b => b.name).join('、')}！` : ''));
 }
@@ -2153,7 +2168,7 @@ function renderHouse(opt = {}) {
   }
   mount(`<div class="screen sky">${hud('tomap')}
     ${cheer ? `<div class="badge hcheer">🎉 ${zy(cheer)}</div>` : ''}<div class="hmsg">${zy(msg)}</div>${body}${pal}
-    <div class="mapbar"><button class="btn green big" data-act="tomap">${zy('去冒險拿材料')} ▶</button><button class="btn orange big" data-act="garden">${questComplete(c) ? '🌳' : '🔒'} ${zy('家園模式')}</button></div>${petBuddy()}</div>`);
+    <div class="mapbar"><button class="btn green big" data-act="tomap">▶ ${zy('去冒險拿材料')}</button><button class="btn orange big" data-act="garden">${questComplete(c) ? '🌳' : '🔒'} ${zy('家園模式')}</button></div>${petBuddy()}</div>`);
   if (opt.built) SFX.win();
   if (!opt.quiet || opt.built) speak(say);
   if (!all) { fitHouse(); setupHouseDrag(); }
@@ -2494,19 +2509,24 @@ function gardenTick(c) {
   const u = U(c);
   u.gsec = (u.gsec || 0) + 1;
   const t = document.getElementById('gtime'); if (t) t.innerHTML = gTime(c);
-  if (u.gsec >= gSec(c)) { save(); renderHouse({ quiet: true }); speak('今天的家園時間用完了，明天再來布置吧！'); }
+  if (u.gsec >= gSec(c) && !document.getElementById('gbye')) {
+    save(); S.screen = 'gardenbye';
+    document.querySelector('.screen').insertAdjacentHTML('beforeend', `<div class="fishq" id="gbye"><div class="fqbox card2"><div class="fname">⏰ ${zy('家園時間到了')}</div>
+      <div class="fmeta">${zy('今天的家園時間用完了，明天再來布置吧！')}</div><div class="row"><button class="btn green big" data-act="house">👋 ${zy('再見')}</button></div></div></div>`);
+    speak('今天的家園時間用完了，明天再來布置吧！');
+  }
 }
 
 function goodbye() {
   const c = S.child, u = U(c);
   clearLater();
-  S.screen = 'bye'; S.game = null; S.fg = null; S.endPending = false; save();
+  S.screen = 'bye'; S.game = null; S.fg = null; S.endPending = false; save(); stopVoice(); mountedScreen = 'bye';
   const tws = Array.from({ length: 24 }, () => `<i class="tw" style="left:${ri(2, 98)}%;top:${ri(2, 60)}%;animation-delay:-${ri(0, 24) / 10}s"></i>`).join('');
   app.innerHTML = `<div class="screen night">${tws}<img class="moon px" src="${SPR.moon}">
     <div class="panel"><div style="position:relative"><img class="byeface px" src="${avatarURL(c.avatar)}"><div class="zzz">Zzz</div></div>
       <div class="title sm">${zy('今天玩得好棒！')}</div><div class="sub">${zy('太陽下山了，我們明天見')} 🌙</div>
       <div class="rewards"><div class="rw"><img class="px" src="${SPR.star}">+${u.stars}</div><div class="rw">${zy([u.q ? `答了 ${u.q} 題` : '', u.g ? `玩了 ${u.g} 局` : ''].filter(Boolean).join('・') || '明天繼續')}</div></div>
-      <button class="btn green big" data-act="logout">${zy('晚安')} 👋</button></div></div>`;
+      <button class="btn green big" data-act="logout">👋 ${zy('晚安')}</button></div></div>`;
   speak(`${c.name}，今天玩得好棒！太陽下山了，我們明天見，晚安！`);
 }
 
@@ -3155,7 +3175,7 @@ async function duelOpen() {
     S.duelInvite = room;
     duelShell(`<div class="panel"><img class="px duelav" src="${avatarURL(room.p[0].av)}">
       <div class="title sm">${zy(room.p[0].name + ' 邀請你玩翻牌對戰！')}</div><div class="lvup">${zy(DUEL_MODES[room.mode][0] + '：' + DUEL_MODES[room.mode][1])}</div>
-      <div class="row"><button class="btn green big" data-act="duel-join">${zy('加入')} ▶</button></div></div>`);
+      <div class="row"><button class="btn green big" data-act="duel-join">▶ ${zy('加入')}</button></div></div>`);
     speak('有人邀請你一起玩翻牌對戰！按加入就可以開始囉！');
     return;
   }
@@ -3317,7 +3337,7 @@ function startReact() {
   const L = flv('react'), [N, show, gap, ratio, holes] = REACT[L];
   S.fg = { game: 'react', L, N, show, gap, ratio, holes, k: 0, pigs: 0, hits: 0, errors: 0, cur: null, last: -1 };
   focusShell('看到小豬就點！', false, `<div class="demo"><div><img class="px" src="${SPR.pig}"><span class="okc">✔ ${zy('點牠')}</span></div>
-    <div><img class="px" src="${SPR.mon}"><span class="ngc">✘ ${zy('不要點')}</span></div><button class="btn green big" data-act="rstart">${zy('準備好了')} ▶</button></div>`);
+    <div><img class="px" src="${SPR.mon}"><span class="ngc">✘ ${zy('不要點')}</span></div><button class="btn green big" data-act="rstart">▶ ${zy('準備好了')}</button></div>`);
   speak(FGAMES.react.say);
 }
 function runReact() {
@@ -3529,7 +3549,8 @@ function recCard() {
 function renderParent() {
   const prev = document.querySelector('.parent'), top = prev ? prev.scrollTop : 0;
   S.screen = 'parent';
-  app.innerHTML = `<div class="screen parent"><div class="ptop"><span>⚙ 家長後台</span><button class="pbtn light" data-act="logout">回到遊戲 ▶</button></div>
+  if (mountedScreen !== 'parent') { stopVoice(); mountedScreen = 'parent'; }
+  app.innerHTML = `<div class="screen parent"><div class="ptop"><span>⚙ 家長後台</span><button class="pbtn light" data-act="logout">▶ 回到遊戲</button></div>
     <div class="pcards">${S.data.children.map(pCard).join('')}${recCard()}
       <div class="pcard"><h3>其他設定</h3>
         ${voiceRow('中文聲音', 'zh', voiceList(/zh[-_]TW/i), ZH)}
@@ -3688,7 +3709,7 @@ app.addEventListener('click', e => {
       if (!b.open) { speak(`${b.name}還在建造中，快要開放囉！`); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); return; }
       if (blocked(S.child, b.id)) return restHere(el);
       SFX.tap();
-      if (SUBJ[b.id]) startGame(b.id, b.say); else { speak(b.say); renderCave(); }
+      if (SUBJ[b.id]) startGame(b.id, b.say); else { renderCave(); speak(b.say); }
       break;
     }
     case 'again':
@@ -3780,9 +3801,10 @@ function showLock(ch) {
 }
 // 第一次使用（或換新 iPad）時，由家長幫每個孩子建立帳號
 function renderSetup() {
+  stopVoice(); mountedScreen = 'setup';
   S.screen = 'setup'; S.su = { age: 5, avatar: avObj(S.data.children.length), lock: '' };
   const kids = S.data.children;
-  app.innerHTML = `<div class="screen parent"><div class="ptop"><span>👋 設定孩子的帳號</span>${kids.length ? '<button class="pbtn light" data-act="logout">回到首頁 ▶</button>' : ''}</div>
+  app.innerHTML = `<div class="screen parent"><div class="ptop"><span>👋 設定孩子的帳號</span>${kids.length ? '<button class="pbtn light" data-act="logout">▶ 回到首頁</button>' : ''}</div>
     <div class="pcards">
       <div class="pcard" style="grid-column:1/-1">
         <div class="pnote">先幫每個孩子建立帳號。孩子不用打字，之後點自己的頭像就能進去，每個人的星星、材料、等級和紀錄都分開。換新 iPad 的話，可以直接用舊 iPad 的「備份進度」檔案還原。</div>
@@ -3802,7 +3824,7 @@ function renderSetup() {
       <div class="pcard"><h3>已建立的孩子</h3>
         ${kids.map(c => `<div class="prow"><span><img class="px" src="${avatarURL(c.avatar)}" width="32" height="32" style="vertical-align:middle"> <b>${esc(c.name)}</b>（${c.age} 歲）</span><span>${c.lock ? '🔒 ' + LOCKS.find(l => l[0] === c.lock)[1] : ''}</span></div>`).join('') || '<div class="pnote">還沒有，請在左邊新增。</div>'}
         <div class="prow"><span>家長密碼（4 位數字）</span><input class="pname" id="spin" inputmode="numeric" maxlength="4" value="${esc(S.data.pin)}" style="width:110px"></div>
-        <div class="prow">${pb('su-done', '', 0, '完成，開始玩 ▶', '')}</div>
+        <div class="prow">${pb('su-done', '', 0, '▶ 完成，開始玩', '')}</div>
       </div>
     </div></div>`;
 }
