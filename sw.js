@@ -1,7 +1,7 @@
 // 離線快取：第一次開啟時把整個遊戲存到 iPad，之後沒有網路也能玩。
 // 更新 index.html 後，iPad 連網開啟時會在背景下載新版，再下一次開啟就是新版。
 // 新增或刪除檔案時，記得更新 FILES 並把 VERSION 改掉（例如 v3）。
-const VERSION = 'v6';
+const VERSION = 'v7';
 const CACHE = 'block-island-' + VERSION;
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png',
   ...['dog', 'cat', 'rabbit', 'bear', 'tiger', 'giraffe'].map(p => `./img/pet-${p}.webp`),

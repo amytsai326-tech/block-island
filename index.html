@@ -375,8 +375,8 @@ i.blk.tryon{width:120px;height:120px;display:block}
 /* 頭像框：框的圖是 320×464，頭像放在中間的洞裡 */
 .favatar{position:relative;aspect-ratio:320/464;width:70px;flex:none}
 .favatar.plain{aspect-ratio:1}
-.favatar .fa-face{position:absolute;left:13%;top:28%;width:76%;aspect-ratio:1;object-fit:cover;background:#bfe3ff}
-.favatar.plain .fa-face{left:0;top:0;width:100%;box-shadow:0 0 0 3px #1e1e1e}
+.favatar .fa-face{position:absolute;object-fit:contain;object-position:50% 100%;background:#bfe3ff}
+.favatar.plain .fa-face{left:0;top:0;width:100%;aspect-ratio:1;box-shadow:0 0 0 3px #1e1e1e}
 .favatar .fa-frame{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .favatar.big{width:110px}
 .favatar.small{width:56px}
@@ -834,30 +834,31 @@ async function loadVoicePack() {
   } catch (e) {}
 }
 // 切法要跟 tools/voice-lines.js 一樣：用標點切開；片段裡由長到短找有音檔的詞，找不到的字交給裝置語音
-const VOICE_PUNCT = /[，。！？、：；,.!?:;…～~（）()「」『』\s—–\-]+/;
+// 英文單字裡的「-」不算標點（T-Shirt）；中英文中間的空白拿掉，音檔的名字也是這樣存（紅色T-Shirt）
+const VOICE_PUNCT = /[，。！？、：；,.!?:;…～~（）()「」『』\s—–]+|(?<![A-Za-z])-|-(?![A-Za-z])/;
+const voiceNorm = t => t.replace(/([一-鿿])\s+(?=[A-Za-z])/g, '$1').replace(/([A-Za-z])\s+(?=[一-鿿])/g, '$1');
 function voiceSplit(p) {
   if (p.en || p.sym) return [p];
   const out = [], push = x => out.push({ ...p, ...x });
-  // 句子裡的英文（例如 T-Shirt）用英文的聲音念
-  p.text.split(/([A-Za-z][A-Za-z'\-]*(?: [A-Za-z][A-Za-z'\-]*)*)/).forEach((chunk, k) => {
-    if (k % 2) return push({ text: chunk, en: true });
-    if (!/[^\s，。！？、：；,.!?:;…～~（）()「」『』—–\-]/.test(chunk)) return;
-    if (!VOICE.size) return push({ text: chunk });
-    for (const s of chunk.split(VOICE_PUNCT)) {
-      if (!s) continue;
-      if (!/^[一-鿿0-9]+$/.test(s)) { push({ text: s }); continue; }
-      let buf = '';
-      for (let i = 0; i < s.length;) {
-        let L = Math.min(VOICE_MAX, s.length - i);
-        // 單一個字只在整段就是這個字或是數字時才用音檔，避免把名字拆開來念
-        for (; L > 0; L--) { const w = s.substr(i, L); if (VOICE.has(w) && (L > 1 || s.length === 1 || /\d/.test(w))) break; }
-        if (!L) { buf += s[i++]; continue; }
-        if (buf) { push({ text: buf }); buf = ''; }
-        push({ clip: VOICE.get(s.substr(i, L)) }); i += L;
-      }
-      if (buf) push({ text: buf });
-    }
+  // 沒有音檔的部分：英文用英文的聲音念，中文用裝置的中文聲音
+  const flush = s => s.split(/([A-Za-z][A-Za-z'\-]*(?: [A-Za-z][A-Za-z'\-]*)*)/).forEach((x, k) => {
+    if (k % 2) push({ text: x, en: true }); else if (/[^\s，。！？、：；,.!?:;…～~（）()「」『』—–\-]/.test(x)) push({ text: x });
   });
+  if (!VOICE.size) { flush(p.text); return out.length ? out : [p]; }
+  for (const s of voiceNorm(p.text).split(VOICE_PUNCT)) {
+    if (!s) continue;
+    if (!/^[一-鿿0-9A-Za-z'\-]+$/.test(s)) { flush(s); continue; }
+    let buf = '';
+    for (let i = 0; i < s.length;) {
+      let L = Math.min(VOICE_MAX, s.length - i);
+      // 單一個字只在整段就是這個字或是數字時才用音檔，避免把名字拆開來念
+      for (; L > 0; L--) { const w = s.substr(i, L); if (VOICE.has(w) && (L > 1 || s.length === 1 || /\d/.test(w))) break; }
+      if (!L) { buf += s[i++]; continue; }
+      if (buf) { flush(buf); buf = ''; }
+      push({ clip: VOICE.get(s.substr(i, L)) }); i += L;
+    }
+    if (buf) flush(buf);
+  }
   return out.length ? out : [p];
 }
 // 依序念出多段：{text} 中文、{text, en:true} 英文、{sym} 注音符號（有家長錄音就播錄音）
@@ -1698,8 +1699,11 @@ function checkBadges() {
 const FRAME_NEED = [1, 2, 4, 6, 8, 10, 12, 14, 17, 20]; // 第 n 個頭像框要幾個獎牌
 const frameImg = n => `img/frame-${n}.webp`;
 // 有頭像框時，把頭像放在框的中間；沒有就只有頭像
+// 每個頭像框中間透明洞的位置（左、上、寬、高，%），人像放在洞裡，稍微放大一點藏到框下面
+const FRAME_HOLE = [null, [17.8,25.4,70.6,53.2],[17.9,25.8,69.4,53.9],[17.7,26.4,68.2,53.6],[16.0,25.2,67.7,52.3],[13.5,25.6,70.4,54.1],[19.2,26.5,67.8,50.7],[21.9,28.6,62.2,48.6],[22.1,31.8,55.1,42.6],[17.1,29.0,64.5,42.5],[20.6,36.1,54.3,36.1]];
 function framedAvatar(c, cls = '', n = c.frame) {
-  const face = `<img class="${c.avatar && c.avatar.outfit ? '' : 'px'} fa-face" src="${avatarURL(c.avatar)}" alt="">`;
+  const h = FRAME_HOLE[n], pos = h ? `left:${h[0] - h[2] * .04}%;top:${h[1] - h[3] * .04}%;width:${h[2] * 1.08}%;height:${h[3] * 1.08}%` : '';
+  const face = `<img class="${c.avatar && c.avatar.outfit ? '' : 'px'} fa-face" style="${pos}" src="${avatarURL(c.avatar)}" alt="">`;
   return n ? `<div class="favatar ${cls}">${face}<img class="fa-frame" src="${frameImg(n)}" alt=""></div>` : `<div class="favatar plain ${cls}">${face}</div>`;
 }
 
@@ -1836,7 +1840,7 @@ function shopPreview(id) {
   document.querySelector('.screen').insertAdjacentHTML('beforeend', `<div class="fishq" id="shopask"><div class="fqbox card2">
     <div class="fname">${zy(it.name)}</div>${look}<div class="fmeta">${curIcon(it)} ${it.price}</div>
     <div class="row"><button class="btn green big" data-act="buyok" data-v="${id}">${zy('購買')}</button><button class="btn big" data-act="buyno">${zy('返回')}</button></div></div></div>`);
-  speak(`${it.name}要 ${it.price} ${curName(it)}，要買嗎？`);
+  speak(`${it.name}，要 ${it.price} ${curName(it)}，要買嗎？`);
 }
 function shopBuy(id) {
   const c = S.child, it = shopItem(id), wallet = it.cur === 'gold' ? 'gold' : 'stars';
