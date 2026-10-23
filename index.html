@@ -72,7 +72,13 @@ input{user-select:text;-webkit-user-select:text}
   font-size:clamp(18px,2.4vw,26px);box-shadow:0 0 0 3px #1e1e1e;z-index:6;white-space:nowrap;text-shadow:2px 2px 0 #000;animation:pop .4s}
 
 /* 地圖 */
-.mapgrid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:18px;padding:18px 24px 8px;min-height:0}
+.mapgrid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr .62fr;gap:14px 18px;padding:14px 24px 8px;min-height:0}
+/* 釣魚池、金礦山：不算每日任務，格子小一點 */
+.biome.extra .sym{font-size:clamp(30px,5vw,56px)}
+.biome.water{background:repeating-linear-gradient(170deg,rgba(255,255,255,.14) 0 6px,transparent 6px 26px),linear-gradient(#5ec3ff,#2a78c8)}
+.biome.extra.locked::after{content:none}
+.mapbar.small .btn{font-size:clamp(16px,2.2vw,22px);padding:.35em .9em}
+@media (orientation:landscape){.mapgrid{grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr}}
 .biome{position:relative;border:0;font:inherit;color:#fff;cursor:pointer;--tile:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;overflow:hidden;
   box-shadow:0 0 0 4px #1e1e1e,inset 0 -10px 0 rgba(0,0,0,.25)}
 .biome:active{transform:translateY(3px)}
@@ -127,7 +133,16 @@ input{user-select:text;-webkit-user-select:text}
 .badge{background:#c9932a;padding:6px 16px;font-weight:900;font-size:22px;box-shadow:0 0 0 3px #1e1e1e;animation:pop .5s}
 .lvup{font-size:24px;font-weight:900;color:#ffe14d;text-shadow:2px 2px 0 #000}
 .house{display:grid;grid-template-columns:repeat(12,var(--hb));--hb:min(4.4vw,4.8vh);margin:0 auto}
-.hrow{flex:1;min-height:0;display:flex;gap:28px;align-items:center;justify-content:center}
+.hrow{flex:1;min-height:0;display:flex;flex-wrap:wrap;align-content:center;gap:12px 28px;align-items:center;justify-content:center;overflow:hidden;padding:0 10px}
+.hrow .hpal{flex-basis:100%}
+/* 橫向：材料改放在房子右邊直排，房子大小由 fitHouse() 依剩下的空間決定 */
+@media (orientation:landscape){
+  .hrow{flex-wrap:nowrap}
+  .hrow .hpal{flex-basis:auto;flex-direction:column;flex-wrap:nowrap;gap:8px}
+  .hrow .hsrc{flex-direction:row;gap:8px;padding:4px 10px}
+  .hrow .hsrc .blk{width:40px;height:40px}
+}
+@media (orientation:landscape) and (max-height:600px){.screen .badges{display:none}.hrow .hpal{display:grid;grid-template-columns:auto auto}}
 .hcheer{text-align:center;margin:2px auto 0;font-size:clamp(16px,2.2vw,22px)}
 .town{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:4px 10px;flex:none;max-width:42vw}
 .tb{display:flex;flex-direction:column;align-items:center;background:rgba(0,0,0,.25);padding:6px 8px;box-shadow:0 0 0 3px #1e1e1e}
@@ -171,7 +186,14 @@ input{user-select:text;-webkit-user-select:text}
 .pnote{font-size:14px;color:#7a6a55;padding:6px 2px}
 .av{width:40px;height:40px;cursor:pointer;opacity:.45;box-shadow:0 0 0 2px #3b2f22}
 .av.sel{opacity:1;box-shadow:0 0 0 3px #e8892b}
-.avs{display:flex;gap:8px}
+.avs{display:flex;gap:8px;flex-wrap:wrap}
+.aved{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:4px 0 10px}
+.avbig{width:112px;height:112px;box-shadow:0 0 0 3px #3b2f22;background:#bfe3ff;flex:none}
+.avopts{display:flex;flex-direction:column;gap:6px;flex:1;min-width:240px}
+.avrow{display:flex;align-items:center;gap:10px}
+.avrow>span:first-child{width:4.5em;flex:none;font-weight:700}
+.sw{width:32px;height:32px;border:0;padding:0;cursor:pointer;box-shadow:0 0 0 2px #3b2f22;opacity:.6}
+.sw.sel{opacity:1;box-shadow:0 0 0 3px #e8892b;transform:scale(1.1)}
 .bars{display:flex;gap:8px;align-items:flex-end;height:90px;padding:6px 2px}
 .bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;font-size:12px;height:100%}
 .bar i{display:block;width:100%;background:#6aa84f;min-height:2px}
@@ -269,6 +291,10 @@ input{user-select:text;-webkit-user-select:text}
 /* 注音、英文 */
 .ans.emo{font-size:clamp(44px,7vw,80px);background:#f3ead7;text-shadow:none}
 .ans.zy{font-size:clamp(40px,6vw,70px);letter-spacing:.05em}
+/* 拼音選項照課本直寫，聲調放在最後一個符號的右邊 */
+.ans.zy .zv{display:inline-flex;flex-direction:column;align-items:center;line-height:1.02;position:relative;font-size:.72em;letter-spacing:0;vertical-align:middle}
+.ans.zy .zv i{font-style:normal}
+.ans.zy .zv .tn{position:absolute;right:-.6em;bottom:.15em;font-size:.8em;font-weight:inherit}
 .ans.word{font-size:clamp(30px,4.6vw,54px);text-transform:none}
 .listen{font-size:clamp(70px,12vw,140px);animation:bob 2s ease-in-out infinite}
 .bigemo{font-size:clamp(90px,15vw,170px);line-height:1;filter:drop-shadow(4px 4px 0 rgba(0,0,0,.35))}
@@ -284,7 +310,140 @@ input{user-select:text;-webkit-user-select:text}
 .recgrid .pbtn.sel{outline:3px solid #e8892b;outline-offset:2px}
 
 /* 專注力礦洞 */
-.cavegrid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:18px;padding:18px 24px 20px;min-height:0}
+.cavegrid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr auto;gap:18px;padding:18px 24px 20px;min-height:0}
+.fgame.duelbtn{grid-column:1/-1;flex-direction:row;gap:18px;padding:10px;background:rgba(232,137,43,.35)}
+.fgame.duelbtn .ficon{font-size:44px}
+/* 寵物、釣魚池 */
+.petbuddy{position:absolute;right:10px;bottom:96px;width:min(30vw,195px);background:none;border:0;padding:0;z-index:5;cursor:pointer;animation:bob 2.2s ease-in-out infinite}
+.petbuddy img,.petbig,.petpick img{width:100%;filter:drop-shadow(3px 5px 0 rgba(0,0,0,.25));-webkit-user-drag:none}
+.petbuddy.jump{animation:petjump .6s}
+.petbuddy.spin{animation:petspin .8s}
+@keyframes petjump{40%{transform:translateY(-50px) scale(1.1)}}
+@keyframes petspin{50%{transform:translateY(-30px) rotate(180deg)}100%{transform:rotate(360deg)}}
+.heartpop{position:absolute;left:40%;top:0;font-size:32px;animation:heartup .9s forwards;pointer-events:none}
+@keyframes heartup{to{transform:translateY(-60px);opacity:0}}
+.pondwrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:0;padding:8px 16px}
+.petcard{display:flex;align-items:center;gap:16px;background:rgba(0,0,0,.3);padding:8px 16px;box-shadow:0 0 0 3px #1e1e1e}
+.petbig{width:min(28vw,150px)}
+.petbig.eat{animation:petjump .5s 2}
+.petinfo{display:flex;flex-direction:column;gap:8px;font-weight:900;text-shadow:2px 2px 0 #000}
+.pname2{font-size:24px}.pname2 b{color:#ffe14d}
+.lovebar{position:relative;width:min(40vw,220px);height:26px;background:#3b2f22;box-shadow:0 0 0 3px #1e1e1e}
+.lovebar div{height:100%;background:linear-gradient(#ff8fb1,#e84a7a)}
+.lovebar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px}
+.fscene{position:relative;width:min(94vw,700px);aspect-ratio:16/10;max-height:46vh;flex:none;overflow:hidden;box-shadow:0 0 0 4px #1e1e1e;background:linear-gradient(#8fd3ff,#c9ecff 55%)}
+.fwater{position:absolute;left:0;right:0;top:52%;bottom:0;background:repeating-linear-gradient(172deg,rgba(255,255,255,.16) 0 5px,transparent 5px 22px),linear-gradient(#4ab0f0,#1f6fbf);animation:wave 3s linear infinite;background-size:auto,100% 100%}
+@keyframes wave{to{background-position:60px 0,0 0}}
+.dock{position:absolute;left:0;width:40%;top:62%;height:10%;box-shadow:0 4px 0 rgba(0,0,0,.3);background-size:32px 32px;image-rendering:pixelated}
+.dock::after{content:"";position:absolute;left:12%;right:12%;top:100%;height:120%;background:repeating-linear-gradient(90deg,#5a3f22 0 10px,transparent 10px 60px)}
+.fkid{position:absolute;left:6%;top:16.3%;width:16%;aspect-ratio:14/25;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.3))}
+.fkid.out{aspect-ratio:auto;width:15%;top:15%}
+.fpet{position:absolute;left:23%;top:31%;width:22%;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.25));transition:transform .2s}
+.fpet.want{transform:scale(1.2);filter:drop-shadow(0 0 10px #ffe14d)}
+.fpet.eat{animation:petjump .45s 3}
+.frod{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.fbob{position:absolute;width:3.2%;aspect-ratio:1;margin:-1.6% 0 0 -1.6%;border-radius:50%;background:linear-gradient(#e33 50%,#fff 50%);box-shadow:0 0 0 2px #1e1e1e}
+.fbob.float{animation:bob 1.4s ease-in-out infinite}
+.fbob.bite{animation:dip .35s infinite}
+@keyframes dip{50%{transform:translateY(40%)}}
+.fbub{position:absolute;left:8%;top:12%;background:#fff;color:#1e1e1e;font-weight:900;font-size:clamp(22px,4vw,36px);padding:0 .4em;border-radius:12px;box-shadow:0 0 0 3px #1e1e1e;display:none}
+.fsplash{position:absolute;width:12%;aspect-ratio:2;margin:-3% 0 0 -6%;border-radius:50%;border:3px solid rgba(255,255,255,.9);opacity:0;pointer-events:none}
+.fsplash.on{animation:ring .7s ease-out}
+.fsplash.small{width:7%;margin:-1.75% 0 0 -3.5%}
+.fsplash.big{width:22%;margin:-5.5% 0 0 -11%;border-width:5px}
+@keyframes ring{from{opacity:1;transform:scale(.3)}to{opacity:0;transform:scale(1.3)}}
+.ffish{position:absolute;width:15%;margin-left:-7.5%;z-index:3;touch-action:none;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.3))}
+.ffish.feedme{cursor:grab;animation:wiggle .8s ease-in-out infinite}
+.ffish.drag{animation:none;transform:scale(1.15)}
+@keyframes wiggle{25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+.fhearts{position:absolute;left:24%;top:30%;font-size:clamp(24px,4vw,40px);animation:heartup 1.4s forwards;pointer-events:none}
+.fctl{min-height:76px;display:flex;align-items:center;justify-content:center}
+.holdbtn{touch-action:none;user-select:none;-webkit-user-select:none;display:flex;flex-direction:column;align-items:center;gap:6px}
+.reel{width:200px;height:14px;background:#3b2f22;box-shadow:0 0 0 2px #1e1e1e}
+.reel div{height:100%;width:0;background:linear-gradient(#8ee86a,#3fa82a)}
+.card2{background:#fff6dc;color:#3b2f22;text-shadow:none;min-width:min(80vw,320px)}
+.card2 .title{color:#3b2f22;text-shadow:none}
+.fcardimg{background:#dfe8ee;padding:12px 24px;box-shadow:0 0 0 3px #3b2f22}
+.fcardimg img{width:150px}
+.fname{font-size:28px;font-weight:900}
+.fmeta{font-size:18px;font-weight:700}
+.fqfish{width:72px}
+/* 娃娃屋 */
+.btn.pink{background:#e0669a}
+.doll-bg{background:linear-gradient(#ffd6e7,#ffeef5 60%,#f7d9b5 60%)}
+.dollwrap{flex:1;display:flex;gap:16px;padding:10px 16px;min-height:0;align-items:stretch}
+.dstage{position:relative;flex:none;width:min(36vw,260px);display:flex;align-items:flex-end;justify-content:center;padding-bottom:6%}
+.dollbig{width:100%;aspect-ratio:14/25;filter:drop-shadow(4px 6px 0 rgba(0,0,0,.2))}
+.dollbig.pop{animation:pop .35s}
+.dpic{position:absolute;left:0;top:0;display:flex;flex-direction:column;align-items:center;font-weight:900;color:#7a3a55;font-size:14px}
+.dpic img{width:56px;height:56px;box-shadow:0 0 0 3px #7a3a55;background:#fff}
+.dside{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0;min-height:0}
+.dtabs{display:flex;flex-wrap:wrap;gap:6px}
+.dlist{flex:1;overflow:auto;min-height:0;background:rgba(255,255,255,.55);box-shadow:0 0 0 3px #7a3a55;padding:8px}
+.dopts{display:flex;flex-wrap:wrap;gap:8px}
+.dsub2{font-weight:900;color:#7a3a55;margin:6px 0 4px}
+.dopt{border:0;font:inherit;background:#fff;box-shadow:0 0 0 2px #c9a0b5;padding:6px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:#3b2f22;font-weight:700;font-size:14px;width:88px}
+.dopt img{width:56px;height:56px;object-fit:contain}
+.dopt img.doll{height:84px;width:auto;aspect-ratio:14/25}
+.dopt.sel{box-shadow:0 0 0 4px #e0669a;background:#ffe6f0}
+.sw.big{width:44px;height:44px}
+.dlist .pnote2{color:#7a3a55;text-shadow:none}
+.shopi .doll{height:64px;width:auto;aspect-ratio:14/25}
+@media (orientation:portrait){.dollwrap{flex-direction:column}.dstage{width:auto;height:min(34vh,330px);padding-bottom:0}.dollbig{width:auto;height:100%}}
+/* 金礦山 */
+.minetop{display:flex;gap:16px;justify-content:center;padding-top:8px}
+.pill.big{font-size:24px;padding:4px 14px}
+.minegrid{--mc:min(calc((100vw - 60px) / 7), calc((100vh - 330px) / 6), 96px);display:grid;gap:4px;margin:auto;padding:8px}
+.minegrid.boom{animation:shake .25s 2}
+.mc{width:var(--mc);height:var(--mc);border:0;padding:0;cursor:pointer;position:relative;box-shadow:inset 0 0 0 2px rgba(0,0,0,.35);font-size:calc(var(--mc) * .55);display:flex;align-items:center;justify-content:center;background-size:100% 100%;image-rendering:pixelated}
+.mc.empty{background:#2b2b33;box-shadow:inset 0 0 0 2px #1a1a20;cursor:default}
+.mc.ore{background:#3a3424;cursor:default}
+.mc.blast{animation:pop .4s}
+.mc.glint::after{content:"✨";position:absolute;right:2px;top:0;font-size:calc(var(--mc) * .35);animation:glint 2s ease-in-out infinite;animation-delay:inherit;opacity:0}
+@keyframes glint{0%,60%,100%{opacity:0}75%{opacity:1;transform:scale(1.2)}}
+.mc .bomb{width:70%;animation:pulse .3s infinite}
+.mc .nug{width:55%;animation:pop .5s}
+.mc .nug.big{width:85%;filter:drop-shadow(0 0 6px #ffd83a)}
+.pill .ico{width:1.1em;height:1.1em;vertical-align:-.15em}
+.biome .lv .ico,.sprice .ico,.shopcur .ico,.petpick .ico{width:1.1em;height:1.1em;vertical-align:-.15em}
+/* 家長給的插畫（寵物、特別造型）不要用像素的縮放方式 */
+img[src^="img/"]{image-rendering:auto}
+.ans.kn{font-size:clamp(22px,3.4vw,34px);min-width:clamp(110px,18vw,200px)}
+.bagrow{display:flex;gap:14px;justify-content:center}
+.hmsg.sm{font-size:16px}
+.petpick.no img{filter:grayscale(.6) brightness(.85)}
+.petbuddy{touch-action:none}
+.petbuddy.drag{animation:none;opacity:.85;transform:scale(1.1)}
+.pethide{position:absolute;left:50%;top:-34px;transform:translateX(-50%);white-space:nowrap;font:inherit;font-size:18px;font-weight:900;background:#3b2f22;color:#fff;border:0;padding:4px 8px;box-shadow:0 0 0 2px #1e1e1e;display:none;cursor:pointer}
+.petbuddy.menu .pethide{display:block}
+.petshow{position:absolute;right:10px;bottom:96px;font-size:28px;background:rgba(0,0,0,.35);border:0;box-shadow:0 0 0 3px #1e1e1e;padding:4px 8px;cursor:pointer;z-index:5}
+.fishq{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:20;padding:12px}
+.fqbox{background:#4a8fd8;box-shadow:0 0 0 4px #1e1e1e;padding:14px;display:flex;flex-direction:column;align-items:center;gap:12px;max-width:96vw;max-height:94vh;overflow:auto}
+.fqtop{display:flex;align-items:center;gap:12px}
+.fqfish{font-size:56px}
+.fishq .answers{padding:0;flex-wrap:wrap}
+.petgrid{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:12px 18px;align-content:center;min-height:0}
+.petpick{border:0;font:inherit;color:#fff;font-weight:900;background:rgba(0,0,0,.25);box-shadow:0 0 0 3px #1e1e1e;padding:8px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;text-shadow:2px 2px 0 #000}
+.petpick img{width:min(24vw,140px)}
+.pemo{display:inline-flex;align-items:center;justify-content:center;font-size:min(16vw,96px);line-height:1.2}
+.petbuddy .pemo,.fpet.pemo{font-size:min(14vw,90px)}
+.petpick.sel{box-shadow:0 0 0 5px #ffe14d;background:rgba(255,225,77,.25)}
+.petpick b{color:#ffe14d}
+.pnote2{text-align:center;font-weight:900;padding:6px 0 14px;text-shadow:2px 2px 0 #000}
+@media (orientation:landscape){.pondwrap{flex-direction:row;flex-wrap:wrap}.petgrid{grid-template-columns:repeat(6,1fr)}}
+/* 翻牌對戰 */
+.duel{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:0;padding:8px}
+.duelav{width:96px;height:96px;box-shadow:0 0 0 3px #1e1e1e}
+.dsub{font-size:.5em;font-weight:700;margin-top:4px}
+.dots{font-size:28px;letter-spacing:8px;animation:pulse 1.2s infinite}
+.dhead{display:flex;align-items:center;gap:16px;justify-content:center}
+.dp{display:flex;align-items:center;gap:8px;padding:6px 12px;background:rgba(0,0,0,.35);box-shadow:0 0 0 3px #1e1e1e;font-weight:900;opacity:.55;transition:.2s}
+.dp.on{opacity:1;box-shadow:0 0 0 4px #ffe14d;transform:scale(1.08)}
+.dp img{width:48px;height:48px}
+.dp b{font-size:30px;color:#ffe14d;text-shadow:2px 2px 0 #000}
+.dmid{font-size:26px;font-weight:900;text-shadow:2px 2px 0 #000}
+.card.done.mine{box-shadow:0 0 0 5px #ffe14d}
+.card.done.theirs{box-shadow:0 0 0 5px #5ea8ff}
 .fgame{border:0;font:inherit;color:#fff;cursor:pointer;background:rgba(255,255,255,.08);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
   box-shadow:0 0 0 4px #1e1e1e,inset 0 -8px 0 rgba(0,0,0,.35)}
 .fgame:active{transform:translateY(3px)}
@@ -352,14 +511,14 @@ const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.f
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 /* ---------- 中文字旁加注音 ---------- */
 // 字典由 tools/make-zhuyin.js 依照本檔用到的字自動產生（常用讀音，台灣讀法另外修正）
-/* ZYDICT-START */const ZYDICT = {"方":"ㄈㄤ","塊":"ㄎㄨㄞˋ","學":"ㄒㄩㄝˊ","習":"ㄒㄧˊ","島":"ㄉㄠˇ","登":"ㄉㄥ","入":"ㄖㄨˋ","地":"ㄉㄧˋ","圖":"ㄊㄨˊ","即":"ㄐㄧˊ","將":"ㄐㄧㄤ","開":"ㄎㄞ","放":"ㄈㄤˋ","遊":"ㄧㄡˊ","戲":"ㄒㄧˋ","結":"ㄐㄧㄝˊ","果":"ㄍㄨㄛˇ","家":"ㄐㄧㄚ","晚":"ㄨㄢˇ","安":"ㄢ","長":"ㄔㄤˊ","小":"ㄒㄧㄠˇ","汪":"ㄨㄤ","星":"ㄒㄧㄥ","商":"ㄕㄤ","店":"ㄉㄧㄢˋ","秘":"ㄇㄧˋ","密":"ㄇㄧˋ","案":"ㄢˋ","拖":"ㄊㄨㄛ","曳":"ㄧㄝˋ","加":"ㄐㄧㄚ","法":"ㄈㄚˇ","每":"ㄇㄟˇ","日":"ㄖˋ","任":"ㄖㄣˋ","務":"ㄨˋ","注":"ㄓㄨˋ","音":"ㄧㄣ","照":"ㄓㄠˋ","課":"ㄎㄜˋ","本":"ㄅㄣˇ","排":"ㄆㄞˊ","符":"ㄈㄨˊ","號":"ㄏㄠˋ","直":"ㄓˊ","在":"ㄗㄞˋ","字":"ㄗˋ","的":"˙ㄉㄜ","右":"ㄧㄡˋ","邊":"ㄅㄧㄢ","二":"ㄦˋ","三":"ㄙㄢ","四":"ㄙˋ","聲":"ㄕㄥ","最":"ㄗㄨㄟˋ","後":"ㄏㄡˋ","一":"ㄧ","個":"ㄍㄜˋ","上":"ㄕㄤˋ","輕":"ㄑㄧㄥ","點":"ㄉㄧㄢˇ","面":"ㄇㄧㄢˋ","說":"ㄕㄨㄛ","看":"ㄎㄢˋ","英":"ㄧㄥ","文":"ㄨㄣˊ","專":"ㄓㄨㄢ","力":"ㄌㄧˋ","礦":"ㄎㄨㄤˋ","洞":"ㄉㄨㄥˋ","工":"ㄍㄨㄥ","具":"ㄐㄩˋ","中":"ㄓㄨㄥ","旁":"ㄆㄤˊ","典":"ㄉㄧㄢˇ","由":"ㄧㄡˊ","依":"ㄧ","檔":"ㄉㄤˇ","用":"ㄩㄥˋ","到":"ㄉㄠˋ","自":"ㄗˋ","動":"ㄉㄨㄥˋ","產":"ㄔㄢˇ","生":"ㄕㄥ","常":"ㄔㄤˊ","讀":"ㄉㄨˊ","台":"ㄊㄞˊ","灣":"ㄨㄢ","另":"ㄌㄧㄥˋ","外":"ㄨㄞˋ","修":"ㄒㄧㄡ","正":"ㄓㄥˋ","破":"ㄆㄛˋ","詞":"ㄘˊ","語":"ㄩˇ","決":"ㄐㄩㄝˊ","定":"ㄉㄧㄥˋ","比":"ㄅㄧˇ","單":"ㄉㄢ","優":"ㄧㄡ","先":"ㄒㄧㄢ","數":"ㄕㄨˋ","得":"ㄉㄜˊ","玩":"ㄨㄢˊ","記":"ㄐㄧˋ","覺":"ㄐㄩㄝˊ","少":"ㄕㄠˇ","了":"˙ㄌㄜ","解":"ㄐㄧㄝˇ","什":"ㄕㄣˊ","麼":"˙ㄇㄜ","怎":"ㄗㄣˇ","這":"ㄓㄜˋ","還":"ㄏㄞˊ","有":"ㄧㄡˇ","要":"ㄧㄠˋ","沒":"ㄇㄟˊ","東":"ㄉㄨㄥ","西":"ㄒㄧ","朋":"ㄆㄥˊ","友":"ㄧㄡˇ","休":"ㄒㄧㄡ","息":"ㄒㄧ","時":"ㄕˊ","候":"ㄏㄡˋ","下":"ㄒㄧㄚˋ","大":"ㄉㄚˋ","重":"ㄓㄨㄥˋ","新":"ㄒㄧㄣ","空":"ㄎㄨㄥ","間":"ㄐㄧㄢ","答":"ㄉㄚˊ","對":"ㄉㄨㄟˋ","回":"ㄏㄨㄟˊ","把":"ㄅㄚˇ","轉":"ㄓㄨㄢˇ","成":"ㄔㄥˊ","帶":"ㄉㄞˋ","可":"ㄎㄜˇ","關":"ㄍㄨㄢ","掉":"ㄉㄧㄠˋ","非":"ㄈㄟ","原":"ㄩㄢˊ","樣":"ㄧㄤˋ","資":"ㄗ","料":"ㄌㄧㄠˋ","裝":"ㄓㄨㄤ","置":"ㄓˋ","孩":"ㄏㄞˊ","子":"ㄗˇ","會":"ㄏㄨㄟˋ","進":"ㄐㄧㄣˋ","註":"ㄓㄨˋ","冊":"ㄘㄜˋ","畫":"ㄏㄨㄚˋ","補":"ㄅㄨˇ","齊":"ㄑㄧˊ","舊":"ㄐㄧㄡˋ","或":"ㄏㄨㄛˋ","備":"ㄅㄟˋ","份":"ㄈㄣˋ","缺":"ㄑㄩㄝ","欄":"ㄌㄢˊ","位":"ㄨㄟˋ","版":"ㄅㄢˇ","度":"ㄉㄨˋ","也":"ㄧㄝˇ","經":"ㄐㄧㄥ","過":"ㄍㄨㄛˋ","裡":"ㄌㄧˇ","交":"ㄐㄧㄠ","給":"ㄍㄟˇ","分":"ㄈㄣ","享":"ㄒㄧㄤˇ","選":"ㄒㄩㄢˇ","存":"ㄘㄨㄣˊ","不":"ㄅㄨˋ","支":"ㄓ","援":"ㄩㄢˊ","接":"ㄐㄧㄝ","載":"ㄗㄞˋ","所":"ㄙㄨㄛˇ","換":"ㄏㄨㄢˋ","來":"ㄌㄞˊ","是":"ㄕˋ","請":"ㄑㄧㄥˇ","再":"ㄗㄞˋ","次":"ㄘˋ","取":"ㄑㄩˇ","代":"ㄉㄞˋ","目":"ㄇㄨˋ","前":"ㄑㄧㄢˊ","嗎":"˙ㄇㄚ","完":"ㄨㄢˊ","區":"ㄑㄩ","域":"ㄩˋ","各":"ㄍㄜˋ","同":"ㄊㄨㄥˊ","多":"ㄉㄨㄛ","連":"ㄌㄧㄢˊ","錄":"ㄌㄨˋ","剛":"ㄍㄤ","好":"ㄏㄠˇ","發":"ㄈㄚ","寶":"ㄅㄠˇ","箱":"ㄒㄧㄤ","傳":"ㄔㄨㄢˊ","顯":"ㄒㄧㄢˇ","示":"ㄕˋ","今":"ㄐㄧㄣ","種":"ㄓㄨㄥˇ","材":"ㄘㄞˊ","就":"ㄐㄧㄡˋ","挑":"ㄊㄧㄠ","名":"ㄇㄧㄥˊ","稱":"ㄔㄥ","增":"ㄗㄥ","強":"ㄑㄧㄤˊ","高":"ㄍㄠ","品":"ㄆㄧㄣˇ","質":"ㄓˊ","聽":"ㄊㄧㄥ","起":"ㄑㄧˇ","較":"ㄐㄧㄠˋ","像":"ㄒㄧㄤˋ","機":"ㄐㄧ","器":"ㄑㄧˋ","化":"ㄏㄨㄚˋ","調":"ㄉㄧㄠˋ","整":"ㄓㄥˇ","體":"ㄊㄧˇ","速":"ㄙㄨˋ","電":"ㄉㄧㄢˋ","腦":"ㄋㄠˇ","快":"ㄎㄨㄞˋ","預":"ㄩˋ","設":"ㄕㄜˋ","慢":"ㄇㄢˋ","些":"ㄒㄧㄝ","型":"ㄒㄧㄥˊ","內":"ㄋㄟˋ","建":"ㄐㄧㄢˋ","式":"ㄕˋ","事":"ㄕˋ","口":"ㄎㄡˇ","序":"ㄒㄩˋ","念":"ㄋㄧㄢˋ","出":"ㄔㄨ","段":"ㄉㄨㄢˋ","播":"ㄅㄛ","偶":"ㄡˇ","爾":"ㄦˇ","觸":"ㄔㄨˋ","保":"ㄅㄠˇ","底":"ㄉㄧˇ","標":"ㄅㄧㄠ","準":"ㄓㄨㄣˇ","己":"ㄐㄧˇ","網":"ㄨㄤˇ","站":"ㄓㄢˋ","共":"ㄍㄨㄥˋ","兩":"ㄌㄧㄤˇ","者":"ㄓㄜˇ","都":"ㄉㄡ","打":"ㄉㄚˇ","包":"ㄅㄠ","無":"ㄨˊ","使":"ㄕˇ","麥":"ㄇㄞˋ","克":"ㄎㄜˋ","風":"ㄈㄥ","允":"ㄩㄣˇ","許":"ㄒㄩ","試":"ㄕˋ","儲":"ㄔㄨˇ","失":"ㄕ","敗":"ㄅㄞˋ","素":"ㄙㄨˋ","造":"ㄗㄠˋ","般":"ㄅㄢ","話":"ㄏㄨㄚˋ","張":"ㄓㄤ","嘴":"ㄗㄨㄟˇ","心":"ㄒㄧㄣ","瞇":"ㄇㄧ","眼":"ㄧㄢˇ","吐":"ㄊㄨˇ","舌":"ㄕㄜˊ","表":"ㄅㄧㄠˇ","情":"ㄑㄧㄥˊ","灰":"ㄏㄨㄟ","色":"ㄙㄜˋ","改":"ㄍㄞˇ","紅":"ㄏㄨㄥˊ","腳":"ㄐㄧㄠˇ","印":"ㄧㄣˋ","題":"ㄊㄧˊ","以":"ㄧˇ","減":"ㄐㄧㄢˇ","九":"ㄐㄧㄡˇ","乘":"ㄔㄥˊ","按":"ㄢˋ","住":"ㄓㄨˋ","格":"ㄍㄜˊ","木":"ㄇㄨˋ","頭":"ㄊㄡˊ","喔":"ㄛ","草":"ㄘㄠˇ","左":"ㄗㄨㄛˇ","已":"ㄧˇ","夠":"ㄍㄡˋ","現":"ㄒㄧㄢˋ","幾":"ㄐㄧˇ","錯":"ㄘㄨㄛˋ","拿":"ㄋㄚˊ","十":"ㄕˊ","哪":"ㄋㄚˇ","手":"ㄕㄡˇ","蓋":"ㄍㄞˋ","才":"ㄘㄞˊ","能":"ㄋㄥˊ","等":"ㄉㄥˇ","於":"ㄩˊ","合":"ㄏㄜˊ","例":"ㄌㄧˋ","玻":"ㄅㄛ","爸":"ㄅㄚˋ","坡":"ㄆㄛ","葡":"ㄆㄨˊ","萄":"ㄊㄠˊ","摸":"ㄇㄛ","貓":"ㄇㄠ","咪":"ㄇㄧ","佛":"ㄈㄛˊ","飛":"ㄈㄟ","象":"ㄒㄧㄤˋ","特":"ㄊㄜˋ","兔":"ㄊㄨˋ","訥":"ㄋㄜˋ","牛":"ㄋㄧㄡˊ","勒":"ㄌㄜˋ","老":"ㄌㄠˇ","虎":"ㄏㄨˇ","哥":"ㄍㄜ","狗":"ㄍㄡˇ","科":"ㄎㄜ","恐":"ㄎㄨㄥˇ","龍":"ㄌㄨㄥˊ","喝":"ㄏㄜ","花":"ㄏㄨㄚ","朵":"ㄉㄨㄛˇ","基":"ㄐㄧ","雞":"ㄐㄧ","七":"ㄑㄧ","汽":"ㄑㄧˋ","車":"ㄔㄜ","瓜":"ㄍㄨㄚ","知":"ㄓ","豬":"ㄓㄨ","吃":"ㄔ","帆":"ㄈㄢ","船":"ㄔㄨㄢˊ","師":"ㄕ","獅":"ㄕ","巴":"ㄅㄚ","疵":"ㄘ","莓":"ㄇㄟˊ","思":"ㄙ","雨":"ㄩˇ","傘":"ㄙㄢˇ","衣":"ㄧ","服":"ㄈㄨˊ","屋":"ㄨ","烏":"ㄨ","龜":"ㄍㄨㄟ","迂":"ㄩ","魚":"ㄩˊ","啊":"˙ㄚ","鴨":"ㄧㄚ","公":"ㄍㄨㄥ","叫":"ㄐㄧㄠˋ","鵝":"ㄜˊ","白":"ㄅㄞˊ","欸":"ㄞˇ","椰":"ㄧㄝ","哀":"ㄞ","愛":"ㄞˋ","誒":"ㄟ","杯":"ㄅㄟ","凹":"ㄠ","書":"ㄕㄨ","歐":"ㄡ","猴":"ㄏㄡˊ","飯":"ㄈㄢˋ","恩":"ㄣ","門":"ㄇㄣˊ","骯":"ㄤ","綿":"ㄇㄧㄢˊ","羊":"ㄧㄤˊ","鞥":"ㄥ","蜜":"ㄇㄧˋ","蜂":"ㄈㄥ","兒":"ㄦˊ","耳":"ㄦˇ","容":"ㄖㄨㄥˊ","易":"ㄧˋ","搞":"ㄍㄠˇ","混":"ㄏㄨㄣˋ","拼":"ㄆㄧㄣ","只":"ㄓˇ","項":"ㄒㄧㄤˋ","必":"ㄅㄧˋ","媽":"ㄇㄚ","八":"ㄅㄚ","他":"ㄊㄚ","拉":"ㄌㄚ","哈":"ㄏㄚ","哭":"ㄎㄨ","姑":"ㄍㄨ","粗":"ㄘㄨ","蘇":"ㄙㄨ","刀":"ㄉㄠ","黑":"ㄏㄟ","拍":"ㄆㄞ","偷":"ㄊㄡ","收":"ㄕㄡ","溝":"ㄍㄡ","山":"ㄕㄢ","跟":"ㄍㄣ","森":"ㄙㄣ","湯":"ㄊㄤ","幫":"ㄅㄤ","燈":"ㄉㄥ","抓":"ㄓㄨㄚ","刷":"ㄕㄨㄚ","天":"ㄊㄧㄢ","偏":"ㄆㄧㄢ","冬":"ㄉㄨㄥ","金":"ㄐㄧㄣ","光":"ㄍㄨㄤ","窗":"ㄔㄨㄤ","雙":"ㄕㄨㄤ","香":"ㄒㄧㄤ","江":"ㄐㄧㄤ","春":"ㄔㄨㄣ","秋":"ㄑㄧㄡ","推":"ㄊㄨㄟ","吹":"ㄔㄨㄟ","飄":"ㄆㄧㄠ","歡":"ㄏㄨㄢ","官":"ㄍㄨㄢ","軍":"ㄐㄩㄣ","麻":"ㄇㄚˊ","馬":"ㄇㄚˇ","罵":"ㄇㄚˋ","煩":"ㄈㄢˊ","人":"ㄖㄣˊ","拔":"ㄅㄚˊ","熟":"ㄕㄨˊ","鼠":"ㄕㄨˇ","樹":"ㄕㄨˋ","糖":"ㄊㄤˊ","躺":"ㄊㄤˇ","燙":"ㄊㄤˋ","很":"ㄏㄣˇ","急":"ㄐㄧˊ","著":"˙ㄓㄜ","玉":"ㄩˋ","迴":"ㄏㄨㄟˊ","石":"ㄕˊ","五":"ㄨˇ","霧":"ㄨˋ","聊":"ㄌㄧㄠˊ","妻":"ㄑㄧ","騎":"ㄑㄧˊ","氣":"ㄑㄧˋ","蛙":"ㄨㄚ","娃":"ㄨㄚˊ","瓦":"ㄨㄚˇ","襪":"ㄨㄚˋ","青":"ㄑㄧㄥ","片":"ㄆㄧㄢˋ","鍋":"ㄍㄨㄛ","國":"ㄍㄨㄛˊ","火":"ㄏㄨㄛˇ","水":"ㄕㄨㄟˇ","去":"ㄑㄩˋ","通":"ㄊㄨㄥ","桶":"ㄊㄨㄥˇ","痛":"ㄊㄨㄥˋ","毀":"ㄏㄨㄟˇ","房":"ㄈㄤˊ","訪":"ㄈㄤˇ","問":"ㄨㄣˋ","假":"ㄐㄧㄚˇ","找":"ㄓㄠˇ","全":"ㄑㄩㄢˊ","部":"ㄅㄨˋ","母":"ㄇㄨˇ","韻":"ㄩㄣˋ","戰":"ㄓㄢˋ","介":"ㄐㄧㄝˋ","隨":"ㄙㄨㄟˊ","第":"ㄉㄧˋ","寫":"ㄒㄧㄝˇ","尾":"ㄨㄟˇ","配":"ㄆㄟˋ","然":"ㄖㄢˊ","確":"ㄑㄩㄝˋ","相":"ㄒㄧㄤ","練":"ㄌㄧㄢˋ","仔":"ㄗˇ","細":"ㄒㄧˋ","辨":"ㄅㄧㄢˋ","識":"ㄕˋ","需":"ㄒㄩ","路":"ㄌㄨˋ","固":"ㄍㄨˋ","角":"ㄐㄧㄠˇ","含":"ㄏㄢˊ","何":"ㄏㄜˊ","算":"ㄙㄨㄢˋ","棒":"ㄅㄤˋ","嘗":"ㄔㄤˊ","我":"ㄨㄛˇ","們":"ㄇㄣˊ","差":"ㄔㄚ","複":"ㄈㄨˋ","權":"ㄑㄩㄢˊ","限":"ㄒㄧㄢˋ","之":"ㄓ","跳":"ㄊㄧㄠˋ","辦":"ㄅㄢˋ","沙":"ㄕㄚ","岩":"ㄧㄢˊ","璃":"ㄌㄧˊ","級":"ㄐㄧˊ","身":"ㄕㄣ","與":"ㄩˇ","獎":"ㄐㄧㄤˇ","勵":"ㄌㄧˋ","漠":"ㄇㄛˋ","雪":"ㄒㄩㄝˇ","築":"ㄓㄨˋ","座":"ㄗㄨㄛˋ","隻":"ㄓ","物":"ㄨˋ","搬":"ㄅㄢ","瞭":"ㄌㄧㄠˋ","望":"ㄨㄤˋ","塔":"ㄊㄚˇ","冰":"ㄅㄧㄥ","城":"ㄔㄥˊ","堡":"ㄅㄠˇ","王":"ㄨㄤˊ","從":"ㄘㄨㄥˊ","往":"ㄨㄤˇ","及":"ㄐㄧˊ","編":"ㄅㄧㄢ","集":"ㄐㄧˊ","但":"ㄉㄢˋ","當":"ㄉㄤ","見":"ㄐㄧㄢˋ","達":"ㄉㄚˊ","探":"ㄊㄢˋ","險":"ㄒㄧㄢˇ","走":"ㄗㄡˇ","計":"ㄐㄧˋ","清":"ㄑㄧㄥ","避":"ㄅㄧˋ","免":"ㄇㄧㄢˇ","離":"ㄌㄧˊ","作":"ㄗㄨㄛˋ","太":"ㄊㄞˋ","陽":"ㄧㄤˊ","囉":"˙ㄌㄨㄛ","慰":"ㄨㄟˋ","提":"ㄊㄧˊ","醒":"ㄒㄧㄥˇ","毛":"ㄇㄠˊ","和":"ㄏㄜˊ","件":"ㄐㄧㄢˋ","睛":"ㄐㄧㄥ","鼻":"ㄅㄧˊ","柴":"ㄔㄞˊ","犬":"ㄑㄩㄢˇ","黃":"ㄏㄨㄤˊ","獵":"ㄌㄧㄝˋ","士":"ㄕˋ","奇":"ㄑㄧˊ","戴":"ㄉㄞˋ","帽":"ㄇㄠˋ","蝴":"ㄏㄨˊ","蝶":"ㄉㄧㄝˊ","酷":"ㄎㄨˋ","墨":"ㄇㄛˋ","鏡":"ㄐㄧㄥˋ","皇":"ㄏㄨㄤˊ","冠":"ㄍㄨㄢ","呼":"ㄏㄨ","買":"ㄇㄞˇ","紹":"ㄕㄠˋ","價":"ㄐㄧㄚˋ","錢":"ㄑㄧㄢˊ","顆":"ㄎㄜ","冒":"ㄇㄠˋ","吧":"˙ㄅㄚ","你":"ㄋㄧˇ","始":"ㄕˇ","別":"ㄅㄧㄝˊ","族":"ㄗㄨˊ","村":"ㄘㄨㄣ","莊":"ㄓㄨㄤ","套":"ㄊㄠˋ","流":"ㄌㄧㄡˊ","程":"ㄔㄥˊ","講":"ㄐㄧㄤˇ","亂":"ㄌㄨㄢˋ","秒":"ㄇㄧㄠˇ","繼":"ㄐㄧˋ","續":"ㄒㄩˋ","耶":"ㄧㄝ","升":"ㄕㄥ","認":"ㄖㄣˋ","真":"ㄓㄣ","懂":"ㄉㄨㄥˇ","變":"ㄅㄧㄢˋ","厲":"ㄌㄧˋ","害":"ㄏㄞˋ","降":"ㄐㄧㄤˋ","告":"ㄍㄠˋ","訴":"ㄙㄨˋ","挫":"ㄘㄨㄛˋ","折":"ㄓㄜˊ","感":"ㄍㄢˇ","布":"ㄅㄨˋ","棄":"ㄑㄧˋ","越":"ㄩㄝˋ","想":"ㄒㄧㄤˇ","係":"ㄒㄧˋ","陪":"ㄆㄟˊ","擔":"ㄉㄢ","乎":"ㄏㄨ","額":"ㄜˊ","它":"ㄊㄚ","返":"ㄈㄢˇ","徽":"ㄏㄨㄟ","章":"ㄓㄤ","為":"ㄨㄟˋ","縮":"ㄙㄨㄛ","否":"ㄈㄡˇ","則":"ㄗㄜˊ","虛":"ㄒㄩ","線":"ㄒㄧㄢˋ","淡":"ㄉㄢˋ","熱":"ㄖㄜˋ","鬧":"ㄋㄠˋ","亮":"ㄌㄧㄤˋ","框":"ㄎㄨㄤˋ","明":"ㄇㄧㄥˊ","局":"ㄐㄩˊ","憶":"ㄧˋ","翻":"ㄈㄢ","牌":"ㄆㄞˊ","卡":"ㄎㄚˇ","擊":"ㄐㄧˊ","楚":"ㄔㄨˇ","順":"ㄕㄨㄣˋ","趕":"ㄍㄢˇ","牠":"ㄊㄚ","綠":"ㄌㄩˋ","怪":"ㄍㄨㄞˋ","迷":"ㄇㄧˊ","宮":"ㄍㄨㄥ","向":"ㄒㄧㄤˋ","鍵":"ㄐㄧㄢˋ","那":"ㄋㄚˋ","悄":"ㄑㄧㄠ","低":"ㄉㄧ","場":"ㄔㄤˇ","讓":"ㄖㄤˋ","停":"ㄊㄧㄥˊ","留":"ㄌㄧㄡˊ","毫":"ㄏㄠˊ","隔":"ㄍㄜˊ","誤":"ㄨˋ","悉":"ㄒㄧ","噢":"ㄛ","形":"ㄒㄧㄥˊ","旋":"ㄒㄩㄢˊ","藍":"ㄌㄢˊ","求":"ㄑㄧㄡˊ","步":"ㄅㄨˋ","指":"ㄓˇ","久":"ㄐㄧㄡˇ","費":"ㄈㄟˋ","列":"ㄌㄧㄝˋ","碰":"ㄆㄥˋ","牆":"ㄑㄧㄤˊ","鄰":"ㄌㄧㄣˊ","消":"ㄒㄧㄠ","碼":"ㄇㄚˇ","紀":"ㄐㄧˋ","近":"ㄐㄧㄣˋ","狀":"ㄓㄨㄤˋ","況":"ㄎㄨㄤˋ","議":"ㄧˋ","判":"ㄆㄢˋ","斷":"ㄉㄨㄢˋ","累":"ㄌㄟˋ","年":"ㄋㄧㄢˊ","齡":"ㄌㄧㄥˊ","歲":"ㄙㄨㄟˋ","迎":"ㄧㄥˊ","鐘":"ㄓㄨㄥ","剩":"ㄕㄥˋ","此":"ㄘˇ","止":"ㄓˇ","刪":"ㄕㄢ","除":"ㄔㄨˊ","帳":"ㄓㄤˋ","約":"ㄩㄝ","匯":"ㄏㄨㄟˋ","替":"ㄊㄧˋ","其":"ㄑㄧˊ","輔":"ㄈㄨˇ","助":"ㄓㄨˋ","朗":"ㄌㄤˇ","美":"ㄇㄟˇ","佳":"ㄐㄧㄚ","處":"ㄔㄨˋ","理":"ㄌㄧˇ","詢":"ㄒㄩㄣˊ","瀏":"ㄌㄧㄡˊ","覽":"ㄌㄢˇ","更":"ㄍㄥˋ","擇":"ㄗㄜˊ","平":"ㄆㄧㄥˊ","言":"ㄧㄢˊ","復":"ㄈㄨˋ","輸":"ㄕㄨ","至":"ㄓˋ","熊":"ㄒㄩㄥˊ","呢":"˙ㄋㄜ","立":"ㄌㄧˋ","首":"ㄕㄡˇ","頁":"ㄧㄝˋ","如":"ㄖㄨˊ","油":"ㄧㄡˊ","填":"ㄊㄧㄢˊ","做":"ㄗㄨㄛˋ","道":"ㄉㄠˋ","超":"ㄔㄠ","仍":"ㄖㄥˊ","未":"ㄨㄟˋ","束":"ㄕㄨˋ","址":"ㄓˇ","啟":"ㄑㄧˇ","略":"ㄌㄩㄝˋ"};/* ZYDICT-END */
+/* ZYDICT-START */const ZYDICT = {"方":"ㄈㄤ","塊":"ㄎㄨㄞˋ","學":"ㄒㄩㄝˊ","習":"ㄒㄧˊ","島":"ㄉㄠˇ","登":"ㄉㄥ","入":"ㄖㄨˋ","地":"ㄉㄧˋ","圖":"ㄊㄨˊ","釣":"ㄉㄧㄠˋ","魚":"ㄩˊ","池":"ㄔˊ","金":"ㄐㄧㄣ","礦":"ㄎㄨㄤˋ","山":"ㄕㄢ","不":"ㄅㄨˋ","算":"ㄙㄨㄢˋ","每":"ㄇㄟˇ","日":"ㄖˋ","任":"ㄖㄣˋ","務":"ㄨˋ","格":"ㄍㄜˊ","子":"ㄗˇ","小":"ㄒㄧㄠˇ","一":"ㄧ","點":"ㄉㄧㄢˇ","即":"ㄐㄧˊ","將":"ㄐㄧㄤ","開":"ㄎㄞ","放":"ㄈㄤˋ","遊":"ㄧㄡˊ","戲":"ㄒㄧˋ","結":"ㄐㄧㄝˊ","果":"ㄍㄨㄛˇ","家":"ㄐㄧㄚ","晚":"ㄨㄢˇ","安":"ㄢ","橫":"ㄏㄥˊ","向":"ㄒㄧㄤˋ","材":"ㄘㄞˊ","料":"ㄌㄧㄠˋ","改":"ㄍㄞˇ","在":"ㄗㄞˋ","房":"ㄈㄤˊ","右":"ㄧㄡˋ","邊":"ㄅㄧㄢ","直":"ㄓˊ","排":"ㄆㄞˊ","大":"ㄉㄚˋ","由":"ㄧㄡˊ","依":"ㄧ","剩":"ㄕㄥˋ","下":"ㄒㄧㄚˋ","的":"˙ㄉㄜ","空":"ㄎㄨㄥ","間":"ㄐㄧㄢ","決":"ㄐㄩㄝˊ","定":"ㄉㄧㄥˋ","長":"ㄔㄤˊ","汪":"ㄨㄤ","星":"ㄒㄧㄥ","商":"ㄕㄤ","店":"ㄉㄧㄢˋ","秘":"ㄇㄧˋ","密":"ㄇㄧˋ","案":"ㄢˋ","拖":"ㄊㄨㄛ","曳":"ㄧㄝˋ","加":"ㄐㄧㄚ","法":"ㄈㄚˇ","注":"ㄓㄨˋ","音":"ㄧㄣ","照":"ㄓㄠˋ","課":"ㄎㄜˋ","本":"ㄅㄣˇ","符":"ㄈㄨˊ","號":"ㄏㄠˋ","字":"ㄗˋ","二":"ㄦˋ","三":"ㄙㄢ","四":"ㄙˋ","聲":"ㄕㄥ","最":"ㄗㄨㄟˋ","後":"ㄏㄡˋ","個":"ㄍㄜˋ","上":"ㄕㄤˋ","輕":"ㄑㄧㄥ","面":"ㄇㄧㄢˋ","說":"ㄕㄨㄛ","看":"ㄎㄢˋ","英":"ㄧㄥ","文":"ㄨㄣˊ","拼":"ㄆㄧㄣ","選":"ㄒㄩㄢˇ","項":"ㄒㄧㄤˋ","寫":"ㄒㄧㄝˇ","調":"ㄉㄧㄠˋ","專":"ㄓㄨㄢ","力":"ㄌㄧˋ","洞":"ㄉㄨㄥˋ","寵":"ㄔㄨㄥˇ","物":"ㄨˋ","娃":"ㄨㄚˊ","屋":"ㄨ","給":"ㄍㄟˇ","插":"ㄔㄚ","畫":"ㄏㄨㄚˋ","特":"ㄊㄜˋ","別":"ㄅㄧㄝˊ","造":"ㄗㄠˋ","型":"ㄒㄧㄥˊ","要":"ㄧㄠˋ","用":"ㄩㄥˋ","像":"ㄒㄧㄤˋ","素":"ㄙㄨˋ","縮":"ㄙㄨㄛ","式":"ㄕˋ","翻":"ㄈㄢ","牌":"ㄆㄞˊ","對":"ㄉㄨㄟˋ","戰":"ㄓㄢˋ","工":"ㄍㄨㄥ","具":"ㄐㄩˋ","中":"ㄓㄨㄥ","旁":"ㄆㄤˊ","典":"ㄉㄧㄢˇ","檔":"ㄉㄤˇ","到":"ㄉㄠˋ","自":"ㄗˋ","動":"ㄉㄨㄥˋ","產":"ㄔㄢˇ","生":"ㄕㄥ","常":"ㄔㄤˊ","讀":"ㄉㄨˊ","台":"ㄊㄞˊ","灣":"ㄨㄢ","另":"ㄌㄧㄥˋ","外":"ㄨㄞˋ","修":"ㄒㄧㄡ","正":"ㄓㄥˋ","破":"ㄆㄛˋ","詞":"ㄘˊ","語":"ㄩˇ","比":"ㄅㄧˇ","單":"ㄉㄢ","優":"ㄧㄡ","先":"ㄒㄧㄢ","數":"ㄕㄨˋ","得":"ㄉㄜˊ","玩":"ㄨㄢˊ","記":"ㄐㄧˋ","覺":"ㄐㄩㄝˊ","少":"ㄕㄠˇ","了":"˙ㄌㄜ","解":"ㄐㄧㄝˇ","什":"ㄕㄣˊ","麼":"˙ㄇㄜ","怎":"ㄗㄣˇ","這":"ㄓㄜˋ","還":"ㄏㄞˊ","有":"ㄧㄡˇ","沒":"ㄇㄟˊ","東":"ㄉㄨㄥ","西":"ㄒㄧ","朋":"ㄆㄥˊ","友":"ㄧㄡˇ","休":"ㄒㄧㄡ","息":"ㄒㄧ","時":"ㄕˊ","候":"ㄏㄡˋ","轉":"ㄓㄨㄢˇ","鮭":"ㄍㄨㄟ","重":"ㄓㄨㄥˋ","新":"ㄒㄧㄣ","答":"ㄉㄚˊ","回":"ㄏㄨㄟˊ","把":"ㄅㄚˇ","成":"ㄔㄥˊ","帶":"ㄉㄞˋ","可":"ㄎㄜˇ","關":"ㄍㄨㄢ","掉":"ㄉㄧㄠˋ","非":"ㄈㄟ","原":"ㄩㄢˊ","樣":"ㄧㄤˋ","資":"ㄗ","裝":"ㄓㄨㄤ","置":"ㄓˋ","孩":"ㄏㄞˊ","會":"ㄏㄨㄟˋ","進":"ㄐㄧㄣˋ","註":"ㄓㄨˋ","冊":"ㄘㄜˋ","補":"ㄅㄨˇ","齊":"ㄑㄧˊ","舊":"ㄐㄧㄡˋ","或":"ㄏㄨㄛˋ","備":"ㄅㄟˋ","份":"ㄈㄣˋ","缺":"ㄑㄩㄝ","欄":"ㄌㄢˊ","位":"ㄨㄟˋ","版":"ㄅㄢˇ","度":"ㄉㄨˋ","也":"ㄧㄝˇ","經":"ㄐㄧㄥ","過":"ㄍㄨㄛˋ","裡":"ㄌㄧˇ","頭":"ㄊㄡˊ","配":"ㄆㄟˋ","件":"ㄐㄧㄢˋ","飾":"ㄕˋ","品":"ㄆㄧㄣˇ","交":"ㄐㄧㄠ","分":"ㄈㄣ","享":"ㄒㄧㄤˇ","存":"ㄘㄨㄣˊ","支":"ㄓ","援":"ㄩㄢˊ","接":"ㄐㄧㄝ","載":"ㄗㄞˋ","所":"ㄙㄨㄛˇ","換":"ㄏㄨㄢˋ","來":"ㄌㄞˊ","是":"ㄕˋ","請":"ㄑㄧㄥˇ","再":"ㄗㄞˋ","次":"ㄘˋ","取":"ㄑㄩˇ","代":"ㄉㄞˋ","目":"ㄇㄨˋ","前":"ㄑㄧㄢˊ","嗎":"˙ㄇㄚ","完":"ㄨㄢˊ","更":"ㄍㄥˋ","雲":"ㄩㄣˊ","端":"ㄉㄨㄢ","合":"ㄏㄜˊ","併":"ㄅㄧㄥˋ","並":"ㄅㄧㄥˋ","程":"ㄔㄥˊ","免":"ㄇㄧㄢˇ","費":"ㄈㄟˋ","匿":"ㄋㄧˋ","名":"ㄇㄧㄥˊ","兩":"ㄌㄧㄤˇ","網":"ㄨㄤˇ","頁":"ㄧㄝˋ","公":"ㄍㄨㄥ","識":"ㄕˋ","碼":"ㄇㄚˇ","靠":"ㄎㄠˋ","庭":"ㄊㄧㄥˊ","和":"ㄏㄜˊ","規":"ㄍㄨㄟ","則":"ㄗㄜˊ","保":"ㄅㄠˇ","護":"ㄏㄨˋ","同":"ㄊㄨㄥˊ","組":"ㄗㄨˇ","留":"ㄌㄧㄡˊ","較":"ㄐㄧㄠˋ","那":"ㄋㄚˋ","今":"ㄐㄧㄣ","天":"ㄊㄧㄢ","多":"ㄉㄨㄛ","刪":"ㄕㄢ","跑":"ㄆㄠˇ","傳":"ㄔㄨㄢˊ","路":"ㄌㄨˋ","就":"ㄐㄧㄡˋ","等":"ㄉㄥˇ","連":"ㄌㄧㄢˊ","啟":"ㄑㄧˇ","例":"ㄌㄧˋ","如":"ㄖㄨˊ","截":"ㄐㄧㄝˊ","找":"ㄓㄠˇ","起":"ㄑㄧˇ","步":"ㄅㄨˋ","母":"ㄇㄨˇ","確":"ㄑㄩㄝˋ","認":"ㄖㄣˋ","試":"ㄕˋ","之":"ㄓ","區":"ㄑㄩ","域":"ㄩˋ","各":"ㄍㄜˋ","錄":"ㄌㄨˋ","剛":"ㄍㄤ","好":"ㄏㄠˇ","發":"ㄈㄚ","寶":"ㄅㄠˇ","箱":"ㄒㄧㄤ","顯":"ㄒㄧㄢˇ","示":"ㄕˋ","種":"ㄓㄨㄥˇ","炸":"ㄓㄚˋ","彈":"ㄊㄢˊ","挑":"ㄊㄧㄠ","稱":"ㄔㄥ","增":"ㄗㄥ","強":"ㄑㄧㄤˊ","高":"ㄍㄠ","質":"ㄓˊ","聽":"ㄊㄧㄥ","機":"ㄐㄧ","器":"ㄑㄧˋ","化":"ㄏㄨㄚˋ","整":"ㄓㄥˇ","體":"ㄊㄧˇ","速":"ㄙㄨˋ","電":"ㄉㄧㄢˋ","腦":"ㄋㄠˇ","快":"ㄎㄨㄞˋ","預":"ㄩˋ","設":"ㄕㄜˋ","慢":"ㄇㄢˋ","些":"ㄒㄧㄝ","念":"ㄋㄧㄢˋ","話":"ㄏㄨㄚˋ","事":"ㄕˋ","片":"ㄆㄧㄢˋ","段":"ㄉㄨㄢˋ","才":"ㄘㄞˊ","切":"ㄑㄧㄝˋ","跟":"ㄍㄣ","標":"ㄅㄧㄠ","短":"ㄉㄨㄢˇ","只":"ㄓˇ","避":"ㄅㄧˋ","拆":"ㄔㄞ","序":"ㄒㄩˋ","出":"ㄔㄨ","播":"ㄅㄛ","套":"ㄊㄠˋ","偶":"ㄡˇ","爾":"ㄦˇ","觸":"ㄔㄨˋ","底":"ㄉㄧˇ","準":"ㄓㄨㄣˇ","己":"ㄐㄧˇ","站":"ㄓㄢˋ","共":"ㄍㄨㄥˋ","者":"ㄓㄜˇ","都":"ㄉㄡ","打":"ㄉㄚˇ","包":"ㄅㄠ","無":"ㄨˊ","使":"ㄕˇ","麥":"ㄇㄞˋ","克":"ㄎㄜˋ","風":"ㄈㄥ","允":"ㄩㄣˇ","許":"ㄒㄩ","儲":"ㄔㄨˇ","失":"ㄕ","敗":"ㄅㄞˋ","人":"ㄖㄣˊ","紙":"ㄓˇ","髮":"ㄈㄚˇ","色":"ㄙㄜˋ","膚":"ㄈㄨ","眼":"ㄧㄢˇ","睛":"ㄐㄧㄥ","身":"ㄕㄣ","服":"ㄈㄨˊ","衣":"ㄧ","顏":"ㄧㄢˊ","應":"ㄧㄥ","刺":"ㄘˋ","妹":"ㄇㄟˋ","雙":"ㄕㄨㄤ","馬":"ㄇㄚˇ","尾":"ㄨㄟˇ","皮":"ㄆㄧˊ","穿":"ㄔㄨㄢ","哪":"ㄋㄚˇ","主":"ㄓㄨˇ","深":"ㄕㄣ","綴":"ㄓㄨㄟˋ","始":"ㄕˇ","褲":"ㄎㄨˋ","裙":"ㄑㄩㄣˊ","鞋":"ㄒㄧㄝˊ","臉":"ㄌㄧㄢˇ","手":"ㄕㄡˇ","紅":"ㄏㄨㄥˊ","恤":"ㄒㄩˋ","藍":"ㄌㄢˊ","綠":"ㄌㄩˋ","黃":"ㄏㄨㄤˊ","紫":"ㄗˇ","粉":"ㄈㄣˇ","湖":"ㄏㄨˊ","水":"ㄕㄨㄟˇ","灰":"ㄏㄨㄟ","條":"ㄊㄧㄠˊ","紋":"ㄨㄣˊ","衫":"ㄕㄢ","帽":"ㄇㄠˋ","黑":"ㄏㄟ","牛":"ㄋㄧㄡˊ","仔":"ㄗˇ","洋":"ㄧㄤˊ","禮":"ㄌㄧˇ","卡":"ㄎㄚˇ","其":"ㄑㄧˊ","百":"ㄅㄞˇ","褶":"ㄓㄜˇ","白":"ㄅㄞˊ","球":"ㄑㄧㄡˊ","咖":"ㄎㄚ","啡":"ㄈㄟ","靴":"ㄒㄩㄝ","雨":"ㄩˇ","蝴":"ㄏㄨˊ","蝶":"ㄉㄧㄝˊ","花":"ㄏㄨㄚ","夾":"ㄐㄧㄚˊ","貓":"ㄇㄠ","耳":"ㄦˇ","朵":"ㄉㄨㄛˇ","皇":"ㄏㄨㄤˊ","冠":"ㄍㄨㄢ","鏡":"ㄐㄧㄥˋ","酷":"ㄎㄨˋ","墨":"ㄇㄛˋ","棒":"ㄅㄤˋ","糖":"ㄊㄤˊ","氣":"ㄑㄧˋ","魔":"ㄇㄛˊ","寬":"ㄎㄨㄢ","行":"ㄒㄧㄥˊ","肩":"ㄐㄧㄢ","膀":"ㄅㄤˇ","腳":"ㄐㄧㄠˇ","處":"ㄔㄨˋ","脖":"ㄅㄛˊ","臂":"ㄅㄧˋ","腿":"ㄊㄨㄟˇ","內":"ㄋㄟˋ","蓋":"ㄍㄞˋ","住":"ㄓㄨˋ","以":"ㄧˇ","拿":"ㄋㄚˊ","第":"ㄉㄧˋ","提":"ㄊㄧˊ","供":"ㄍㄨㄥ","張":"ㄓㄤ","買":"ㄇㄞˇ","編":"ㄅㄧㄢ","全":"ㄑㄩㄢˊ","甜":"ㄊㄧㄢˊ","美":"ㄇㄟˇ","冒":"ㄇㄠˋ","險":"ㄒㄧㄢˇ","夢":"ㄇㄥˋ","幻":"ㄏㄨㄢˋ","帥":"ㄕㄨㄞˋ","愛":"ㄞˋ","然":"ㄖㄢˊ","半":"ㄅㄢˋ","部":"ㄅㄨˋ","輯":"ㄐㄧˊ","讓":"ㄖㄤˋ","引":"ㄧㄣˇ","信":"ㄒㄧㄣˋ","火":"ㄏㄨㄛˇ","他":"ㄊㄚ","般":"ㄅㄢ","嘴":"ㄗㄨㄟˇ","心":"ㄒㄧㄣ","瞇":"ㄇㄧ","吐":"ㄊㄨˇ","舌":"ㄕㄜˊ","表":"ㄅㄧㄠˇ","情":"ㄑㄧㄥˊ","印":"ㄧㄣˋ","題":"ㄊㄧˊ","減":"ㄐㄧㄢˇ","九":"ㄐㄧㄡˇ","乘":"ㄔㄥˊ","按":"ㄢˋ","木":"ㄇㄨˋ","喔":"ㄛ","草":"ㄘㄠˇ","左":"ㄗㄨㄛˇ","已":"ㄧˇ","夠":"ㄍㄡˋ","現":"ㄒㄧㄢˋ","幾":"ㄐㄧˇ","錯":"ㄘㄨㄛˋ","十":"ㄕˊ","能":"ㄋㄥˊ","於":"ㄩˊ","玻":"ㄅㄛ","爸":"ㄅㄚˋ","坡":"ㄆㄛ","葡":"ㄆㄨˊ","萄":"ㄊㄠˊ","摸":"ㄇㄛ","咪":"ㄇㄧ","佛":"ㄈㄛˊ","飛":"ㄈㄟ","象":"ㄒㄧㄤˋ","兔":"ㄊㄨˋ","訥":"ㄋㄜˋ","勒":"ㄌㄜˋ","老":"ㄌㄠˇ","虎":"ㄏㄨˇ","哥":"ㄍㄜ","狗":"ㄍㄡˇ","科":"ㄎㄜ","恐":"ㄎㄨㄥˇ","龍":"ㄌㄨㄥˊ","喝":"ㄏㄜ","基":"ㄐㄧ","雞":"ㄐㄧ","七":"ㄑㄧ","汽":"ㄑㄧˋ","車":"ㄔㄜ","瓜":"ㄍㄨㄚ","知":"ㄓ","豬":"ㄓㄨ","吃":"ㄔ","帆":"ㄈㄢ","船":"ㄔㄨㄢˊ","師":"ㄕ","獅":"ㄕ","巴":"ㄅㄚ","疵":"ㄘ","莓":"ㄇㄟˊ","思":"ㄙ","傘":"ㄙㄢˇ","烏":"ㄨ","龜":"ㄍㄨㄟ","迂":"ㄩ","啊":"˙ㄚ","鴨":"ㄧㄚ","叫":"ㄐㄧㄠˋ","鵝":"ㄜˊ","欸":"ㄞˇ","椰":"ㄧㄝ","哀":"ㄞ","誒":"ㄟ","杯":"ㄅㄟ","凹":"ㄠ","書":"ㄕㄨ","歐":"ㄡ","猴":"ㄏㄡˊ","飯":"ㄈㄢˋ","恩":"ㄣ","門":"ㄇㄣˊ","骯":"ㄤ","綿":"ㄇㄧㄢˊ","羊":"ㄧㄤˊ","鞥":"ㄥ","蜜":"ㄇㄧˋ","蜂":"ㄈㄥ","兒":"ㄦˊ","容":"ㄖㄨㄥˊ","易":"ㄧˋ","搞":"ㄍㄠˇ","混":"ㄏㄨㄣˋ","必":"ㄅㄧˋ","媽":"ㄇㄚ","八":"ㄅㄚ","拉":"ㄌㄚ","哈":"ㄏㄚ","哭":"ㄎㄨ","姑":"ㄍㄨ","粗":"ㄘㄨ","蘇":"ㄙㄨ","刀":"ㄉㄠ","拍":"ㄆㄞ","偷":"ㄊㄡ","收":"ㄕㄡ","溝":"ㄍㄡ","森":"ㄙㄣ","湯":"ㄊㄤ","幫":"ㄅㄤ","燈":"ㄉㄥ","抓":"ㄓㄨㄚ","刷":"ㄕㄨㄚ","偏":"ㄆㄧㄢ","冬":"ㄉㄨㄥ","光":"ㄍㄨㄤ","窗":"ㄔㄨㄤ","香":"ㄒㄧㄤ","江":"ㄐㄧㄤ","春":"ㄔㄨㄣ","秋":"ㄑㄧㄡ","推":"ㄊㄨㄟ","吹":"ㄔㄨㄟ","飄":"ㄆㄧㄠ","歡":"ㄏㄨㄢ","官":"ㄍㄨㄢ","軍":"ㄐㄩㄣ","麻":"ㄇㄚˊ","罵":"ㄇㄚˋ","煩":"ㄈㄢˊ","拔":"ㄅㄚˊ","熟":"ㄕㄨˊ","鼠":"ㄕㄨˇ","樹":"ㄕㄨˋ","躺":"ㄊㄤˇ","燙":"ㄊㄤˋ","很":"ㄏㄣˇ","急":"ㄐㄧˊ","著":"˙ㄓㄜ","玉":"ㄩˋ","迴":"ㄏㄨㄟˊ","石":"ㄕˊ","五":"ㄨˇ","霧":"ㄨˋ","聊":"ㄌㄧㄠˊ","妻":"ㄑㄧ","騎":"ㄑㄧˊ","蛙":"ㄨㄚ","瓦":"ㄨㄚˇ","襪":"ㄨㄚˋ","青":"ㄑㄧㄥ","鍋":"ㄍㄨㄛ","國":"ㄍㄨㄛˊ","去":"ㄑㄩˋ","通":"ㄊㄨㄥ","桶":"ㄊㄨㄥˇ","痛":"ㄊㄨㄥˋ","毀":"ㄏㄨㄟˇ","訪":"ㄈㄤˇ","問":"ㄨㄣˋ","假":"ㄐㄧㄚˇ","韻":"ㄩㄣˋ","介":"ㄐㄧㄝˋ","隨":"ㄙㄨㄟˊ","相":"ㄒㄧㄤ","練":"ㄌㄧㄢˋ","細":"ㄒㄧˋ","辨":"ㄅㄧㄢˋ","需":"ㄒㄩ","固":"ㄍㄨˋ","角":"ㄐㄧㄠˇ","含":"ㄏㄢˊ","何":"ㄏㄜˊ","嘗":"ㄔㄤˊ","我":"ㄨㄛˇ","們":"ㄇㄣˊ","差":"ㄔㄚ","複":"ㄈㄨˋ","停":"ㄊㄧㄥˊ","止":"ㄓˇ","當":"ㄉㄤ","作":"ㄗㄨㄛˋ","鈕":"ㄋㄧㄡˇ","權":"ㄑㄩㄢˊ","限":"ㄒㄧㄢˋ","口":"ㄎㄡˇ","跳":"ㄊㄧㄠˋ","辦":"ㄅㄢˋ","續":"ㄒㄩˋ","往":"ㄨㄤˇ","布":"ㄅㄨˋ","沙":"ㄕㄚ","岩":"ㄧㄢˊ","璃":"ㄌㄧˊ","級":"ㄐㄧˊ","與":"ㄩˇ","獎":"ㄐㄧㄤˇ","勵":"ㄌㄧˋ","漠":"ㄇㄛˋ","雪":"ㄒㄩㄝˇ","建":"ㄐㄧㄢˋ","築":"ㄓㄨˋ","座":"ㄗㄨㄛˋ","隻":"ㄓ","搬":"ㄅㄢ","瞭":"ㄌㄧㄠˋ","望":"ㄨㄤˋ","塔":"ㄊㄚˇ","冰":"ㄅㄧㄥ","城":"ㄔㄥˊ","堡":"ㄅㄠˇ","王":"ㄨㄤˊ","從":"ㄘㄨㄥˊ","及":"ㄐㄧˊ","集":"ㄐㄧˊ","但":"ㄉㄢˋ","見":"ㄐㄧㄢˋ","達":"ㄉㄚˊ","探":"ㄊㄢˋ","走":"ㄗㄡˇ","計":"ㄐㄧˋ","清":"ㄑㄧㄥ","離":"ㄌㄧˊ","太":"ㄊㄞˋ","陽":"ㄧㄤˊ","囉":"˙ㄌㄨㄛ","慰":"ㄨㄟˋ","醒":"ㄒㄧㄥˇ","毛":"ㄇㄠˊ","鼻":"ㄅㄧˊ","柴":"ㄔㄞˊ","犬":"ㄑㄩㄢˇ","獵":"ㄌㄧㄝˋ","士":"ㄕˋ","奇":"ㄑㄧˊ","戴":"ㄉㄞˋ","呼":"ㄏㄨ","顆":"ㄎㄜ","紹":"ㄕㄠˋ","價":"ㄐㄧㄚˋ","錢":"ㄑㄧㄢˊ","挖":"ㄨㄚ","吧":"˙ㄅㄚ","你":"ㄋㄧˇ","餵":"ㄨㄟˋ","背":"ㄅㄟˋ","流":"ㄌㄧㄡˊ","講":"ㄐㄧㄤˇ","亂":"ㄌㄨㄢˋ","秒":"ㄇㄧㄠˇ","繼":"ㄐㄧˋ","耶":"ㄧㄝ","升":"ㄕㄥ","真":"ㄓㄣ","懂":"ㄉㄨㄥˇ","變":"ㄅㄧㄢˋ","厲":"ㄌㄧˋ","害":"ㄏㄞˋ","降":"ㄐㄧㄤˋ","告":"ㄍㄠˋ","訴":"ㄙㄨˋ","挫":"ㄘㄨㄛˋ","折":"ㄓㄜˊ","感":"ㄍㄢˇ","棄":"ㄑㄧˋ","越":"ㄩㄝˋ","想":"ㄒㄧㄤˇ","係":"ㄒㄧˋ","陪":"ㄆㄟˊ","擔":"ㄉㄢ","乎":"ㄏㄨ","額":"ㄜˊ","它":"ㄊㄚ","返":"ㄈㄢˇ","徽":"ㄏㄨㄟ","章":"ㄓㄤ","為":"ㄨㄟˋ","否":"ㄈㄡˇ","虛":"ㄒㄩ","線":"ㄒㄧㄢˋ","淡":"ㄉㄢˋ","熱":"ㄖㄜˋ","鬧":"ㄋㄠˋ","疊":"ㄉㄧㄝˊ","適":"ㄕˋ","亮":"ㄌㄧㄤˋ","框":"ㄎㄨㄤˋ","明":"ㄇㄧㄥˊ","局":"ㄐㄩˊ","憶":"ㄧˋ","擊":"ㄐㄧˊ","楚":"ㄔㄨˇ","順":"ㄕㄨㄣˋ","趕":"ㄍㄢˇ","牠":"ㄊㄚ","怪":"ㄍㄨㄞˋ","迷":"ㄇㄧˊ","宮":"ㄍㄨㄥ","鍵":"ㄐㄧㄢˋ","平":"ㄆㄧㄥˊ","板":"ㄅㄢˇ","悄":"ㄑㄧㄠ","低":"ㄉㄧ","場":"ㄔㄤˇ","餓":"ㄜˋ","病":"ㄅㄧㄥˋ","熊":"ㄒㄩㄥˊ","頸":"ㄐㄧㄥˇ","鹿":"ㄌㄨˋ","累":"ㄌㄟˋ","積":"ㄐㄧ","伴":"ㄅㄢˋ","擋":"ㄉㄤˇ","藏":"ㄘㄤˊ","稀":"ㄒㄧ","鱒":"ㄗㄨㄣ","鯉":"ㄌㄧˇ","河":"ㄏㄜˊ","豚":"ㄊㄨㄣˊ","丑":"ㄔㄡˇ","年":"ㄋㄧㄢˊ","紀":"ㄐㄧˋ","歲":"ㄙㄨㄟˋ","坐":"ㄗㄨㄛˋ","繫":"ㄒㄧˋ","陌":"ㄇㄛˋ","洗":"ㄒㄧˇ","指":"ㄓˇ","牙":"ㄧㄚˊ","期":"ㄑㄧˊ","根":"ㄍㄣ","北":"ㄅㄟˇ","融":"ㄖㄨㄥˊ","硬":"ㄧㄥˋ","扇":"ㄕㄢˋ","喵":"ㄇㄧㄠ","咩":"ㄇㄧㄝ","蘋":"ㄆㄧㄣˊ","蘿":"ㄌㄨㄛˊ","蔔":"˙ㄅㄛ","麵":"ㄇㄧㄢˋ","蟲":"ㄔㄨㄥˊ","鳥":"ㄋㄧㄠˇ","蝌":"ㄎㄜ","蚪":"ㄉㄡˇ","冷":"ㄌㄥˇ","災":"ㄗㄞ","搭":"ㄉㄚ","梯":"ㄊㄧ","月":"ㄩㄝˋ","震":"ㄓㄣˋ","遠":"ㄩㄢˇ","戶":"ㄏㄨˋ","鐘":"ㄓㄨㄥ","遇":"ㄩˋ","壞":"ㄏㄨㄞˋ","警":"ㄐㄧㄥˇ","察":"ㄔㄚˊ","吸":"ㄒㄧ","鰓":"ㄙㄞ","植":"ㄓˊ","做":"ㄗㄨㄛˋ","奶":"ㄋㄞˇ","蛋":"ㄉㄢˋ","蜘":"ㄓ","蛛":"ㄓㄨ","昆":"ㄎㄨㄣ","彩":"ㄘㄞˇ","虹":"ㄏㄨㄥˊ","阿":"ㄚ","里":"ㄌㄧˇ","煮":"ㄓㄨˇ","滾":"ㄍㄨㄣˇ","蒸":"ㄓㄥ","颱":"ㄊㄞˊ","海":"ㄏㄞˇ","浪":"ㄌㄤˋ","址":"ㄓˇ","類":"ㄌㄟˋ","活":"ㄏㄨㄛˊ","雷":"ㄌㄟˊ","閃":"ㄕㄢˇ","滴":"ㄉㄧ","被":"ㄅㄟˋ","染":"ㄖㄢˇ","繞":"ㄖㄠˋ","圈":"ㄑㄩㄢ","約":"ㄩㄝ","久":"ㄐㄧㄡˇ","睡":"ㄕㄨㄟˋ","遮":"ㄓㄜ","沸":"ㄈㄟˋ","騰":"ㄊㄥˊ","近":"ㄐㄧㄣˋ","磁":"ㄘˊ","鐵":"ㄊㄧㄝˇ","釘":"ㄉㄧㄥ","塑":"ㄙㄨˋ","膠":"ㄐㄧㄠ","氧":"ㄧㄤˇ","碳":"ㄊㄢˋ","企":"ㄑㄧˋ","南":"ㄋㄢˊ","極":"ㄐㄧˊ","尺":"ㄔˇ","臟":"ㄗㄤˋ","血":"ㄒㄧㄝˇ","液":"ㄧˋ","送":"ㄙㄨㄥˋ","忙":"ㄇㄤˊ","消":"ㄒㄧㄠ","食":"ㄕˊ","拋":"ㄆㄠ","竿":"ㄍㄢ","待":"ㄉㄞˋ","浮":"ㄈㄨˊ","元":"ㄩㄢˊ","飽":"ㄅㄠˇ","甩":"ㄕㄨㄞˇ","弧":"ㄏㄨˊ","落":"ㄌㄨㄛˋ","鉤":"ㄍㄡ","反":"ㄈㄢˇ","滿":"ㄇㄢˇ","寸":"ㄘㄨㄣˋ","游":"ㄧㄡˊ","謝":"ㄒㄧㄝˋ","幸":"ㄒㄧㄥˋ","福":"ㄈㄨˊ","領":"ㄌㄧㄥˇ","養":"ㄧㄤˇ","觀":"ㄍㄨㄢ","爆":"ㄅㄠˋ","哇":"ㄨㄚ","又":"ㄧㄡˋ","輪":"ㄌㄨㄣˊ","副":"ㄈㄨˋ","競":"ㄐㄧㄥˋ","賽":"ㄙㄞˋ","誰":"ㄕㄨㄟˊ","邀":"ㄧㄠ","呢":"˙ㄋㄜ","狀":"ㄓㄨㄤˋ","態":"ㄊㄞˋ","判":"ㄆㄢˋ","斷":"ㄉㄨㄢˋ","贏":"ㄧㄥˊ","油":"ㄧㄡˊ","毫":"ㄏㄠˊ","隔":"ㄍㄜˊ","誤":"ㄨˋ","悉":"ㄒㄧ","噢":"ㄛ","形":"ㄒㄧㄥˊ","旋":"ㄒㄩㄢˊ","求":"ㄑㄧㄡˊ","列":"ㄌㄧㄝˋ","碰":"ㄆㄥˋ","牆":"ㄑㄧㄤˊ","鄰":"ㄌㄧㄣˊ","況":"ㄎㄨㄤˋ","議":"ㄧˋ","齡":"ㄌㄧㄥˊ","迎":"ㄧㄥˊ","此":"ㄘˇ","除":"ㄔㄨˊ","帳":"ㄓㄤˋ","匯":"ㄏㄨㄟˋ","替":"ㄊㄧˋ","輔":"ㄈㄨˇ","助":"ㄓㄨˋ","朗":"ㄌㄤˇ","佳":"ㄐㄧㄚ","理":"ㄌㄧˇ","詢":"ㄒㄩㄣˊ","瀏":"ㄌㄧㄡˊ","覽":"ㄌㄢˇ","功":"ㄍㄨㄥ","立":"ㄌㄧˋ","忘":"ㄨㄤˋ","輸":"ㄕㄨ","擇":"ㄗㄜˊ","言":"ㄧㄢˊ","製":"ㄓˋ","復":"ㄈㄨˋ","脫":"ㄊㄨㄛ","至":"ㄓˋ","族":"ㄗㄨˊ","村":"ㄘㄨㄣ","莊":"ㄓㄨㄤ","首":"ㄕㄡˇ","填":"ㄊㄧㄢˊ","道":"ㄉㄠˋ","超":"ㄔㄠ","仍":"ㄖㄥˊ","未":"ㄨㄟˋ","束":"ㄕㄨˋ","略":"ㄌㄩㄝˋ"};/* ZYDICT-END */
 // 破音字依詞語決定讀音，比單字字典優先
 const ZYWORDS = {
   '數數': ['ㄕㄨˇ', 'ㄕㄨˋ'], '數學': ['ㄕㄨˋ', 'ㄒㄩㄝˊ'], '得到': ['ㄉㄜˊ', 'ㄉㄠˋ'], '玩得': ['ㄨㄢˊ', '˙ㄉㄜ'], '記得': ['ㄐㄧˋ', '˙ㄉㄜ'],
   '覺得': ['ㄐㄩㄝˊ', '˙ㄉㄜ'], '少了': ['ㄕㄠˇ', '˙ㄌㄜ'], '了解': ['ㄌㄧㄠˇ', 'ㄐㄧㄝˇ'], '什麼': ['ㄕㄣˊ', '˙ㄇㄜ'], '怎麼': ['ㄗㄣˇ', '˙ㄇㄜ'],
   '這麼': ['ㄓㄜˋ', '˙ㄇㄜ'], '還有': ['ㄏㄞˊ', 'ㄧㄡˇ'], '還要': ['ㄏㄞˊ', 'ㄧㄠˋ'], '還沒': ['ㄏㄞˊ', 'ㄇㄟˊ'], '地方': ['ㄉㄧˋ', '˙ㄈㄤ'],
   '東西': ['ㄉㄨㄥ', '˙ㄒㄧ'], '朋友': ['ㄆㄥˊ', '˙ㄧㄡ'], '休息': ['ㄒㄧㄡ', '˙ㄒㄧ'], '時候': ['ㄕˊ', '˙ㄏㄡ'], '一下': ['ㄧ', 'ㄒㄧㄚˋ'],
-  '長大': ['ㄓㄤˇ', 'ㄉㄚˋ'], '重新': ['ㄔㄨㄥˊ', 'ㄒㄧㄣ'], '空間': ['ㄎㄨㄥ', 'ㄐㄧㄢ'], '答對': ['ㄉㄚˊ', 'ㄉㄨㄟˋ'], '答案': ['ㄉㄚˊ', 'ㄢˋ'],
+  '長大': ['ㄓㄤˇ', 'ㄉㄚˋ'], '自轉': ['ㄗˋ', 'ㄓㄨㄢˋ'], '轉一': ['ㄓㄨㄢˋ', 'ㄧ'], '鮭魚': ['ㄍㄨㄟ', 'ㄩˊ'],'重新': ['ㄔㄨㄥˊ', 'ㄒㄧㄣ'], '空間': ['ㄎㄨㄥ', 'ㄐㄧㄢ'], '答對': ['ㄉㄚˊ', 'ㄉㄨㄟˋ'], '答案': ['ㄉㄚˊ', 'ㄢˋ'],
   '回答': ['ㄏㄨㄟˊ', 'ㄉㄚˊ'], '答了': ['ㄉㄚˊ', '˙ㄌㄜ'],
 };
 function rb(ch, z) {
@@ -395,11 +554,13 @@ function defaultData() {
 // 補齊舊資料或備份檔缺少的欄位（舊版 iPad 上的進度也會經過這裡）
 function normalizeChild(c) {
   c.stone = c.stone || 0; c.sand = c.sand || 0; c.glass = c.glass || 0;
+  c.pets = c.pets || []; c.pet = c.pet || ''; c.gold = c.gold || 0; c.bombs = c.bombs || 0; c.mine = c.mine || null;
   const big = c.age >= 8, L = big ? 3 : 1;
   c.focus = c.focus || { memory: L, seq: L, react: L, maze: L };
   c.zy = c.zy || (big ? { level: 5, minLevel: 4, maxLevel: 7 } : { level: 1, minLevel: 1, maxLevel: 4 });
   c.en = c.en || (big ? { level: 3, minLevel: 2, maxLevel: 6 } : { level: 1, minLevel: 1, maxLevel: 4 });
-  c.owned = c.owned || []; c.skin = c.skin || 'shiba'; c.acc = c.acc || 'none';
+  c.owned = (c.owned || []).map(x => ({ 'v:1': 'd:glasses', 'v:2': 'd:bow', 'v:3': 'd:crown', 'v:4': 'd:cap' })[x] || x); // 舊版的頭像配件改成娃娃屋的飾品
+  c.skin = c.skin || 'shiba'; c.acc = c.acc || 'none';
   c.greet = c.greet || ''; c.lock = c.lock || '';
   if (!c.placed) c.placed = legacyPlaced(c);
   return c;
@@ -569,9 +730,9 @@ function questRecord(b) {
   qDone(c)[b] = (qDone(c)[b] || 0) + 1;
   if (u.last === b) u.run++; else { u.last = b; u.run = 1; }
   if (was || !questComplete(c) || u.chest) return '';
-  u.chest = true; c.stars += 5; u.stars += 5;
+  u.chest = true; c.stars += 5; u.stars += 5; c.bombs = (c.bombs || 0) + MINE_BOMBS;
   MATS.forEach(([m]) => c[m] += 2);
-  return '🎁 今日任務完成！寶箱：+5 ⭐、每種材料 +2';
+  return `🎁 今日任務完成！寶箱：+5 ⭐、每種材料 +2、💣 炸彈 +${MINE_BOMBS}`;
 }
 
 /* ---------- 聲音 ---------- */
@@ -809,16 +970,169 @@ function sprite(rows, pal) {
   rows.forEach((row, j) => [...row].forEach((ch, i) => { if (ch !== '.') { x.fillStyle = pal[ch]; x.fillRect(i, j, 1, 1); } }));
   return c.toDataURL();
 }
-const FACE_A = ['hhhhhhhh', 'hhhhhhhh', 'hssssssh', 'swessews', 'ssssssss', 'sssnnsss', 'ssmmmmss', 'ssssssss'];
-const FACE_B = ['hhhhhhhh', 'hhhhhhhh', 'hssssssh', 'hwessewh', 'hssssssh', 'hssnnssh', 'hsmmmmsh', 'hssssssh'];
-const AVATARS = [
-  [FACE_A, { h: '#5a3a1e', s: '#f0b98a', w: '#fff', e: '#3b5bdb', n: '#d8996a', m: '#a5524a' }],
-  [FACE_B, { h: '#1f1f1f', s: '#f3c49b', w: '#fff', e: '#5a3a1e', n: '#dba57a', m: '#c0505a' }],
-  [FACE_A, { h: '#e9c46a', s: '#f6cfa6', w: '#fff', e: '#2a9d4a', n: '#e0ae84', m: '#b5524a' }],
-  [FACE_B, { h: '#c0392b', s: '#eab48a', w: '#fff', e: '#6b3fa0', n: '#d29a6e', m: '#9c3f3f' }],
+/* ---------- 人物：像素紙娃娃。頭（髮型、髮色、膚色、眼睛）＋ 身上的服飾 ---------- */
+// c.avatar = { hs, hc, sk, ey, top, bottom, shoes, hat, face, hand, outfit }
+// 舊版存的 sh（衣服顏色）、ac（配件）會在 avObj() 轉成服飾；更舊的版本存 0–3 的數字，對應 AV_PRESETS
+const AV_OPTS = [
+  ['hs', '髮型', ['短髮', '刺刺頭', '妹妹頭', '長髮', '雙馬尾']],
+  ['hc', '頭髮顏色', ['#2a1d14', '#5a3a1e', '#a0522d', '#e9c46a', '#c0392b', '#7b5cd6']],
+  ['sk', '皮膚', ['#f8d8b8', '#f0b98a', '#d9a06c', '#a8703f']],
+  ['ey', '眼睛', ['#3b2a1a', '#3b5bdb', '#2a9d4a', '#7b3fb0']],
 ];
+const AV_PRESETS = [
+  { hs: 0, hc: 1, sk: 1, ey: 1, sh: 1 }, { hs: 2, hc: 0, sk: 1, ey: 0, sh: 5 },
+  { hs: 3, hc: 3, sk: 0, ey: 2, sh: 2 }, { hs: 4, hc: 4, sk: 1, ey: 3, sh: 4 },
+];
+const shade = (hex, k) => '#' + [1, 3, 5].map(i => Math.round(parseInt(hex.slice(i, i + 2), 16) * k).toString(16).padStart(2, '0')).join('');
+// 服飾：slot 是穿在哪裡，type 決定畫法，c 是 [主色, 深色, 點綴色]，price 是金礦（0 = 一開始就有）
+const DOLL_SLOTS = [['top', '上衣'], ['bottom', '褲裙'], ['shoes', '鞋子'], ['hat', '頭飾'], ['face', '臉上'], ['hand', '手上']];
+const tee = (id, name, c, price) => ({ id, slot: 'top', type: 'tee', name, c: [c, shade(c, .78), '#ffffff'], price });
+const DOLL = [
+  tee('tee-r', '紅色T恤', '#e74c3c', 0), tee('tee-b', '藍色T恤', '#3d7bd9', 0), tee('tee-g', '綠色T恤', '#2ecc71', 0),
+  tee('tee-y', '黃色T恤', '#f1c40f', 8), tee('tee-v', '紫色T恤', '#9b59b6', 8), tee('tee-p', '粉紅T恤', '#ff8fb1', 8),
+  tee('tee-t', '湖水綠T恤', '#1abc9c', 8), tee('tee-k', '灰色T恤', '#777777', 8),
+  { id: 'stripe', slot: 'top', type: 'stripe', name: '條紋衫', c: ['#ffffff', '#cccccc', '#3d7bd9'], price: 12 },
+  { id: 'hoodie', slot: 'top', type: 'hoodie', name: '綠色帽T', c: ['#4caf50', '#357a38', '#ffffff'], price: 15 },
+  { id: 'hoodie-k', slot: 'top', type: 'hoodie', name: '黑色帽T', c: ['#3a3a44', '#26262e', '#ffffff'], price: 15 },
+  { id: 'jacket', slot: 'top', type: 'jacket', name: '牛仔外套', c: ['#4a6fa5', '#34507a', '#ffffff'], price: 20 },
+  { id: 'dress-p', slot: 'top', type: 'dress', name: '粉紅洋裝', c: ['#ff8fb1', '#e06690', '#ffffff'], price: 25 },
+  { id: 'dress-b', slot: 'top', type: 'dress', name: '藍色洋裝', c: ['#6aa8ff', '#4a80d6', '#ffffff'], price: 25 },
+  { id: 'dress-q', slot: 'top', type: 'dress', name: '公主禮服', c: ['#c78bff', '#9a5fd6', '#ffd83a'], price: 40 },
+  { id: 'pants-b', slot: 'bottom', type: 'pants', name: '藍色長褲', c: ['#3b4a6b', '#2c3750'], price: 0 },
+  { id: 'pants-k', slot: 'bottom', type: 'pants', name: '黑色長褲', c: ['#2a2a2a', '#1a1a1a'], price: 8 },
+  { id: 'shorts', slot: 'bottom', type: 'shorts', name: '卡其短褲', c: ['#c9a46a', '#a8854f'], price: 8 },
+  { id: 'skirt-r', slot: 'bottom', type: 'skirt', name: '紅色裙子', c: ['#e74c3c', '#b83a2e'], price: 10 },
+  { id: 'skirt-b', slot: 'bottom', type: 'skirt', name: '百褶裙', c: ['#4a6fa5', '#34507a'], price: 12 },
+  { id: 'sneaker', slot: 'shoes', type: 'sneaker', name: '白色球鞋', c: ['#f4f4f4', '#aaaaaa'], price: 0 },
+  { id: 'sneaker-r', slot: 'shoes', type: 'sneaker', name: '紅色球鞋', c: ['#e74c3c', '#ffffff'], price: 8 },
+  { id: 'boots', slot: 'shoes', type: 'boots', name: '咖啡色靴子', c: ['#7a4a26', '#5a3418'], price: 12 },
+  { id: 'rainboots', slot: 'shoes', type: 'boots', name: '黃色雨鞋', c: ['#f1c40f', '#c9a20c'], price: 12 },
+  { id: 'bow', slot: 'hat', type: 'bow', name: '蝴蝶結', price: 15 },
+  { id: 'flower', slot: 'hat', type: 'flower', name: '小花髮夾', price: 10 },
+  { id: 'cap', slot: 'hat', type: 'cap', name: '紅帽子', price: 15 },
+  { id: 'catears', slot: 'hat', type: 'catears', name: '貓耳朵', price: 20 },
+  { id: 'crown', slot: 'hat', type: 'crown', name: '皇冠', price: 40 },
+  { id: 'glasses', slot: 'face', type: 'glasses', name: '眼鏡', price: 15 },
+  { id: 'shades', slot: 'face', type: 'shades', name: '酷墨鏡', price: 20 },
+  { id: 'lolli', slot: 'hand', type: 'lolli', name: '棒棒糖', price: 10 },
+  { id: 'balloon', slot: 'hand', type: 'balloon', name: '氣球', price: 12 },
+  { id: 'wand', slot: 'hand', type: 'wand', name: '魔法棒', price: 25 },
+];
+const dollItem = id => DOLL.find(d => d.id === id);
+const TEE_BY_SH = ['tee-r', 'tee-b', 'tee-g', 'tee-y', 'tee-v', 'tee-p', 'tee-t', 'tee-k'];
+function avObj(a) {
+  const o = a && typeof a === 'object' ? { ...AV_PRESETS[0], ...a } : { ...AV_PRESETS[(a | 0) % AV_PRESETS.length] };
+  if (!o.top) {
+    o.top = TEE_BY_SH[o.sh] || 'tee-b'; o.bottom = 'pants-b'; o.shoes = 'sneaker';
+    o.hat = ['', '', 'bow', 'crown', 'cap'][o.ac] || ''; o.face = o.ac === 1 ? 'glasses' : ''; o.hand = '';
+  }
+  return o;
+}
+// 畫出整個娃娃：14 寬 × 25 高。頭在 0–10 行，身體 11–24 行（肩膀 11、手 16、腳 24）
+function drawDoll(o) {
+  const W = 14, H = 25, g = Array.from({ length: H }, () => Array(W).fill('.'));
+  const ok = (x, y) => x >= 0 && x < W && y >= 0 && y < H;
+  const set = (ch, ...cells) => cells.forEach(([x, y]) => { if (ok(x, y)) g[y][x] = ch; });
+  const fill = (ch, ...cells) => cells.forEach(([x, y]) => { if (ok(x, y) && g[y][x] === '.') g[y][x] = ch; }); // 只畫在空白處
+  const span = (y, x1, x2) => Array.from({ length: x2 - x1 + 1 }, (_, i) => [x1 + i, y]);
+  const col = (x, y1, y2) => Array.from({ length: y2 - y1 + 1 }, (_, i) => [x, y1 + i]);
+  const box = (x1, x2, y1, y2) => Array.from({ length: y2 - y1 + 1 }, (_, j) => span(y1 + j, x1, x2)).flat();
+  const legs = (y1, y2) => [...box(3, 5, y1, y2), ...box(8, 10, y1, y2)];
+  // 身體（皮膚）：脖子、手臂、手、腿
+  for (let y = 2; y <= 9; y++) set('s', ...span(y, 3, 10));
+  set('w', [4, 5], [9, 5]); set('e', [5, 5], [8, 5]); set('p', [4, 7], [9, 7]); set('m', [6, 8], [7, 8]);
+  set('S', ...span(10, 5, 8));
+  set('W', ...box(3, 10, 11, 17));              // 內衣（沒穿上衣時）
+  set('s', ...col(2, 12, 16), ...col(11, 12, 16), ...legs(18, 23), ...span(24, 2, 5), ...span(24, 8, 11));
+  // 下身（洋裝會蓋住，所以先畫）
+  const tp = dollItem(o.top) || dollItem('tee-b'), bt = dollItem(o.bottom), sh = dollItem(o.shoes);
+  if (bt && tp.type !== 'dress') {
+    if (bt.type === 'pants') { set('P', ...box(3, 10, 17, 17), ...legs(18, 23)); set('Q', ...col(5, 18, 23), ...col(8, 18, 23)); }
+    if (bt.type === 'shorts') { set('P', ...box(3, 10, 17, 17), ...legs(18, 19)); set('Q', ...span(19, 3, 5), ...span(19, 8, 10)); }
+    if (bt.type === 'skirt') { set('P', ...box(3, 10, 17, 18), ...span(19, 2, 11)); set('Q', ...span(20, 2, 11), [5, 18], [8, 18]); }
+  }
+  // 上衣
+  const sleeve = n => set('T', ...col(2, 12, 11 + n), ...col(11, 12, 11 + n));
+  set('T', ...box(3, 10, 11, 16)); set('U', ...col(3, 12, 16), ...col(10, 12, 16));
+  if (tp.type === 'tee') { sleeve(2); set('s', [6, 11], [7, 11]); }
+  if (tp.type === 'stripe') { sleeve(5); for (let y = 12; y <= 16; y += 2) set('V', ...span(y, 3, 10), [2, y], [11, y]); set('s', [6, 11], [7, 11]); }
+  if (tp.type === 'hoodie') { sleeve(5); set('U', ...span(15, 5, 8)); set('V', [6, 12], [8, 12]); set('T', [4, 10], [9, 10]); }
+  if (tp.type === 'jacket') { sleeve(5); set('V', ...col(6, 11, 16), ...col(7, 11, 16)); set('U', [5, 13], [5, 15]); }
+  if (tp.type === 'dress') {
+    sleeve(1); set('s', [6, 11], [7, 11]); set('V', ...span(16, 3, 10));
+    set('T', ...box(3, 10, 17, 18), ...span(19, 2, 11), ...span(20, 2, 11)); set('U', ...span(21, 2, 11));
+  }
+  set('s', [2, 16], [11, 16]); // 手
+  // 鞋子
+  if (sh) {
+    if (sh.type === 'sneaker') { set('F', ...span(23, 3, 5), ...span(23, 8, 10), ...span(24, 2, 5), ...span(24, 8, 11)); set('G', ...span(24, 2, 3), ...span(24, 10, 11)); }
+    if (sh.type === 'boots') { set('F', ...legs(21, 23), ...span(24, 2, 5), ...span(24, 8, 11)); set('G', ...span(21, 3, 5), ...span(21, 8, 10)); }
+  }
+  // 頭髮
+  const top = () => set('h', ...span(1, 3, 10), ...span(2, 3, 10));
+  [
+    () => { top(); set('h', [3, 3], [4, 3], [9, 3], [10, 3], [3, 4], [10, 4]); },
+    () => { set('h', [4, 0], [6, 0], [8, 0], [10, 0], ...span(1, 3, 10), ...span(2, 3, 10), [3, 3], [4, 3], [9, 3], [10, 3]); },
+    () => { set('h', ...span(1, 3, 10), ...span(2, 2, 11), ...span(3, 2, 11), ...col(2, 4, 9), ...col(11, 4, 9)); },
+    () => { set('h', ...span(1, 3, 10), ...span(2, 2, 11), ...span(3, 2, 5), ...span(3, 8, 11), ...col(2, 4, 13), ...col(11, 4, 13)); },
+    () => { top(); set('h', ...span(3, 3, 5), ...span(3, 8, 10), ...col(1, 3, 8), ...col(12, 3, 8), ...col(0, 4, 7), ...col(13, 4, 7)); set('r', [2, 3], [11, 3]); },
+  ][o.hs]();
+  // 頭飾、臉上的東西
+  const ht = dollItem(o.hat), fc = dollItem(o.face), hd = dollItem(o.hand);
+  if (ht) ({
+    bow: () => { set('r', [9, 0], [11, 0], [9, 1], [11, 1]); set('R', [10, 0], [10, 1]); },
+    flower: () => { set('R', [10, 1], [12, 1], [11, 0], [11, 2]); set('y', [11, 1]); },
+    cap: () => { set('k', ...span(0, 4, 9), ...span(1, 3, 10), ...span(2, 3, 10)); set('K', ...span(3, 7, 12)); },
+    catears: () => { set('h', [3, 0], [4, 0], [9, 0], [10, 0]); set('R', [4, 0], [9, 0]); set('h', [3, 1], [10, 1]); },
+    crown: () => { set('y', [4, 0], [6, 0], [7, 0], [9, 0], ...span(1, 4, 9)); set('R', [6, 1]); },
+  })[ht.type]();
+  if (fc) ({
+    glasses: () => set('g', [4, 4], [5, 4], [8, 4], [9, 4], [4, 6], [5, 6], [8, 6], [9, 6], [3, 5], [6, 5], [7, 5], [10, 5]),
+    shades: () => { set('g', ...span(4, 3, 10), ...span(5, 4, 5), ...span(5, 8, 9), [6, 5], [7, 5]); set('x', [4, 5], [8, 5]); },
+  })[fc.type]();
+  // 右手拿的東西（右手在第 11 欄、第 16 行）
+  if (hd) ({
+    lolli: () => { set('X', ...col(12, 14, 16)); set('Y', [12, 12], [13, 12], [12, 13], [13, 13]); set('Z', [12, 12]); },
+    balloon: () => { set('X', ...col(12, 11, 16)); fill('Y', ...box(11, 13, 6, 9)); fill('Z', [11, 6]); },
+    wand: () => { set('X', ...col(12, 12, 16)); set('Y', [12, 11], [11, 11], [13, 11], [12, 10]); set('Z', [12, 11]); },
+  })[hd.type]();
+  const V = k => AV_OPTS.find(x => x[0] === k)[2][o[k]];
+  const sk = V('sk'), tc = tp.c, bc = (bt || {}).c || [], sc = (sh || {}).c || [];
+  const hand = { lolli: ['#ffffff', '#ff6fa8', '#fff'], balloon: ['#dddddd', '#e84a4a', '#ff9a9a'], wand: ['#7a4a26', '#ffd83a', '#fff6b0'] }[(hd || {}).type] || [];
+  return [g.map(r => r.join('')), {
+    s: sk, S: shade(sk, .85), w: '#fff', e: V('ey'), p: '#f2a0a0', m: '#b5524a', h: V('hc'), W: '#f4f4f4',
+    T: tc[0], U: tc[1], V: tc[2], P: bc[0], Q: bc[1], F: sc[0], G: sc[1], X: hand[0], Y: hand[1], Z: hand[2],
+    g: '#222', x: '#5a5a6a', r: '#e84a7a', R: '#ff9ab8', y: '#ffd83a', k: '#d63a3a', K: '#a82828',
+  }];
+}
 const SPR = {};
-const avatarURL = i => SPR['av' + i];
+const ICO = { bomb: () => `<img class="px ico" src="${SPR.bomb}" alt="炸彈">`, gold: () => `<img class="px ico" src="${SPR.gold}" alt="金礦">` };
+// 特別頭像：家長提供的 6 張插畫，用金礦買；選了之後頭像換成插畫的臉（avatar.outfit 是編號），釣魚時也是插畫的全身
+const OUTFITS = [[1, '甜美風'], [2, '冒險風'], [3, '夢幻風'], [4, '酷帥風'], [5, '可愛風'], [6, '自然風']];
+const OUTFIT_PRICE = 60;
+const dollKey = o => [...AV_OPTS.map(([k]) => o[k]), ...DOLL_SLOTS.map(([k]) => o[k])].join(',');
+// 整個娃娃（娃娃屋、釣魚）
+function dollURL(a) {
+  const o = avObj(a), key = 'doll:' + dollKey(o);
+  return SPR[key] || (SPR[key] = sprite(...drawDoll(o)));
+}
+// 頭像：娃娃的上半身（前 14 行）
+function avatarURL(a) {
+  if (a && a.outfit) return `img/char-${a.outfit}-face.webp`;
+  const o = avObj(a), key = 'av:' + dollKey(o);
+  if (!SPR[key]) { const [rows, pal] = drawDoll(o); SPR[key] = sprite(rows.slice(0, 14), pal); }
+  return SPR[key];
+}
+const kidURL = a => a && a.outfit ? `img/char-${a.outfit}.webp` : dollURL(a);
+// 頭部編輯器（髮型、顏色）：設定頁（act = su-av）和家長後台（act = p-avatar）共用；衣服在娃娃屋換
+function avatarEditor(a, act, id = '') {
+  const o = { ...avObj(a), outfit: 0 }, at = `data-act="${act}" ${id ? `data-id="${id}"` : ''}`;
+  return `<div class="aved"><img class="px avbig" src="${avatarURL(o)}"><div class="avopts">${AV_OPTS.map(([k, name, list]) =>
+    `<div class="avrow"><span>${name}</span><span class="avs">${list.map((v, i) => /^#/.test(v)
+      ? `<button class="sw ${o[k] === i ? 'sel' : ''}" ${at} data-v="${k}" data-d="${i}" style="background:${v}"></button>`
+      : `<img class="px av ${o[k] === i ? 'sel' : ''}" ${at} data-v="${k}" data-d="${i}" title="${v}" src="${avatarURL({ ...o, [k]: i })}">`).join('')}</span></div>`).join('')}
+    <div class="avnote">衣服和飾品讓孩子在「娃娃屋」自己換</div></div></div>`;
+}
 function initArt() {
   let css = '';
   for (const [name, fn] of Object.entries(TEXDEF)) {
@@ -832,10 +1146,14 @@ function initArt() {
   SPR.star = sprite(['....y....', '...yYy...', '...yYy...', 'yyyyYyyyy', '.yYYYYYy.', '..yYYYy..', '..yYyYy..', '.yYy.yYy.', '.yy...yy.'], { y: '#e0a000', Y: '#ffe14d' });
   SPR.sun = sprite(['yyyyyyyy', 'yYYYYYYy', 'yYWWWWYy', 'yYWWWWYy', 'yYWWWWYy', 'yYWWWWYy', 'yYYYYYYy', 'yyyyyyyy'], { y: '#ffb000', Y: '#ffd84a', W: '#fff6b0' });
   SPR.moon = sprite(['mmmmmmmm', 'mMMmmmMm', 'mMMmmmmm', 'mmmmmMMm', 'mmmmmMMm', 'mMmmmmmm', 'mmmmMmmm', 'mmmmmmmm'], { m: '#e6e8f0', M: '#b8bcc8' });
+  // 炸彈（引信冒火花）和金塊，跟遊戲裡其他東西一樣用像素畫
+  SPR.bomb = sprite(['......ry.', '.....yr..', '....ff...', '..kkffk..', '.kkwkkkk.', '.kwwkkkkK', '.kkkkkkkK', '.kkkkkkKK', '..kKKKKK.', '...KKKK..'],
+    { k: '#3a3a48', K: '#22222c', w: '#8a8aa0', f: '#7a5a3a', r: '#ff5a2a', y: '#ffd83a' });
+  SPR.gold = sprite(['...YYY....', '..YWWyY...', '.YWyyyyO..', '.Yyyyy.OYY', '..OOO.YWyY', '.YY..YyyyO', 'YWyY.YyyOO', 'YyyyO.OO..', '.OOO......'],
+    { Y: '#ffd83a', W: '#fff6b0', y: '#f0b020', O: '#b8860b' });
   SPR.heart = sprite(['.rr.rr.', 'rRrrrrr', 'rrrrrrr', '.rrrrr.', '..rrr..', '...r...'], { r: '#e03a3a', R: '#ff9a9a' });
   SPR.pig = sprite(['pppppppp', 'pppppppp', 'pkwppwkp', 'pppppppp', 'ppnnnnpp', 'ppknnkpp', 'ppnnnnpp', 'pppppppp'], { p: '#f4a6b4', n: '#e8869a', k: '#3a2a2a', w: '#fff' });
   SPR.mon = sprite(['gGgggGgg', 'ggGggggG', 'gkkggkkg', 'gkkggkkg', 'gggkkggg', 'ggkkkkgg', 'ggkkkkgg', 'ggkggkgg'], { g: '#5cbf4a', G: '#8fdc7a', k: '#1e2a1a' });
-  AVATARS.forEach(([rows, pal], i) => SPR['av' + i] = sprite(rows, pal));
   // 小汪：每種造型都有一般、說話（張嘴）、開心（瞇眼吐舌）三張
   const DOG = ['bb......bb', 'bbllllllbb', 'bllllllllb', 'blellllelb', 'blellllelb', '.llwwwwll.', '.lwwkkwwl.', '.lwwwwwwl.', '..lwwwwl..', '...llll...'];
   SKINS.forEach(s => {
@@ -1192,6 +1510,8 @@ function listen(done) {
   stopVoice();
   try { r.start(); } catch (e) { return end([], 'start'); }
   later(() => { try { r.stop(); } catch (e) {} }, 7000);
+  // iPad 有時停止後不會通知，時間到就當作沒聽到，避免按鈕卡在「我在聽」
+  later(() => { try { r.abort(); } catch (e) {} end([]); }, 9000);
 }
 function onMic(el) {
   const g = S.game;
@@ -1207,7 +1527,13 @@ function onMic(el) {
       g.state = 'done'; bubble('麥克風沒辦法用，這題先跳過', 2000); speak('麥克風沒辦法用，這題先跳過喔！');
       return later(() => { g.idx++; nextQ(); }, 2200);
     }
-    if (!alts.length) { bubble('沒聽到，再說一次'); speak('沒有聽到喔，再按一次說說看！'); return; }
+    // 連續兩次沒聽到就算一次答錯，才會往下給提示、公布答案，不會一直卡在這題
+    if (!alts.length) {
+      g.empty = (g.empty || 0) + 1;
+      if (g.empty < 2) { bubble('沒聽到，再說一次'); speak('沒有聽到喔，再按一次說說看！'); return; }
+      g.empty = 0;
+      return judge(false, el, '');
+    }
     if (heard) heard.textContent = '聽到：' + alts[0];
     judge(g.q.speak.any || heardMatch(alts, g.q.speak.expect), el, alts[0]);
   });
@@ -1358,50 +1684,74 @@ function dogSay(parts, onDone, mood) {
   setDog('talk ' + (mood || ''));
   sayParts(parts, () => { setDog(''); if (onDone) onDone(); });
 }
-/* ---------- 星星商店：用多的星星換材料、小汪的造型和配件 ---------- */
+/* ---------- 商店：星星換材料、小汪的造型和配件；金礦買娃娃屋的服飾、特別頭像和寵物 ---------- */
 const shopItem = id => {
   const [kind, key] = id.split(':');
-  if (kind === 'm') { const m = MATS.find(x => x[0] === key); return { kind, key, name: `1 個${m[1]}`, price: MAT_PRICE }; }
-  return { kind, key, ...(kind === 's' ? SKINS : ACCS).find(x => x.id === key) };
+  if (kind === 'm') { const m = MATS.find(x => x[0] === key); return { kind, key, name: `1 個${m[1]}`, price: MAT_PRICE, cur: 'star' }; }
+  if (kind === 'p') return { kind, key, name: petName(key), price: PET_PRICE, cur: 'gold' };
+  if (kind === 'o') return { kind, key, name: +key ? OUTFITS.find(x => x[0] === +key)[1] : '原本的樣子', price: +key ? OUTFIT_PRICE : 0, cur: 'gold' };
+  if (kind === 'd') { const d = dollItem(key); return { kind, key, name: d.name, price: d.price, cur: 'gold', slot: d.slot }; }
+  return { kind, key, cur: 'star', ...(kind === 's' ? SKINS : ACCS).find(x => x.id === key) };
 };
-const owns = (c, it) => it.price === 0 || c.owned.includes(it.kind + ':' + it.key);
+const owns = (c, it) => it.price === 0 || (it.kind === 'p' ? c.pets.some(p => p.id === it.key) : c.owned.includes(it.kind + ':' + it.key));
+const curName = it => it.cur === 'gold' ? '個金礦' : '顆星星';
+const curIcon = it => it.cur === 'gold' ? ICO.gold() : '⭐';
+function using(c, it) {
+  return (it.kind === 's' && c.skin === it.key) || (it.kind === 'a' && c.acc === it.key) || (it.kind === 'p' && c.pet === it.key) || (it.kind === 'd' && avObj(c.avatar)[it.slot] === it.key) || (it.kind === 'o' && (avObj(c.avatar).outfit || 0) === +it.key);
+}
+function wear(c, it) {
+  if (it.kind === 's') c.skin = it.key; else if (it.kind === 'a') c.acc = it.key;
+  else if (it.kind === 'p') c.pet = it.key; else if (it.kind === 'd') { c.avatar = { ...avObj(c.avatar), [it.slot]: it.key }; c.upd = Date.now(); }
+  else if (it.kind === 'o') { c.avatar = { ...avObj(c.avatar), outfit: +it.key }; c.upd = Date.now(); }
+}
 function renderShop(line) {
   S.screen = 'shop';
   const c = S.child, sel = S.shopSel;
   const card = (id, icon) => {
-    const it = shopItem(id), using = (it.kind === 's' && c.skin === it.key) || (it.kind === 'a' && c.acc === it.key);
-    const tag = it.kind === 'm' ? `⭐ ${it.price}` : using ? `✓ ${zy('使用中')}` : owns(c, it) ? zy('點我換上') : `⭐ ${it.price}`;
-    return `<button class="shopi ${sel === id ? 'sel' : ''} ${using ? 'use' : ''}" data-act="buy" data-v="${id}"><div class="sicon">${icon}</div><div class="sname">${zy(it.name)}</div><div class="sprice">${tag}</div></button>`;
+    const it = shopItem(id), use = using(c, it);
+    const tag = it.kind === 'm' ? `⭐ ${it.price}` : use ? `✓ ${zy('使用中')}` : owns(c, it) ? zy('點我換上') : `${curIcon(it)} ${it.price}`;
+    return `<button class="shopi ${sel === id ? 'sel' : ''} ${use ? 'use' : ''}" data-act="buy" data-v="${id}"><div class="sicon">${icon}</div><div class="sname">${zy(it.name)}</div><div class="sprice">${tag}</div></button>`;
   };
   const sec = (title, cards) => `<div class="shead">${title}</div><div class="sgrid2">${cards.join('')}</div>`;
+  const o = avObj(c.avatar);
   mount(`<div class="screen sky">${hud('tomap')}
     <div class="mapdog">${dogHTML()}<div class="dogsay">${zy(line || '點一下看看，再點一次就買下來！')}</div></div>
     <div class="shop">
+      <div class="shopcur">⭐ ${zy('用星星買')}　<b>${c.stars}</b></div>
       ${sec('🧱 ' + zy('換材料'), MATS.map(([m, , , t]) => card('m:' + m, `<i class="blk t-${t}"></i>`)))}
       ${sec('🐶 ' + zy('小汪的造型'), SKINS.map(s => card('s:' + s.id, `<img class="px" src="${SPR['dog_' + s.id]}">`)))}
       ${sec('🎩 ' + zy('小汪的配件'), ACCS.map(a => card('a:' + a.id, `<span class="pv"><img class="px" src="${SPR['dog_' + c.skin]}">${a.rows ? `<img class="px" src="${SPR['acc_' + a.id]}">` : ''}</span>`)))}
+      <div class="shopcur gold">${ICO.gold()} ${zy('用金礦買')}　<b>${c.gold}</b></div>
+      ${sec('✨ ' + zy('特別頭像'), [0, ...OUTFITS.map(x => x[0])].map(n => card('o:' + n, `<img ${n ? '' : 'class="px"'} src="${n ? `img/char-${n}-face.webp` : avatarURL({ ...o, outfit: 0 })}" alt="">`)))}
+      ${DOLL_SLOTS.map(([slot, name]) => sec('👗 ' + zy(name), DOLL.filter(d => d.slot === slot && d.price).map(d => card('d:' + d.id, `<img class="px doll" src="${dollURL({ ...o, [slot]: d.id })}">`)))).join('')}
+      ${sec('🐾 ' + zy('寵物'), PETS.map(([id]) => card('p:' + id, `<img src="${petImg(id)}" alt="">`)))}
     </div></div>`);
 }
 // 點第一下：小汪介紹價錢；再點一下：買下來（已經有的就直接換上）
 function shopTap(id) {
-  const c = S.child, it = shopItem(id);
+  const c = S.child, it = shopItem(id), wallet = it.cur === 'gold' ? 'gold' : 'stars';
   if (it.kind !== 'm' && owns(c, it)) {
-    if (it.kind === 's') c.skin = it.key; else c.acc = it.key;
+    wear(c, it);
     S.shopSel = ''; save(); renderShop(`換上${it.name}了！`); setDog('happy', 1500); speak(`換上${it.name}了！`);
     return;
   }
   if (S.shopSel !== id) {
-    S.shopSel = id; const line = `${it.name}要 ${it.price} 顆星星，再點一次就買下來！`;
+    S.shopSel = id; const line = `${it.name}要 ${it.price} ${curName(it)}，再點一次就買下來！`;
     renderShop(line); dogSay([{ text: line }]);
     return;
   }
   S.shopSel = '';
-  if (c.stars < it.price) { const line = `星星還不夠喔，還差 ${it.price - c.stars} 顆，再去冒險收集吧！`; renderShop(line); dogSay([{ text: line }], null, 'sad'); return; }
-  c.stars -= it.price;
+  if (c[wallet] < it.price) {
+    const line = it.cur === 'gold' ? `金礦還不夠喔，還差 ${it.price - c.gold} 個，去金礦山挖金礦吧！` : `星星還不夠喔，還差 ${it.price - c.stars} 顆，再去冒險收集吧！`;
+    renderShop(line); dogSay([{ text: line }], null, 'sad'); return;
+  }
+  c[wallet] -= it.price;
   if (it.kind === 'm') c[it.key]++;
-  else { c.owned.push(it.kind + ':' + it.key); if (it.kind === 's') c.skin = it.key; else c.acc = it.key; }
+  else if (it.kind === 'p') c.pets.push({ id: it.key, love: 0 });
+  else c.owned.push(it.kind + ':' + it.key);
+  if (it.kind !== 'm') wear(c, it);
   save(); SFX.win();
-  const line = it.kind === 'm' ? `買到${it.name}了！可以拿去蓋房子喔！` : `換上${it.name}了，好可愛！`;
+  const line = it.kind === 'm' ? `買到${it.name}了！可以拿去蓋房子喔！` : it.kind === 'p' ? `${it.name}來你家了！` : `換上${it.name}了，好可愛！`;
   renderShop(line); setDog('happy', 2000); speak(line);
 }
 function questLine(c) {
@@ -1440,8 +1790,10 @@ function renderMap() {
     <div class="mapgrid">${BIOMES.map(b => `<button class="biome tiled t-${b.tex} ${b.open ? '' : 'locked'} ${blocked(c, b.id) ? 'rest' : ''} ${questComplete(c) ? '' : done[b.id] ? 'did' : 'todo'}" data-act="biome" data-v="${b.id}">
       ${questComplete(c) ? '' : done[b.id] ? `<span class="flag did">✓ ${zy('今天完成')}</span>` : `<span class="flag todo">⭐ ${zy('今天還沒來')}</span>`}
       ${blocked(c, b.id) ? `<span class="flag rest">💤 ${zy('先去別的地方')}</span>` : ''}
-      <div class="sym">${b.sym}</div><div class="bname">${zy(b.name)}</div>${SUBJ[b.id] ? `<div class="lv">Lv${P(c, b.id).level} ${zy(SUBJ[b.id].levels[P(c, b.id).level])}</div>` : ''}</button>`).join('')}</div>
-    <div class="mapbar"><button class="btn orange big" data-act="house">🏠 ${zy('我的家')}</button><button class="btn green big" data-act="shop">🛒 ${zy('星星商店')}</button><button class="btn big" data-act="village">🏘 ${zy('家族村莊')}</button></div></div>`);
+      <div class="sym">${b.sym}</div><div class="bname">${zy(b.name)}</div>${SUBJ[b.id] ? `<div class="lv">Lv${P(c, b.id).level} ${zy(SUBJ[b.id].levels[P(c, b.id).level])}</div>` : ''}</button>`).join('')}
+      <button class="biome extra water" data-act="pond"><div class="sym">🎣</div><div class="bname">${zy('釣魚池')}</div><div class="lv">${zy('釣魚餵寵物')}</div></button>
+      <button class="biome tiled t-stone extra" data-act="mine"><div class="sym">⛏️</div><div class="bname">${zy('金礦山')}</div><div class="lv">${ICO.bomb()} ${c.bombs}　${ICO.gold()} ${c.gold}</div></button></div>
+    <div class="mapbar small"><button class="btn orange" data-act="house">🏠 ${zy('我的家')}</button><button class="btn green" data-act="shop">🛒 ${zy('商店')}</button><button class="btn pink" data-act="doll">👗 ${zy('娃娃屋')}</button><button class="btn" data-act="bag">🎒 ${zy('背包')}</button></div>${petBuddy()}</div>`);
 }
 
 // 數學、注音、英文共用同一套出題流程：每關 5 題，題目由 SUBJ[subject].gen 產生
@@ -1485,9 +1837,14 @@ function doHiFive(tapped) {
   if (tapped) { ov.classList.add('clap'); beep([880, 1175, 1568], .07, 'square', .08); speak(pick(['耶！', '拍拍手！', '好棒喔！'])); }
   later(() => { ov.remove(); const n = S.hiNext; S.hiNext = null; if (n) n(); }, tapped ? 800 : 0);
 }
+// 兩個以上的注音符號直著排（單一符號照原樣）
+function zyVert(o) {
+  const s = [...o], tone = 'ˊˇˋ˙'.includes(s[s.length - 1]) ? s.pop() : '';
+  return s.length < 2 ? o : `<span class="zv">${s.map(x => `<i>${x}</i>`).join('')}${tone ? `<b class="tn">${tone}</b>` : ''}</span>`;
+}
 function renderGame() {
   S.screen = 'game';
-  const g = S.game, q = g.q, label = q.optLabel || (o => o);
+  const g = S.game, q = g.q, label = q.optLabel || (q.optClass === 'zy' ? zyVert : o => o);
   mount(`<div class="screen sky">${hud('tomap')}
     <div class="gtop"><div class="pips">${Array.from({ length: g.total }, (_, i) => `<i class="blk pip ${i < g.idx ? 't-' + SUBJ[g.subject].tex : ''} ${i === g.idx ? 'cur' : ''}"></i>`).join('')}</div>
       <button class="btn hintbtn" data-act="buyhint">💡 ${zy('提示')} <img class="px ico" src="${SPR.star}">×2</button></div>
@@ -1614,20 +1971,33 @@ function renderHouse(opt = {}) {
     const b = BUILDS[st.cur], placed = new Set(c.placed[st.cur] || []);
     const left = m => b.order[m].filter(cell => !placed.has(cell)).length;
     const short = MATS.filter(([m]) => left(m) > st.have[m]).map(([m, name, place]) => `${place}可以拿${name}`);
-    body = `<div class="hrow">${town}${planHTML(b.plan, placed)}</div>`;
     pal = `<div class="hpal">${MATS.filter(([m]) => left(m) > 0).map(([m, name, , t]) =>
       `<div class="hsrc ${st.have[m] ? '' : 'empty'}" data-m="${m}"><i class="blk t-${t}"></i><b>${st.have[m]}</b><span>${zy(name)}</span></div>`).join('')}</div>`;
+    body = `<div class="hrow">${town}${planHTML(b.plan, placed)}${pal}</div>`; pal = '';
     msg = `正在蓋：${b.name}　把材料拖到虛線格子裡！`;
     say = cheer + (canPlace(c) ? `這是你的${b.name}！把下面的材料拖到虛線格子裡，自己蓋蓋看！` : `${b.name}還需要材料喔！${short.join('，')}。`) + `蓋好會有${b.pet[1]}搬進來喔！`;
   }
   mount(`<div class="screen sky">${hud('tomap')}
     ${cheer ? `<div class="badge hcheer">🎉 ${zy(cheer)}</div>` : ''}<div class="hmsg">${zy(msg)}</div>${body}${pal}
     <div class="badges">${BADGES.map(b => `<span class="bd ${c.badges.includes(b.id) ? '' : 'no'}">🏅 ${zy(b.name)}</span>`).join('')}</div>
-    <div class="mapbar"><button class="btn green big" data-act="tomap">${zy('去冒險拿材料')} ▶</button></div></div>`);
+    <div class="mapbar"><button class="btn green big" data-act="tomap">${zy('去冒險拿材料')} ▶</button></div>${petBuddy()}</div>`);
   if (opt.built) SFX.win();
   if (!opt.quiet || opt.built) speak(say);
-  if (!all) setupHouseDrag();
+  if (!all) { fitHouse(); setupHouseDrag(); }
 }
+// 依剩下的空間縮放正在蓋的房子，避免跟材料疊在一起（直向、橫向都適用）
+function fitHouse() {
+  const row = document.querySelector('.hrow'), h = row && row.querySelector(':scope > .house');
+  if (!h) return;
+  h.style.removeProperty('--hb');
+  const pal = row.querySelector('.hpal'), town = row.querySelector('.town'), land = innerWidth > innerHeight;
+  const rows = Math.ceil(h.children.length / 12), gap = 28;
+  const H = row.clientHeight - (land ? 0 : pal.offsetHeight + 12) - 8;
+  const W = row.clientWidth - (land ? pal.offsetWidth + gap : 0) - (town ? town.offsetWidth + gap : 0) - 8;
+  const now = h.offsetWidth / 12, fit = Math.floor(Math.min(now, H / rows, W / 12));
+  if (fit < now) h.style.setProperty('--hb', fit + 'px');
+}
+window.addEventListener('resize', () => { if (S.screen === 'house') fitHouse(); });
 // 拖曳手上的材料到虛線格子；要放的格子會亮黃框
 function setupHouseDrag() {
   const c = S.child;
@@ -1702,7 +2072,8 @@ function renderCave() {
   };
   mount(`<div class="screen cave">${hud('tomap')}
     <div class="cavegrid">${Object.entries(FGAMES).map(([id, g]) => `<button class="fgame" data-act="fgame" data-v="${id}">
-      <div class="ficon">${icons[id]}</div><div class="bname">${zy(g.name)}</div><div class="lv">Lv${c.focus[id]}</div></button>`).join('')}</div></div>`);
+      <div class="ficon">${icons[id]}</div><div class="bname">${zy(g.name)}</div><div class="lv">Lv${c.focus[id]}</div></button>`).join('')}
+      <button class="fgame duelbtn" data-act="duel"><div class="ficon">⚔️</div><div class="bname">${zy('翻牌對戰')}</div><div class="lv">${zy('兩台平板')}</div></button></div></div>`);
 }
 function startFocus(id) {
   S.again = () => startFocus(id); S.lastBiome = 'focus';
@@ -1788,6 +2159,598 @@ function memTap(i) {
       if (g.miss >= 4 && !g.freePeek) { g.freePeek = true; g.miss = 0; bubble('偷看一下 👀'); speak('沒關係，我們偷看一下！'); peek(1500); }
     }, 1000);
   }
+}
+
+/* ---------- 寵物和釣魚池：釣到的魚要答對題目才能餵寵物；寵物只會越來越開心，不會餓或生病 ---------- */
+const PETS = [['dog', '小狗'], ['cat', '小貓'], ['rabbit', '小兔子'], ['bear', '小熊'], ['tiger', '小老虎'], ['giraffe', '長頸鹿']];
+const PET_PRICE = 30;                  // 第二隻以後用金礦買（金礦從礦山來）
+const PET_LV = [0, 5, 15, 30, 50, 80]; // 愛心累積到這些數字就升一級，最高 Lv6
+const FISH_DAY = 10;                   // 每天最多釣 10 條，避免只玩釣魚
+const petImg = id => `img/pet-${id}.webp`;
+// 寵物圖還沒下載到（例如沒網路、檔案還沒上傳）時，先用表情符號代替，不會只剩文字
+const PET_EMO = { dog: '🐶', cat: '🐱', rabbit: '🐰', bear: '🐻', tiger: '🐯', giraffe: '🦒' };
+document.addEventListener('error', e => {
+  const el = e.target, m = el.tagName === 'IMG' && /img\/pet-(\w+)\.webp/.exec(el.src);
+  if (!m) return;
+  const s = document.createElement('span'); s.className = (el.className + ' pemo').trim(); s.id = el.id; s.textContent = PET_EMO[m[1]] || '🐾';
+  el.replaceWith(s);
+}, true);
+const petName = id => PETS.find(p => p[0] === id)[1];
+const petLv = p => PET_LV.filter(n => p.love >= n).length;
+const curPet = c => c.pets.find(p => p.id === c.pet);
+
+// 陪伴的寵物：可以拖到不擋畫面的地方（位置存在這台 iPad），點一下會跳，也可以先藏起來
+function petBuddy() {
+  const p = S.child && curPet(S.child);
+  if (!p) return '';
+  if (S.data.petHide) return `<button class="petshow" data-act="petshow" title="叫寵物出來">🐾</button>`;
+  const pos = S.data.petPos;
+  return `<div class="petbuddy lv${petLv(p)}" id="petbuddy" style="${pos ? `left:${pos[0]}%;top:${pos[1]}%;right:auto;bottom:auto` : ''}">
+    <img src="${petImg(p.id)}" alt="" draggable="false"><button class="pethide" data-act="pethide">🙈 ${zy('藏起來')}</button></div>`;
+}
+app.addEventListener('pointerdown', e => {
+  const el = e.target.closest('#petbuddy');
+  if (!el || e.target.closest('.pethide')) return;
+  e.preventDefault();
+  const sc = el.parentElement.getBoundingClientRect(), r = el.getBoundingClientRect();
+  const dx = e.clientX - r.left, dy = e.clientY - r.top, x0 = e.clientX, y0 = e.clientY;
+  let moved = false;
+  const move = ev => {
+    if (!moved && Math.hypot(ev.clientX - x0, ev.clientY - y0) < 10) return;
+    moved = true; el.classList.add('drag');
+    const x = Math.max(0, Math.min(sc.width - r.width, ev.clientX - sc.left - dx)), y = Math.max(0, Math.min(sc.height - r.height, ev.clientY - sc.top - dy));
+    Object.assign(el.style, { left: x / sc.width * 100 + '%', top: y / sc.height * 100 + '%', right: 'auto', bottom: 'auto' });
+  };
+  const up = () => {
+    window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up);
+    el.classList.remove('drag');
+    if (moved) { S.data.petPos = [parseFloat(el.style.left), parseFloat(el.style.top)]; saveLocal(); }
+    else petPat(el);
+  };
+  window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
+});
+function petPat(el) {
+  const p = curPet(S.child); if (!p) return;
+  el.classList.remove('jump', 'spin', 'menu'); void el.offsetWidth;
+  el.classList.add(petLv(p) >= 3 && Math.random() < .5 ? 'spin' : 'jump', 'menu');
+  beep([660, 990], .08, 'triangle', .08);
+  el.insertAdjacentHTML('beforeend', `<span class="heartpop">❤️</span>`);
+  setTimeout(() => { el.querySelector('.heartpop')?.remove(); }, 900);
+  clearTimeout(el._menu); el._menu = setTimeout(() => el.classList.remove('menu'), 3000);
+}
+function petCard(p) {
+  const lv = petLv(p), lo = PET_LV[lv - 1], hi = PET_LV[lv];
+  const pct = hi ? (p.love - lo) / (hi - lo) * 100 : 100;
+  return `<div class="petcard"><div class="pname2">${zy(petName(p.id))} <b>Lv${lv}</b></div>
+    <div class="lovebar"><div style="width:${pct}%"></div><span>❤️ ${p.love}${hi ? ' / ' + hi : ''}</span></div>
+    <button class="btn small" data-act="bag">🎒 ${zy('背包')}</button></div>`;
+}
+
+/* 魚：像素圖，稀有度越高越少見，餵了加越多愛心 */
+const FISHES = [
+  ['trout', '藍鱒魚', 1, { b: '#4a7fc0', w: '#d9ecfa', f: '#2f5d99' }],
+  ['carp', '鯉魚', 1, { b: '#e0662f', w: '#ffe0b8', f: '#b8461d' }],
+  ['puffer', '河豚', 2, { b: '#e8c547', w: '#fff6d0', f: '#b8962a' }],
+  ['clown', '小丑魚', 2, { b: '#ff7a1a', w: '#ffffff', f: '#1e1e1e', s: '#ffffff' }],
+  ['salmon', '鮭魚', 2, { b: '#f08a8a', w: '#ffe4e4', f: '#c45a5a' }],
+  ['gold', '金魚', 3, { b: '#ffcc33', w: '#fff1a0', f: '#e09a00' }],
+];
+const FISH_ROWS = ['......ff......', '...bbbbbbb..f.', '..bbbbbbbbbff.', '.bwkbbbbbbbbf.', 'bbbbbbbbbbbbf.', '.wwwwwwwbbbbff', '..wwwwwwww..f.', '.....ff.......'];
+const fishSpr = id => {
+  const k = 'fish_' + id;
+  if (!SPR[k]) {
+    const [, , , pal] = FISHES.find(f => f[0] === id);
+    const rows = pal.s ? FISH_ROWS.map(r => [...r].map((ch, x) => (x === 4 || x === 9) && 'bw'.includes(ch) ? 's' : ch).join('')) : FISH_ROWS;
+    SPR[k] = sprite(rows, { ...pal, k: '#1e1e1e' });
+  }
+  return SPR[k];
+};
+function pickFish() {
+  const r = Math.random(), rar = r < .08 ? 3 : r < .4 ? 2 : 1;
+  const f = pick(FISHES.filter(x => x[2] === rar));
+  return { id: f[0], name: f[1], rar, size: pick(['小型', '中型', '大型']) };
+}
+
+/* 常識、安全、科學題：依年紀出題。tf 是對錯題 */
+const KNOW = [
+  // 5–6 歲
+  [1, '過馬路之前，要先停、看、聽', true], [1, '紅燈的時候可以過馬路', false], [1, '坐車的時候要繫好安全帶', true],
+  [1, '陌生人給的糖果可以直接吃', false], [1, '吃飯前要先洗手', true], [1, '插座可以用手指去摸', false], [1, '每天都要刷牙', true],
+  [1, '綠燈亮了，過馬路還是要左右看', true],
+  [1, '一個星期有幾天？', '7', ['5', '7', '10']], [1, '一隻手有幾根手指頭？', '5', ['4', '5', '6']],
+  [1, '太陽從哪一邊升起來？', '東邊', ['東邊', '西邊', '北邊']], [1, '冰塊放在太陽下面會怎麼樣？', '融化', ['變大', '融化', '變硬']],
+  [1, '下雨天出門要帶什麼？', '雨傘', ['雨傘', '太陽眼鏡', '扇子']], [1, '小狗怎麼叫？', '汪汪', ['汪汪', '喵喵', '咩咩']],
+  [1, '哪一個是水果？', '蘋果', ['蘋果', '紅蘿蔔', '麵包']], [1, '毛毛蟲長大會變成什麼？', '蝴蝶', ['蝴蝶', '小鳥', '青蛙']],
+  [1, '蝌蚪長大會變成什麼？', '青蛙', ['青蛙', '小魚', '烏龜']], [1, '冬天的天氣比較冷還是比較熱？', '比較冷', ['比較冷', '比較熱']],
+  // 7–8 歲
+  [2, '火災的時候可以搭電梯', false], [2, '月亮自己會發光', false], [2, '太陽也是一顆星星', true],
+  [2, '小朋友可以自己去河邊玩水', false], [2, '地震的時候要遠離窗戶', true],
+  [2, '一天有幾個小時？', '24', ['12', '24', '60']], [2, '一個小時有幾分鐘？', '60', ['10', '30', '60']],
+  [2, '一年有幾個月？', '12', ['10', '12', '24']], [2, '發生火災要打幾號電話？', '119', ['110', '119', '123']],
+  [2, '遇到壞人要打幾號電話找警察？', '110', ['110', '119', '123']], [2, '魚用什麼呼吸？', '鰓', ['鰓', '鼻子', '皮膚']],
+  [2, '植物要有什麼才能長大？', '陽光和水', ['陽光和水', '糖果', '電']], [2, '蜜蜂會做出什麼？', '蜂蜜', ['蜂蜜', '牛奶', '雞蛋']],
+  [2, '蜘蛛有幾隻腳？', '8', ['6', '8', '10']], [2, '昆蟲有幾隻腳？', '6', ['4', '6', '8']],
+  [2, '彩虹有幾種顏色？', '7', ['5', '7', '10']], [2, '台灣最高的山是哪一座？', '玉山', ['玉山', '阿里山', '陽明山']],
+  [2, '水煮滾了會冒出什麼？', '水蒸氣', ['水蒸氣', '冰塊', '沙子']],
+  // 9 歲以上
+  [3, '颱風天可以去海邊看浪', false], [3, '網路上認識的人，可以告訴他家裡的地址', false], [3, '恐龍和人類生活在同一個時代', false],
+  [3, '打雷的時候，會先看到閃電，再聽到雷聲', true],
+  [3, '為什麼會有彩虹？', '陽光照到小水滴', ['陽光照到小水滴', '雲被染色', '花的顏色飄上天']],
+  [3, '地球繞太陽轉一圈，大約要多久？', '一年', ['一天', '一個月', '一年']], [3, '地球自己轉一圈，大約要多久？', '一天', ['一天', '一個月', '一年']],
+  [3, '為什麼會有白天和晚上？', '地球會自轉', ['地球會自轉', '太陽會睡覺', '雲把太陽遮住']],
+  [3, '月亮繞地球轉一圈，大約要多久？', '一個月', ['一天', '一個月', '一年']], [3, '水在幾度會結冰？', '0度', ['0度', '50度', '100度']],
+  [3, '水在幾度會沸騰？', '100度', ['0度', '50度', '100度']], [3, '離太陽最近的行星是哪一顆？', '水星', ['水星', '火星', '地球']],
+  [3, '磁鐵可以吸住哪一個？', '鐵釘', ['鐵釘', '木頭', '塑膠']], [3, '植物會放出什麼，讓我們呼吸？', '氧氣', ['氧氣', '二氧化碳', '水蒸氣']],
+  [3, '企鵝住在南極還是北極？', '南極', ['南極', '北極']], [3, '一公尺等於幾公分？', '100', ['10', '100', '1000']],
+  [3, '心臟的工作是什麼？', '把血液送到全身', ['把血液送到全身', '幫忙消化食物', '讓我們看東西']],
+];
+const KNOW_TF = ['對', '錯'];
+function knowQ() {
+  const c = S.child, lvls = c.age <= 6 ? [1] : c.age <= 8 ? [1, 2] : [2, 3];
+  const recent = c.kq || (c.kq = []);
+  const pool = KNOW.map((k, i) => [k, i]).filter(([k, i]) => lvls.includes(k[0]) && !recent.includes(i));
+  const [[, text, a, opts], i] = pick(pool.length ? pool : KNOW.map((k, i) => [k, i]).filter(([k]) => lvls.includes(k[0])));
+  recent.push(i); if (recent.length > 20) recent.shift();
+  const tf = typeof a === 'boolean';
+  return {
+    subject: 'know', display: tf ? text + '，對還是錯？' : text, parts: [{ text: tf ? text + '，對還是錯？' : text }], visual: '',
+    answer: tf ? (a ? '對' : '錯') : a, options: tf ? KNOW_TF : shuffle(opts.slice()), optClass: 'kn',
+    optLabel: o => tf ? (o === '對' ? '⭕ ' : '❌ ') + zy(o) : zy(o), rec: text, ansParts: [{ text: tf ? (a ? '對' : '錯') : a }],
+  };
+}
+// 一半是常識題，一半從數學、注音、英文出（不出拖曳題和口說題）
+function fishQuestion() {
+  const c = S.child;
+  if (Math.random() < .5) return knowQ();
+  for (let t = 0; t < 20; t++) {
+    const s = pick(['math', 'zhuyin', 'eng']), q = SUBJ[s].gen(P(c, s).level);
+    if (q && !q.build && !q.speak && q.options && q.options.length) { q.subject = s; return q; }
+  }
+  return knowQ();
+}
+
+/* 釣魚畫面：拋竿 → 等待 → 浮標動了 → 按住拉線 → 釣起來 → 答題 → 把魚拖給寵物吃 */
+// 釣竿和釣線用 SVG 畫（座標 0–100），浮標和魚是蓋在上面的元素
+const ROD = { base: [21, 47], up: [27, 8], cast: [42, 22], pull: [36, 14], land: [74, 72] };
+function renderPond() {
+  S.screen = 'pond'; S.fish = null;
+  const c = S.child, p = curPet(c);
+  if (!p) return renderPetList(true);
+  const left = FISH_DAY - (U(c).fish || 0);
+  mount(`<div class="screen sky">${hud('tomap')}
+    <div class="pondwrap">${petCard(p)}
+      <div class="fscene" id="fscene">
+        <div class="fwater"></div><div class="dock t-planks"></div>
+        <img class="fkid px ${avObj(c.avatar).outfit ? 'out' : ''}" src="${kidURL(c.avatar)}" alt=""><img class="fpet lv${petLv(p)}" id="fpet" src="${petImg(p.id)}" alt="" draggable="false">
+        <svg class="frod" viewBox="0 0 100 100" preserveAspectRatio="none"><line id="rod" stroke="#6b4423" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+          <path id="fline" fill="none" stroke="#fff" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>
+        <div class="fbob" id="fbob"></div><div class="fbub" id="fbub"></div><div class="fsplash" id="fsplash"></div>
+      </div>
+      <div class="hmsg" id="fmsg">${zy(left > 0 ? `今天還可以釣 ${left} 條魚` : '小動物今天吃飽了，明天再來吧！')}</div>
+      <div class="fctl" id="fctl">${left > 0 ? `<button class="btn green big" data-act="cast">🎣 ${zy('拋竿')}</button>` : ''}</div>
+    </div><div id="bubble" class="bubble"></div></div>`);
+  // 特別造型是插畫，手的位置不一樣
+  ROD.base = avObj(c.avatar).outfit ? [19, 36] : [19.5, 46.5];
+  rodTo(ROD.up); bobAt(null);
+}
+function rodTo(tip, bob) {
+  const rod = document.getElementById('rod'); if (!rod) return;
+  rod.setAttribute('x1', ROD.base[0]); rod.setAttribute('y1', ROD.base[1]); rod.setAttribute('x2', tip[0]); rod.setAttribute('y2', tip[1]);
+  rod.dataset.tip = tip.join(',');
+  const line = document.getElementById('fline');
+  line.setAttribute('d', bob ? `M${tip[0]},${tip[1]} Q${(tip[0] + bob[0]) / 2},${Math.max(tip[1], bob[1]) + 8} ${bob[0]},${bob[1]}` : '');
+}
+function bobAt(pos, cls = '') {
+  const b = document.getElementById('fbob'); if (!b) return;
+  b.style.display = pos ? '' : 'none';
+  if (pos) { b.style.left = pos[0] + '%'; b.style.top = pos[1] + '%'; }
+  b.className = 'fbob ' + cls;
+}
+const fbub = t => { const b = document.getElementById('fbub'); if (b) { b.textContent = t; b.style.display = t ? '' : 'none'; } };
+const fctl = h => { const e = document.getElementById('fctl'); if (e) e.innerHTML = h; };
+function cast() {
+  const c = S.child;
+  if (S.fish || (U(c).fish || 0) >= FISH_DAY) return;
+  S.fish = { stage: 'cast' };
+  fctl(''); SFX.tap();
+  // 竿子往後再甩出去，浮標畫一個弧線落到水裡
+  rodTo([12, 12]);
+  later(() => {
+    rodTo(ROD.cast); beep([300, 500], .06, 'triangle', .06);
+    const b = document.getElementById('fbob'); bobAt(ROD.cast);
+    b.animate([{ left: ROD.cast[0] + '%', top: ROD.cast[1] + '%' }, { left: '60%', top: '4%' }, { left: ROD.land[0] + '%', top: ROD.land[1] + '%' }], { duration: 700, easing: 'ease-out' });
+    later(() => {
+      bobAt(ROD.land, 'float'); rodTo(ROD.cast, ROD.land); splash(ROD.land, 'small');
+      S.fish.stage = 'wait'; fbub('…');
+      later(bite, 1500 + Math.random() * 2500);
+    }, 700);
+  }, 250);
+}
+function splash(pos, size = '') {
+  const s = document.getElementById('fsplash'); if (!s) return;
+  s.style.left = pos[0] + '%'; s.style.top = pos[1] + '%';
+  s.className = 'fsplash'; void s.offsetWidth; s.className = 'fsplash on ' + size;
+}
+function bite() {
+  const f = S.fish; if (!f || f.stage !== 'wait') return;
+  f.stage = 'bite'; f.prog = 0; f.hold = false;
+  bobAt(ROD.land, 'float bite'); fbub('❗'); splash(ROD.land);
+  beep([880, 880], .07, 'square', .08);
+  fctl(`<button class="btn orange big holdbtn" id="holdbtn"><span>✊ ${zy('按住拉線')}</span><div class="reel"><div id="reelbar"></div></div></button>`);
+  const btn = document.getElementById('holdbtn');
+  const on = e => { e.preventDefault(); f.hold = true; if (f.stage === 'bite') { f.stage = 'reel'; reelTick(); } };
+  const off = () => { f.hold = false; };
+  btn.addEventListener('pointerdown', on); btn.addEventListener('pointerup', off); btn.addEventListener('pointerleave', off); btn.addEventListener('pointercancel', off);
+  speak('魚上鉤了！按住拉線！');
+  // 小孩反應比較慢：3 秒內開始拉就好，開始拉了魚就不會跑掉
+  later(() => { if (S.fish === f && f.stage === 'bite') { S.fish = null; fbub(''); bubble('魚跑掉了，再試一次！', 1500); speak('魚跑掉了，再試一次！'); renderPond(); } }, 3000);
+}
+// 按住進度往上、放開慢慢往下；拉滿就釣起來
+function reelTick() {
+  const f = S.fish; if (!f || f.stage !== 'reel') return;
+  f.prog = Math.max(0, Math.min(100, f.prog + (f.hold ? 3 : -1.2)));
+  const bar = document.getElementById('reelbar'); if (bar) bar.style.width = f.prog + '%';
+  const k = f.prog / 100, pos = [ROD.land[0] - k * 28, ROD.land[1] - k * 4];
+  const tip = f.hold ? ROD.pull : ROD.cast;
+  bobAt(pos, 'float bite'); rodTo(tip, pos);
+  if (f.hold && Math.random() < .25) { splash(pos); beep([200 + Math.random() * 100], .03, 'triangle', .04); }
+  if (f.prog >= 100) return caught(pos);
+  later(reelTick, 50);
+}
+function caught(pos) {
+  const f = S.fish;
+  f.stage = 'caught'; f.fish = pickFish(); f.q = fishQuestion(); f.tries = 0; f.wrong = [];
+  fbub(''); bobAt(null); rodTo(ROD.up); fctl(''); splash(pos, 'big'); SFX.ok();
+  // 魚從水裡跳出來
+  const sc = document.getElementById('fscene');
+  sc.insertAdjacentHTML('beforeend', `<img class="ffish px" id="ffish" src="${fishSpr(f.fish.id)}" alt="" draggable="false">`);
+  const el = document.getElementById('ffish');
+  el.animate([{ left: pos[0] + '%', top: pos[1] + '%', transform: 'rotate(0)' }, { left: '45%', top: '0%', transform: 'rotate(-200deg)' }, { left: '30%', top: '14%', transform: 'rotate(-360deg)' }], { duration: 900, easing: 'ease-out' });
+  Object.assign(el.style, { left: '30%', top: '14%' });
+  later(showFishCard, 1000);
+}
+function showFishCard() {
+  const f = S.fish, x = f.fish;
+  document.querySelector('.screen').insertAdjacentHTML('beforeend', `<div class="fishq" id="fishq"><div class="fqbox card2">
+    <div class="title sm">${zy('釣到魚了！')}</div><div class="fcardimg"><img class="px" src="${fishSpr(x.id)}" alt=""></div>
+    <div class="fname">${zy(x.name)}</div><div class="fmeta">${zy('尺寸')}：${zy(x.size)}　${zy('稀有度')}：${'⭐'.repeat(x.rar)}</div>
+    <button class="btn green big" data-act="fok">${zy('確認')}</button></div></div>`);
+  sayParts([{ text: '釣到魚了！' }, { text: x.name }, ...(x.rar === 3 ? [{ text: '好稀有喔！' }] : [])]);
+}
+function showFishQ() {
+  const f = S.fish, q = f.q, label = q.optLabel || (q.optClass === 'zy' ? zyVert : o => o);
+  document.getElementById('fishq')?.remove();
+  document.querySelector('.screen').insertAdjacentHTML('beforeend', `<div class="fishq" id="fishq"><div class="fqbox">
+    <div class="fqtop"><img class="px fqfish" src="${fishSpr(f.fish.id)}" alt=""><button class="btn small blue" data-act="fsay">🔊</button><div class="qtext ${q.dispClass || ''}">${q.displayHTML || zy(q.display)}</div></div>
+    <div class="visual" id="fvis">${q.visual || ''}</div>
+    <div class="answers">${q.options.map((o, i) => `<button class="btn ans ${q.optClass || ''}" data-act="fans" data-v="${i}">${label(o)}</button>`).join('')}</div></div></div>`);
+  f.stage = 'q';
+  sayParts([{ text: '答對問題，就可以餵小動物喔！' }, ...qParts(q)]);
+}
+function fishAnswer(i, el) {
+  const f = S.fish; if (!f || f.stage !== 'q') return;
+  const q = f.q, c = S.child, ok = q.options[i] === q.answer;
+  f.tries++;
+  if (!ok) {
+    SFX.no(); f.wrong.push(q.options[i]); el.classList.add('off', 'shake');
+    if (f.tries === 1) { speak('再想想看喔！'); return; }
+    if (f.tries === 2 && q.hint) { document.getElementById('fvis').innerHTML = q.hint; sayParts([{ text: '一起看提示！' }, ...(q.hintParts || [])]); return; }
+    if (f.tries === 2 && q.options.length > 2) { speak('再試一次！'); return; }
+  }
+  f.stage = 'done';
+  c.log.push({ t: Date.now(), s: q.subject, L: q.L, q: (q.rec || q.display) + '（釣魚）', ans: q.answer, ok, picks: f.wrong });
+  if (c.log.length > 500) c.log.shift();
+  save();
+  if (!ok) {
+    document.querySelectorAll('#fishq .ans').forEach(b => { if (q.options[+b.dataset.v] === q.answer) b.classList.add('reveal'); });
+    sayParts([{ text: '答案是' }, ...(q.ansParts || [{ text: String(q.answer) }]), { text: '，魚游走了，再釣一次吧！' }]);
+    later(() => {
+      document.getElementById('fishq')?.remove();
+      const fish = document.getElementById('ffish');
+      if (fish) fish.animate([{ top: '14%' }, { top: '80%', opacity: 0 }], { duration: 600 }).onfinish = () => renderPond();
+      else renderPond();
+    }, 3200);
+    return;
+  }
+  SFX.ok(); el.classList.add('good');
+  later(() => {
+    document.getElementById('fishq')?.remove();
+    f.stage = 'feed';
+    const fish = document.getElementById('ffish'); fish.classList.add('feedme');
+    fbub('');
+    document.getElementById('fmsg').innerHTML = '👉 ' + zy(`把魚拖給${petName(curPet(c).id)}吃！`);
+    sayParts([{ text: '答對了！' }, { text: '把魚拖給小動物吃吧！' }]);
+  }, 700);
+}
+// 把魚拖到寵物身上
+app.addEventListener('pointerdown', e => {
+  const fish = e.target.closest('#ffish.feedme');
+  if (!fish || !S.fish || S.fish.stage !== 'feed') return;
+  e.preventDefault();
+  const sc = document.getElementById('fscene').getBoundingClientRect(), r = fish.getBoundingClientRect(), start = [fish.style.left, fish.style.top];
+  const dx = e.clientX - r.left, dy = e.clientY - r.top;
+  const overPet = ev => { const p = document.getElementById('fpet').getBoundingClientRect(); return ev.clientX > p.left - 20 && ev.clientX < p.right + 20 && ev.clientY > p.top - 20 && ev.clientY < p.bottom + 20; };
+  fish.classList.add('drag');
+  const move = ev => {
+    fish.style.left = (ev.clientX - sc.left - dx) / sc.width * 100 + '%'; fish.style.top = (ev.clientY - sc.top - dy) / sc.height * 100 + '%';
+    document.getElementById('fpet').classList.toggle('want', overPet(ev));
+  };
+  const up = ev => {
+    window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up);
+    fish.classList.remove('drag'); document.getElementById('fpet').classList.remove('want');
+    if (overPet(ev)) feedPet(); else { fish.style.left = start[0]; fish.style.top = start[1]; }
+  };
+  window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
+});
+function feedPet() {
+  const f = S.fish, c = S.child, p = curPet(c), lv = petLv(p);
+  f.stage = 'ate';
+  document.getElementById('ffish')?.remove();
+  p.love += f.fish.rar; U(c).fish = (U(c).fish || 0) + 1; save();
+  const pet = document.getElementById('fpet'); pet.classList.remove('eat'); void pet.offsetWidth; pet.classList.add('eat');
+  document.getElementById('fscene').insertAdjacentHTML('beforeend', `<div class="fhearts">${'❤️'.repeat(f.fish.rar)}</div>`);
+  beep([523, 659, 784], .1);
+  const up = petLv(p) > lv;
+  sayParts([{ text: pick(['好好吃，謝謝你！', '小動物好開心！', '吃飽飽，好幸福！']) }, ...(up ? [{ text: '你的小動物長大了！' }] : [])]);
+  if (up) bubble(`🎉 ${petName(p.id)} 升到 Lv${petLv(p)}！`, 2500);
+  later(renderPond, up ? 2800 : 1800);
+}
+
+// 背包：換陪伴的寵物、看金礦和炸彈；沒有的寵物可以用金礦領養
+function renderPetList(first) {
+  S.screen = 'pets';
+  const c = S.child;
+  mount(`<div class="screen sky">${hud(first ? 'tomap' : 'tomap')}
+    <div class="hmsg">${zy(first ? '選一隻小動物帶回家！' : '🎒 背包')}</div>
+    ${first ? '' : `<div class="bagrow"><span class="pill">${ICO.gold()} ${zy('金礦')} <b>${c.gold}</b></span><span class="pill">${ICO.bomb()} ${zy('炸彈')} <b>${c.bombs || 0}</b></span></div><div class="hmsg sm">${zy('點一下就換牠陪你')}</div>`}
+    <div class="petgrid">${PETS.filter(([id]) => first || c.pets.some(p => p.id === id)).map(([id, name]) => {
+      const own = c.pets.find(p => p.id === id);
+      const tag = own ? (c.pet === id ? '⭐ ' + zy('陪你中') : `Lv${petLv(own)}`) : first ? zy('免費') : `${ICO.gold()} ${PET_PRICE}`;
+      return `<button class="petpick ${own ? 'own' : 'no'} ${c.pet === id ? 'sel' : ''}" data-act="adopt" data-v="${id}"><img src="${petImg(id)}" alt=""><span>${zy(name)}</span><b>${tag}</b></button>`;
+    }).join('')}</div>
+    ${first ? '' : `<div class="pnote2">${zy('想要更多寵物，可以到商店用金礦買')}</div>`}</div>`);
+  if (first) speak('選一隻小動物帶回家！以後釣到魚就可以餵牠喔！');
+}
+function adopt(id) {
+  const c = S.child, own = c.pets.find(p => p.id === id), first = !c.pets.length;
+  if (own) { c.pet = id; save(); SFX.tap(); speak(`換${petName(id)}陪你了！`); return renderPetList(false); }
+  if (!first) {
+    if (c.gold < PET_PRICE) { SFX.no(); speak('金礦不夠喔，去礦山挖金礦吧！'); return; }
+    c.gold -= PET_PRICE;
+  }
+  c.pets.push({ id, love: 0 }); c.pet = id; save(); SFX.win();
+  if (first) renderPond(); else renderPetList(false);
+  speak(`${petName(id)}來你家了！${first ? '我們去釣魚餵牠吧！' : ''}`);
+}
+
+/* ---------- 娃娃屋：孩子自己換髮型、衣服、飾品和頭像；只看得到自己有的東西，新衣服到商店用金礦買 ---------- */
+const DOLL_TABS = [['head', '頭髮'], ...DOLL_SLOTS, ['pic', '頭像']];
+const ownsDoll = (c, id) => !id || dollItem(id).price === 0 || c.owned.includes('d:' + id);
+function renderDoll(tab = S.dollTab || 'top') {
+  S.screen = 'doll'; S.dollTab = tab;
+  const c = S.child, o = avObj(c.avatar), plain = { ...o, outfit: 0 };
+  const opt = (act, v, img, name, sel, d = '') => `<button class="dopt ${sel ? 'sel' : ''}" data-act="${act}" data-v="${v}" ${d !== '' ? `data-d="${d}"` : ''}>${img}<span>${zy(name)}</span></button>`;
+  let list = '';
+  if (tab === 'head') {
+    list = AV_OPTS.map(([k, name, vals]) => `<div class="dsub2">${zy(name)}</div><div class="dopts">${vals.map((v, i) => /^#/.test(v)
+      ? `<button class="sw big ${o[k] === i ? 'sel' : ''}" data-act="dh" data-v="${k}" data-d="${i}" style="background:${v}"></button>`
+      : opt('dh', k, `<img class="px" src="${avatarURL({ ...plain, [k]: i })}">`, v, o[k] === i, i)).join('')}</div>`).join('');
+  } else if (tab === 'pic') {
+    const mine = OUTFITS.filter(([n]) => c.owned.includes('o:' + n));
+    list = `<div class="dopts">${opt('dpic', 0, `<img class="px" src="${avatarURL(plain)}">`, '我的娃娃', !o.outfit)}${mine.map(([n, name]) =>
+      opt('dpic', n, `<img src="img/char-${n}-face.webp" alt="">`, name, o.outfit === n)).join('')}</div>
+      ${mine.length < OUTFITS.length ? `<div class="pnote2">${zy('更多特別頭像可以到商店用金礦買')}</div>` : ''}`;
+  } else {
+    const items = DOLL.filter(d => d.slot === tab && ownsDoll(c, d.id));
+    const none = ['hat', 'face', 'hand'].includes(tab) ? opt('dw', tab + ':', `<img class="px doll" src="${dollURL({ ...plain, [tab]: '' })}">`, '不戴', !o[tab]) : '';
+    list = `<div class="dopts">${none}${items.map(d => opt('dw', tab + ':' + d.id, `<img class="px doll" src="${dollURL({ ...plain, [tab]: d.id })}">`, d.name, o[tab] === d.id)).join('')}</div>
+      ${tab === 'bottom' && dollItem(o.top).type === 'dress' ? `<div class="pnote2">${zy('穿洋裝的時候看不到褲裙喔')}</div>` : ''}
+      <div class="pnote2">${zy('想要更多，可以到商店用金礦買')}</div>`;
+  }
+  mount(`<div class="screen sky doll-bg">${hud('tomap')}
+    <div class="dollwrap">
+      <div class="dstage"><img class="px dollbig" src="${dollURL(plain)}" alt=""><div class="dpic"><img ${o.outfit ? '' : 'class="px"'} src="${avatarURL(c.avatar)}" alt=""><span>${zy('頭像')}</span></div></div>
+      <div class="dside"><div class="dtabs">${DOLL_TABS.map(([k, n]) => `<button class="btn small ${k === tab ? 'orange' : ''}" data-act="dtab" data-v="${k}">${zy(n)}</button>`).join('')}</div>
+        <div class="dlist">${list}</div>
+        <button class="btn green" data-act="shop">🛒 ${zy('去商店買新衣服')}</button></div>
+    </div><div id="bubble" class="bubble"></div></div>`);
+}
+function dollSet(changes, say) {
+  const c = S.child;
+  c.avatar = { ...avObj(c.avatar), ...changes }; c.upd = Date.now(); save();
+  SFX.tap(); renderDoll();
+  const big = document.querySelector('.dollbig'); if (big) big.classList.add('pop');
+  if (say) speak(say);
+}
+
+/* ---------- 金礦山：用炸彈炸開石頭挖金礦；藏著金礦的石頭偶爾會閃一下，讓孩子觀察要炸哪裡 ---------- */
+// 炸彈只從每日任務寶箱拿（第一次來送一次），金礦拿去商店買寵物和人物裝飾
+const MINE_W = 7, MINE_H = 6, MINE_BOMBS = 3;
+function newMine() {
+  const n = MINE_W * MINE_H, ore = Array(n).fill(0);
+  shuffle([...Array(n).keys()]).slice(0, 8).forEach((i, k) => ore[i] = k ? 3 : 10); // 7 個金礦（3 個），1 個大金塊（10 個）
+  return { ore, broken: Array(n).fill(0) };
+}
+function renderMine(line) {
+  S.screen = 'mine';
+  const c = S.child;
+  if (!c.mine) c.mine = newMine();
+  if (!c.mineIntro) { c.mineIntro = true; c.bombs += MINE_BOMBS; save(); }
+  const m = c.mine;
+  mount(`<div class="screen cave">${hud('tomap')}
+    <div class="minetop"><span class="pill big">${ICO.bomb()} <b id="mBombs">${c.bombs}</b></span><span class="pill big">${ICO.gold()} <b id="mGold">${c.gold}</b></span></div>
+    <div class="hmsg" id="mmsg">${zy(line || (c.bombs ? '看看哪裡在閃光，點一下放炸彈！' : '炸彈用完了，完成今日任務就有新炸彈喔！'))}</div>
+    <div class="minegrid" id="minegrid" style="grid-template-columns:repeat(${MINE_W},var(--mc))">${m.ore.map((o, i) =>
+      `<button class="mc ${m.broken[i] ? (o ? 'ore got' : 'empty') : 'blk t-stone'} ${!m.broken[i] && o ? 'glint' : ''}" data-act="mbomb" data-v="${i}" style="animation-delay:${(i * 0.37) % 2}s">${m.broken[i] && o ? `<img class="px nug ${o >= 10 ? 'big' : ''}" src="${SPR.gold}">` : ''}</button>`).join('')}</div>
+    <div id="bubble" class="bubble"></div></div>`);
+}
+function mineBomb(i) {
+  const c = S.child, m = c.mine;
+  if (S.mineBusy || !m || m.broken[i]) return;
+  if (c.bombs <= 0) { SFX.no(); speak('炸彈用完了，完成今日任務就有新炸彈喔！'); return; }
+  S.mineBusy = true; c.bombs--; save();
+  document.getElementById('mBombs').textContent = c.bombs;
+  const cells = document.querySelectorAll('.mc'), el = cells[i];
+  el.innerHTML = `<img class="px bomb" src="${SPR.bomb}">`; beep([200, 180, 160, 140], .15, 'square', .05);
+  later(() => {
+    // 爆炸：3×3 格
+    beep([90, 70, 50], .18, 'sawtooth', .12);
+    document.getElementById('minegrid').classList.add('boom');
+    const x = i % MINE_W, y = (i / MINE_W) | 0;
+    let got = 0;
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+      const nx = x + dx, ny = y + dy, j = ny * MINE_W + nx;
+      if (nx < 0 || nx >= MINE_W || ny < 0 || ny >= MINE_H || m.broken[j]) continue;
+      m.broken[j] = 1; got += m.ore[j];
+      const cel = cells[j]; cel.className = 'mc ' + (m.ore[j] ? 'ore' : 'empty') + ' blast'; cel.innerHTML = m.ore[j] ? `<img class="px nug ${m.ore[j] >= 10 ? 'big' : ''}" src="${SPR.gold}">` : '';
+    }
+    c.gold += got; save();
+    later(() => {
+      document.getElementById('minegrid').classList.remove('boom');
+      
+      document.getElementById('mGold').textContent = c.gold;
+      S.mineBusy = false;
+      const left = m.ore.some((o, j) => o && !m.broken[j]);
+      if (got) { SFX.win(); bubble(`+${got}`, 1500); document.getElementById('bubble').insertAdjacentHTML('afterbegin', ICO.gold()); speak(got >= 10 ? `哇！挖到大金塊，${got} 個金礦！` : `挖到 ${got} 個金礦！`); }
+      else speak(pick(['這裡沒有金礦，看看哪裡在閃光吧！', '沒挖到，再找找看閃光的地方！']));
+      if (!left) later(() => { c.mine = newMine(); save(); renderMine('金礦都挖完了！又出現一座新的礦山！'); speak('金礦都挖完了！又出現一座新的礦山！'); }, 2200);
+    }, 700);
+  }, 1000);
+}
+
+/* 翻牌對戰：兩台 iPad 用同一個家庭代碼，輪流翻同一副牌 */
+// 房間存在 Firestore 的 families/{家庭代碼}/rooms/memory；只有輪到的人會寫入，另一台每秒讀一次
+const roomURL = code => docURL(code) + '/rooms/memory';
+async function roomGet() {
+  const r = await fetch(roomURL(S.data.cloud.code), { headers: { Authorization: 'Bearer ' + await fbToken() } });
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error('room ' + r.status);
+  return JSON.parse((await r.json()).fields.data.stringValue);
+}
+async function roomPut(room) {
+  room.ts = Date.now(); room.v = (room.v || 0) + 1;
+  const body = { fields: { data: { stringValue: JSON.stringify(room) } } };
+  const r = await fetch(roomURL(S.data.cloud.code), { method: 'PATCH', headers: { Authorization: 'Bearer ' + await fbToken(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  if (!r.ok) throw new Error('room put ' + r.status);
+}
+const DUEL_MODES = { race: ['競賽', '看誰找到的比較多！'], coop: ['合作', '兩個人一起把牌全部找完！'] };
+const meP = () => ({ id: S.child.id, name: S.child.name, av: S.child.avatar });
+function duelShell(inner) {
+  S.screen = 'duel';
+  mount(`<div class="screen cave">${hud('tocave')}<div class="duel">${inner}</div><div id="bubble" class="bubble"></div></div>`);
+}
+// 從礦洞進來：有別台在等就邀請加入，不然就開新房間
+async function duelOpen() {
+  S.again = duelOpen; S.lastBiome = 'focus'; S.duel = null;
+  if (!cloudOn()) { speak('要先請爸爸媽媽在家長後台開啟雲端備份，才能跟另一台平板對戰喔！'); bubble('要先開啟雲端備份', 2500); return; }
+  if (!navigator.onLine) { speak('要連上網路才能對戰喔！'); bubble('沒有網路', 2000); return; }
+  duelShell(`<div class="title sm">${zy('連線中…')}</div>`);
+  let room = null;
+  try { room = await roomGet(); } catch (e) { duelShell(`<div class="title sm">${zy('連不上，請確認網路')}</div>`); return; }
+  if (S.screen !== 'duel') return;
+  const fresh = room && Date.now() - room.ts < 3 * 60000;
+  if (fresh && room.state === 'wait' && room.p[0].id !== S.child.id) {
+    S.duelInvite = room;
+    duelShell(`<div class="panel"><img class="px duelav" src="${avatarURL(room.p[0].av)}">
+      <div class="title sm">${zy(room.p[0].name + ' 邀請你玩翻牌對戰！')}</div><div class="lvup">${zy(DUEL_MODES[room.mode][0] + '：' + DUEL_MODES[room.mode][1])}</div>
+      <div class="row"><button class="btn green big" data-act="duel-join">${zy('加入')} ▶</button></div></div>`);
+    speak('有人邀請你一起玩翻牌對戰！按加入就可以開始囉！');
+    return;
+  }
+  duelShell(`<div class="panel"><div class="title sm">${zy('翻牌對戰')} ⚔️</div><div>${zy('選一個玩法，再請另一個人在他的平板按「翻牌對戰」')}</div>
+    <div class="row">${Object.entries(DUEL_MODES).map(([k, [n, d]]) => `<button class="btn ${k === 'race' ? 'orange' : 'green'} big" data-act="duel-new" data-v="${k}">${zy(n)}<div class="dsub">${zy(d)}</div></button>`).join('')}</div></div>`);
+  speak('翻牌對戰！要比賽還是合作呢？');
+}
+async function duelNew(mode) {
+  const pairs = S.child.age < 7 ? 6 : 8, faces = shuffle(FACES.slice()).slice(0, pairs);
+  const room = { id: Date.now().toString(36), mode, state: 'wait', p: [meP(), null], deck: shuffle([...faces, ...faces]), done: [], flips: [], turn: 0, score: [0, 0], moves: 0, v: 0 };
+  room.done = room.deck.map(() => -1);
+  try { await roomPut(room); } catch (e) { bubble('連不上，請確認網路', 2000); return; }
+  S.duel = { room, me: 0, busy: false, paid: false };
+  duelShell(`<div class="panel"><div class="title sm">${zy('等另一台平板加入…')}</div><img class="px duelav" src="${avatarURL(S.child.avatar)}">
+    <div>${zy('請另一個人在他的平板打開「專注力礦洞」，按「翻牌對戰」')}</div><div class="dots">● ● ●</div></div>`);
+  speak('等另一台平板加入，請他打開專注力礦洞，按翻牌對戰！');
+  duelPoll();
+}
+async function duelJoin() {
+  const room = S.duelInvite; if (!room) return;
+  room.p[1] = meP(); room.state = 'play';
+  try { await roomPut(room); } catch (e) { bubble('連不上，請確認網路', 2000); return; }
+  S.duel = { room, me: 1, busy: false, paid: false };
+  duelBoard(); duelPoll();
+}
+// 每秒讀一次房間；離開畫面時 later 會一起取消
+function duelPoll() {
+  later(async () => {
+    const d = S.duel; if (!d || S.screen !== 'duel') return;
+    try {
+      const r = await roomGet();
+      if (S.duel !== d) return;
+      if (!r || r.id !== d.room.id) { duelShell(`<div class="panel"><div class="title sm">${zy('對方開了新的一局')}</div><button class="btn big" data-act="duel">${zy('重新進入')}</button></div>`); return; }
+      if (r.v > d.room.v && !d.busy) {
+        const was = d.room.state; d.room = r;
+        if (was === 'wait' && r.state === 'play') { SFX.ok(); duelBoard(); } else duelPaint();
+      } else if (r.state === 'play' && Date.now() - r.ts > 2 * 60000 && !d.lost) {
+        d.lost = true; bubble('對方好像離開了', 3000);
+      }
+    } catch (e) {}
+    duelPoll();
+  }, 1000);
+}
+function duelBoard() {
+  const d = S.duel, n = d.room.deck.length, cols = 4, rows = n / cols;
+  const cw = `min(calc((100vw - 60px) / ${cols} - 12px), calc((100vh - 300px) / ${rows} - 12px), 130px)`;
+  duelShell(`<div class="dhead" id="dhead"></div><div class="mgrid" style="grid-template-columns:repeat(${cols},var(--cw));--cw:${cw}">${d.room.deck.map((f, i) =>
+    `<button class="card" data-act="duel-card" data-v="${i}"><span class="back blk t-dirt">?</span><span class="front">${faceHTML(f)}</span></button>`).join('')}</div>`);
+  d.turnSaid = -1; duelPaint();
+}
+// 依照房間狀態更新畫面：誰的回合、分數、哪些牌翻開
+function duelPaint() {
+  const d = S.duel, r = d.room, head = document.getElementById('dhead');
+  if (!head) return;
+  const coop = r.mode === 'coop', found = r.done.filter(x => x >= 0).length / 2;
+  head.innerHTML = r.p.map((p, k) => `<div class="dp ${r.turn === k && r.state === 'play' ? 'on' : ''}"><img class="px" src="${avatarURL(p.av)}"><span>${zy(p.name)}</span>${coop ? '' : `<b>${r.score[k]}</b>`}</div>`).join(coop ? `<div class="dmid">🤝 <b>${found}</b> / ${r.deck.length / 2}</div>` : '<div class="dmid">⚔️</div>');
+  document.querySelectorAll('.card').forEach((el, i) => {
+    const open = r.done[i] >= 0 || r.flips.includes(i);
+    el.classList.toggle('open', open); el.classList.toggle('done', r.done[i] >= 0);
+    el.classList.toggle('mine', !coop && r.done[i] === d.me); el.classList.toggle('theirs', !coop && r.done[i] >= 0 && r.done[i] !== d.me);
+  });
+  if (r.state === 'end') return duelEnd();
+  if (d.turnSaid !== r.turn + r.moves * 2) {
+    d.turnSaid = r.turn + r.moves * 2;
+    if (r.turn === d.me) { bubble('輪到你了！', 1200); speak('輪到你了！'); } else bubble(`換 ${r.p[r.turn].name} 翻牌`, 1200);
+  }
+}
+async function duelTap(i) {
+  const d = S.duel, r = d && d.room;
+  if (!r || r.state !== 'play' || r.turn !== d.me || d.busy || r.done[i] >= 0 || r.flips.includes(i) || r.flips.length >= 2) return;
+  SFX.tap(); r.flips.push(i); d.busy = true; duelPaint();
+  try { await roomPut(r); } catch (e) {}
+  if (r.flips.length < 2) { d.busy = false; return; }
+  // 兩張都翻開：停一下讓對方也看到，再判斷
+  later(async () => {
+    const [a, b] = r.flips; r.moves++; r.flips = [];
+    if (r.deck[a] === r.deck[b]) {
+      r.done[a] = r.done[b] = d.me; r.score[d.me]++; SFX.ok(); bubble(pick(['一樣的！', '找到了！', '好眼力！']), 900);
+      if (r.done.every(x => x >= 0)) r.state = 'end';
+    } else { r.turn = 1 - d.me; SFX.no(); }
+    duelPaint();
+    try { await roomPut(r); } catch (e) {}
+    d.busy = false;
+  }, 1600);
+}
+function duelEnd() {
+  const d = S.duel, r = d.room, c = S.child;
+  if (d.paid) return;
+  d.paid = true;
+  const coop = r.mode === 'coop', mine = r.score[d.me], theirs = r.score[1 - d.me];
+  const stars = coop ? (r.moves <= r.deck.length ? 3 : 2) : mine > theirs ? 3 : mine === theirs ? 2 : 1;
+  c.stars += stars; U(c).stars += stars; c.stone += 3; U(c).g = (U(c).g || 0) + 1;
+  c.log.push({ t: Date.now(), s: 'focus', g: 'duel', L: 0, q: `翻牌對戰（${DUEL_MODES[r.mode][0]}）${coop ? '' : ` ${mine}:${theirs}`}`, ok: coop || mine >= theirs });
+  if (c.log.length > 500) c.log.shift();
+  const say = coop ? '我們一起完成了！' : mine > theirs ? '你贏了！' : mine === theirs ? '平手！' : '對方贏了，下次再加油！';
+  S.duel = null;
+  later(() => showResult({ stars, mat: 'cobble', back: 'tocave', quest: questRecord('focus'), up: '', say: `${say}你得到 ${stars} 顆星星，還有 3 個石頭！` }), 1200);
 }
 
 /* 依序點擊 */
@@ -2017,7 +2980,7 @@ function pCard(c) {
     <h3><img class="px" src="${avatarURL(c.avatar)}" width="40" height="40"><input class="pname" data-act="p-name" data-id="${c.id}" value="${esc(c.name)}"></h3>
     <div class="psec">基本設定</div>
     <div class="prow"><span>年齡</span><span>${pb('p-age', c.id, -1, '−')} <b>${c.age} 歲</b> ${pb('p-age', c.id, 1, '+')}</span></div>
-    <div class="prow"><span>頭像</span><span class="avs">${AVATARS.map((_, i) => `<img class="px av ${i === c.avatar ? 'sel' : ''}" data-act="p-avatar" data-id="${c.id}" data-d="${i}" src="${avatarURL(i)}">`).join('')}</span></div>
+    <div class="prow"><span>頭像</span></div>${avatarEditor(c.avatar, 'p-avatar', c.id)}
     <div class="prow"><span>登入問候語</span><input class="pname" data-act="p-greet" data-id="${c.id}" value="${esc(c.greet)}" placeholder="${esc(c.name)}，歡迎回來！" maxlength="30"></div>
     <div class="prow"><span>秘密圖案</span><span>${[['', '不用'], ...LOCKS].map(([id, e]) => pb('p-lock', c.id, 0, e, 'light' + (c.lock === id ? ' sel' : ''), id)).join(' ')}</span></div>
     <div class="prow"><span>小汪造型</span><b>${esc(SKINS.find(s => s.id === c.skin).name)}　已買 ${c.owned.length} 樣</b></div>
@@ -2039,7 +3002,14 @@ function pCard(c) {
       return `<div class="prow"><span>${f.name}</span><span>${pb('p-flv', c.id, -1, '−', 'light', id)} <b>Lv${c.focus[id]}</b> ${pb('p-flv', c.id, 1, '+', 'light', id)}</span>
         <span>${xs.length} 局${xs.length ? `，表現好 ${Math.round(xs.filter(x => x.ok).length / xs.length * 100)}%` : ''}</span></div>`;
     }).join('')}
-    <div class="pnote">最近：${fl.slice(-3).reverse().map(x => `${FGAMES[x.g].name}（${esc(x.q)}）`).join('、') || '還沒有紀錄'}</div>
+    <div class="pnote">最近：${fl.slice(-3).reverse().map(x => `${(FGAMES[x.g] || { name: '翻牌對戰' }).name}（${esc(x.q)}）`).join('、') || '還沒有紀錄'}</div>
+    ${(() => {
+      // 釣魚時的常識、安全、科學題
+      const kl = c.log.filter(x => x.s === 'know'), miss = kl.filter(x => !x.ok).slice(-3).reverse();
+      return `<div class="psec">釣魚常識題</div><div class="prow"><span>答了 ${kl.length} 題</span><b>${kl.length ? `一次答對 ${Math.round(kl.filter(x => x.ok && !x.picks.length).length / kl.length * 100)}%` : '還沒有紀錄'}</b></div>
+        ${miss.map(m => `<div class="mist">${esc(m.q)}　正確：<b>${esc(m.ans)}</b></div>`).join('')}
+        <div class="prow"><span>寵物、金礦</span><b>${c.pets.map(p => `${petName(p.id)} Lv${petLv(p)}`).join('、') || '還沒有'}　金礦 ${c.gold}　炸彈 ${c.bombs}</b></div>`;
+    })()}
     <div class="prow" style="margin-top:12px">${pb('p-delchild', c.id, 0, `刪除「${esc(c.name)}」的帳號`, 'red')}</div>
   </div>`;
 }
@@ -2130,7 +3100,7 @@ function parentAct(a, c, d, v) {
     case 'p-recexport': exportRecs(); return;
     case 'p-flv': c.focus[v] = Math.max(1, Math.min(5, c.focus[v] + d)); break;
     case 'p-age': c.age = Math.max(3, Math.min(12, c.age + d)); break;
-    case 'p-avatar': c.avatar = d; break;
+    case 'p-avatar': c.avatar = { ...avObj(c.avatar), [v]: d, outfit: 0 }; break; // 改像素頭像時就脫下特別造型（在商店可以再穿上）
     case 'p-limit': c.limit = Math.max(5, Math.min(120, c.limit + d)); break;
     case 'p-extra': u.extra += d; break;
     case 'p-resettoday': u.sec = 0; u.extra = 0; break;
@@ -2175,7 +3145,7 @@ app.addEventListener('click', e => {
     case 'shop': SFX.tap(); S.shopSel = ''; renderShop(); dogSay([{ text: `歡迎來到星星商店！你有 ${S.child.stars} 顆星星，可以換材料，也可以幫小汪換造型喔！` }]); break;
     case 'buy': shopTap(v); break;
     case 'su-age': S.su.age = Math.max(3, Math.min(12, S.su.age + d)); document.getElementById('sage').textContent = S.su.age + ' 歲'; break;
-    case 'su-av': S.su.avatar = d; document.querySelectorAll('[data-act="su-av"]').forEach(x => x.classList.toggle('sel', +x.dataset.d === d)); break;
+    case 'su-av': S.su.avatar = { ...avObj(S.su.avatar), [v]: d }; document.querySelector('.aved').outerHTML = avatarEditor(S.su.avatar, 'su-av'); break;
     case 'su-lock': S.su.lock = v; document.querySelectorAll('[data-act="su-lock"]').forEach(x => x.classList.toggle('sel', x.dataset.v === v)); break;
     case 'su-add': {
       const name = document.getElementById('sname').value.trim().slice(0, 8);
@@ -2223,12 +3193,32 @@ app.addEventListener('click', e => {
     case 'fgame': if (blocked(S.child, 'focus')) { renderMap(); return restHere(); } SFX.tap(); startFocus(v); break;
     case 'fhint': focusHint(); break;
     case 'mcard': memTap(+v); break;
+    case 'duel': if (blocked(S.child, 'focus')) { renderMap(); return restHere(); } SFX.tap(); duelOpen(); break;
+    case 'duel-new': SFX.tap(); duelNew(v); break;
+    case 'duel-join': SFX.tap(); duelJoin(); break;
+    case 'duel-card': duelTap(+v); break;
     case 'tile': seqTap(+v); break;
     case 'rstart': runReact(); break;
     case 'hole': hitHole(+v); break;
     case 'mz': if (S.fg && S.fg.game === 'maze') mazeTo(S.fg.pos + d); break;
     case 'house': SFX.tap(); renderHouse(); break;
     case 'village': speak('家族村莊還在建造中，之後大家蓋的房子都會住在一起喔！'); break;
+    case 'pond': SFX.tap(); renderPond(); if (curPet(S.child)) speak('歡迎來到釣魚池！按拋竿開始釣魚，釣到的魚答對問題就可以餵小動物！'); break;
+    case 'bag': case 'petlist': SFX.tap(); renderPetList(false); break;
+    case 'adopt': adopt(v); break;
+    case 'pethide': S.data.petHide = true; saveLocal(); document.getElementById('petbuddy').outerHTML = petBuddy(); break;
+    case 'petshow': S.data.petHide = false; saveLocal(); el.outerHTML = petBuddy(); break;
+    case 'mine': SFX.tap(); renderMine(); speak('金礦山到了！金礦旁邊的石頭會閃光，看準了再放炸彈！'); break;
+    case 'mbomb': mineBomb(+v); break;
+    case 'doll': SFX.tap(); renderDoll('top'); speak('歡迎來到娃娃屋！點衣服和飾品，幫自己換裝吧！'); break;
+    case 'dtab': SFX.tap(); renderDoll(v); break;
+    case 'dh': dollSet({ [v]: d }); break;
+    case 'dw': { const [slot, id] = v.split(':'); dollSet({ [slot]: id }, id ? `換上${dollItem(id).name}了！` : ''); break; }
+    case 'dpic': dollSet({ outfit: +v }, +v ? `頭像換成${OUTFITS.find(x => x[0] === +v)[1]}了！` : '頭像換回我的娃娃了！'); break;
+    case 'cast': cast(); break;
+    case 'fok': SFX.tap(); showFishQ(); break;
+    case 'fsay': if (S.fish && S.fish.q) sayParts(S.fish.q.replay || qParts(S.fish.q)); break;
+    case 'fans': fishAnswer(+v, el); break;
     case 'say': dogSay(S.game.q.replay || qParts(S.game.q)); break;
     case 'ans': onAnswer(+v, el); break;
     case 'mic': onMic(el); break;
@@ -2274,7 +3264,7 @@ function showLock(ch) {
 }
 // 第一次使用（或換新 iPad）時，由家長幫每個孩子建立帳號
 function renderSetup() {
-  S.screen = 'setup'; S.su = { age: 5, avatar: S.data.children.length % AVATARS.length, lock: '' };
+  S.screen = 'setup'; S.su = { age: 5, avatar: avObj(S.data.children.length), lock: '' };
   const kids = S.data.children;
   app.innerHTML = `<div class="screen parent"><div class="ptop"><span>👋 設定孩子的帳號</span>${kids.length ? '<button class="pbtn light" data-act="logout">回到首頁 ▶</button>' : ''}</div>
     <div class="pcards">
@@ -2286,7 +3276,7 @@ function renderSetup() {
       <div class="pcard"><h3>新增孩子</h3>
         <div class="prow"><span>名字</span><input class="pname" id="sname" placeholder="例如：小寶" maxlength="8"></div>
         <div class="prow"><span>年齡</span><span>${pb('su-age', '', -1, '−')} <b id="sage">${S.su.age} 歲</b> ${pb('su-age', '', 1, '+')}</span></div>
-        <div class="prow"><span>頭像</span><span class="avs">${AVATARS.map((_, i) => `<img class="px av ${i === S.su.avatar ? 'sel' : ''}" data-act="su-av" data-d="${i}" src="${avatarURL(i)}">`).join('')}</span></div>
+        <div class="prow"><span>頭像</span></div>${avatarEditor(S.su.avatar, 'su-av')}
         <div class="prow"><span>登入問候語</span><input class="pname" id="sgreet" placeholder="例如：小寶，今天也要加油喔！" maxlength="30"></div>
         <div class="pnote">問候語會在孩子登入時由小汪念出來；不填就用「名字，歡迎回來！」。</div>
         <div class="prow"><span>秘密圖案</span><span>${[['', '不用'], ...LOCKS.map(([id, e]) => [id, e])].map(([id, e]) => `<button class="pbtn light ${id === '' ? 'sel' : ''}" data-act="su-lock" data-v="${id}">${e}</button>`).join(' ')}</span></div>
