@@ -132,7 +132,7 @@ input{user-select:text;-webkit-user-select:text}
 .row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
 .badge{background:#c9932a;padding:6px 16px;font-weight:900;font-size:22px;box-shadow:0 0 0 3px #1e1e1e;animation:pop .5s}
 .lvup{font-size:24px;font-weight:900;color:#ffe14d;text-shadow:2px 2px 0 #000}
-.house{display:grid;grid-template-columns:repeat(12,var(--hb));--hb:min(6.4vw,5.6vh);margin:0 auto}
+.house{display:grid;grid-template-columns:repeat(12,var(--hb));--hb:min(12.8vw,11.2vh);margin:0 auto}
 .hrow{flex:1;min-height:0;display:flex;flex-wrap:wrap;align-content:center;gap:12px 28px;align-items:center;justify-content:center;overflow:hidden;padding:0 10px}
 .hrow .hpal{flex-basis:100%}
 /* 橫向：材料改放在房子右邊直排，房子大小由 fitHouse() 依剩下的空間決定 */
@@ -142,7 +142,7 @@ input{user-select:text;-webkit-user-select:text}
   .hrow .hsrc{flex-direction:row;gap:8px;padding:4px 10px}
   .hrow .hsrc .blk{width:40px;height:40px}
 }
-@media (orientation:landscape) and (max-height:600px){.screen .badges{display:none}.hrow .hpal{display:grid;grid-template-columns:auto auto}}
+@media (orientation:landscape) and (max-height:600px){.hrow .hpal{display:grid;grid-template-columns:auto auto}}
 .hcheer{text-align:center;margin:2px auto 0;font-size:clamp(16px,2.2vw,22px)}
 .town{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:4px 10px;flex:none;max-width:42vw}
 .tb{display:flex;flex-direction:column;align-items:center;background:rgba(0,0,0,.25);padding:6px 8px;box-shadow:0 0 0 3px #1e1e1e}
@@ -370,11 +370,12 @@ input{user-select:text;-webkit-user-select:text}
 /* 頭像框：框的圖是 320×464，頭像放在中間的洞裡 */
 .favatar{position:relative;aspect-ratio:320/464;width:70px;flex:none}
 .favatar.plain{aspect-ratio:1}
-.favatar .fa-face{position:absolute;left:19%;top:30%;width:62%;aspect-ratio:1;object-fit:cover}
+.favatar .fa-face{position:absolute;left:13%;top:28%;width:76%;aspect-ratio:1;object-fit:cover;background:#bfe3ff}
 .favatar.plain .fa-face{left:0;top:0;width:100%;box-shadow:0 0 0 3px #1e1e1e}
 .favatar .fa-frame{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .favatar.big{width:110px}
 .favatar.small{width:56px}
+.favatar.hud{width:46px;margin:-10px 0}
 .kid .favatar.face{width:clamp(110px,16vw,180px);height:auto;box-shadow:none}
 .mapme{border:0;background:none;padding:0;cursor:pointer;flex:none}
 .mapme .favatar{width:clamp(56px,8vw,80px)}
@@ -830,25 +831,30 @@ async function loadVoicePack() {
 // 切法要跟 tools/voice-lines.js 一樣：用標點切開；片段裡由長到短找有音檔的詞，找不到的字交給裝置語音
 const VOICE_PUNCT = /[，。！？、：；,.!?:;…～~（）()「」『』\s—–\-]+/;
 function voiceSplit(p) {
-  if (!VOICE.size || p.en || p.sym) return [p];
+  if (p.en || p.sym) return [p];
   const out = [], push = x => out.push({ ...p, ...x });
-  for (const s of p.text.split(VOICE_PUNCT)) {
-    if (!s) continue;
-    if (!/^[一-鿿0-9]+$/.test(s)) { push({ text: s }); continue; }
-    let buf = '';
-    for (let i = 0; i < s.length;) {
-      let L = Math.min(VOICE_MAX, s.length - i);
-      // 單一個字只在整段就是這個字或是數字時才用音檔，避免把名字拆開來念
-      for (; L > 0; L--) { const w = s.substr(i, L); if (VOICE.has(w) && (L > 1 || s.length === 1 || /\d/.test(w))) break; }
-      if (!L) { buf += s[i++]; continue; }
-      if (buf) { push({ text: buf }); buf = ''; }
-      push({ clip: VOICE.get(s.substr(i, L)) }); i += L;
+  // 句子裡的英文（例如 T-Shirt）用英文的聲音念
+  p.text.split(/([A-Za-z][A-Za-z'\-]*(?: [A-Za-z][A-Za-z'\-]*)*)/).forEach((chunk, k) => {
+    if (k % 2) return push({ text: chunk, en: true });
+    if (!/[^\s，。！？、：；,.!?:;…～~（）()「」『』—–\-]/.test(chunk)) return;
+    if (!VOICE.size) return push({ text: chunk });
+    for (const s of chunk.split(VOICE_PUNCT)) {
+      if (!s) continue;
+      if (!/^[一-鿿0-9]+$/.test(s)) { push({ text: s }); continue; }
+      let buf = '';
+      for (let i = 0; i < s.length;) {
+        let L = Math.min(VOICE_MAX, s.length - i);
+        // 單一個字只在整段就是這個字或是數字時才用音檔，避免把名字拆開來念
+        for (; L > 0; L--) { const w = s.substr(i, L); if (VOICE.has(w) && (L > 1 || s.length === 1 || /\d/.test(w))) break; }
+        if (!L) { buf += s[i++]; continue; }
+        if (buf) { push({ text: buf }); buf = ''; }
+        push({ clip: VOICE.get(s.substr(i, L)) }); i += L;
+      }
+      if (buf) push({ text: buf });
     }
-    if (buf) push({ text: buf });
-  }
+  });
   return out.length ? out : [p];
 }
-
 // 依序念出多段：{text} 中文、{text, en:true} 英文、{sym} 注音符號（有家長錄音就播錄音）
 function sayParts(parts, onDone) {
   stopVoice();
@@ -1017,9 +1023,9 @@ const shade = (hex, k) => '#' + [1, 3, 5].map(i => Math.round(parseInt(hex.slice
 const DOLL_SLOTS = [['top', '上衣'], ['bottom', '褲裙'], ['shoes', '鞋子'], ['hat', '頭飾'], ['face', '臉上'], ['hand', '手上']];
 const tee = (id, name, c, price) => ({ id, slot: 'top', type: 'tee', name, c: [c, shade(c, .78), '#ffffff'], price });
 const DOLL = [
-  tee('tee-r', '紅色T恤', '#e74c3c', 0), tee('tee-b', '藍色T恤', '#3d7bd9', 0), tee('tee-g', '綠色T恤', '#2ecc71', 0),
-  tee('tee-y', '黃色T恤', '#f1c40f', 8), tee('tee-v', '紫色T恤', '#9b59b6', 8), tee('tee-p', '粉紅T恤', '#ff8fb1', 8),
-  tee('tee-t', '湖水綠T恤', '#1abc9c', 8), tee('tee-k', '灰色T恤', '#777777', 8),
+  tee('tee-r', '紅色 T-Shirt', '#e74c3c', 0), tee('tee-b', '藍色 T-Shirt', '#3d7bd9', 0), tee('tee-g', '綠色 T-Shirt', '#2ecc71', 0),
+  tee('tee-y', '黃色 T-Shirt', '#f1c40f', 8), tee('tee-v', '紫色 T-Shirt', '#9b59b6', 8), tee('tee-p', '粉紅 T-Shirt', '#ff8fb1', 8),
+  tee('tee-t', '湖水綠 T-Shirt', '#1abc9c', 8), tee('tee-k', '灰色 T-Shirt', '#777777', 8),
   { id: 'stripe', slot: 'top', type: 'stripe', name: '條紋衫', c: ['#ffffff', '#cccccc', '#3d7bd9'], price: 12 },
   { id: 'hoodie', slot: 'top', type: 'hoodie', name: '綠色帽T', c: ['#4caf50', '#357a38', '#ffffff'], price: 15 },
   { id: 'hoodie-k', slot: 'top', type: 'hoodie', name: '黑色帽T', c: ['#3a3a44', '#26262e', '#ffffff'], price: 15 },
@@ -1684,7 +1690,7 @@ function framedAvatar(c, cls = '', n = c.frame) {
 function hud(back) {
   const c = S.child;
   return `<div class="hud"><button class="btn small" data-act="${back}">⬅</button>
-    <img class="hface px" src="${avatarURL(c.avatar)}"><span class="hname">${zy(c.name)}</span>
+    ${c.frame ? framedAvatar(c, 'hud') : `<img class="hface ${c.avatar && c.avatar.outfit ? '' : 'px'}" src="${avatarURL(c.avatar)}">`}<span class="hname">${zy(c.name)}</span>
     <div class="daybar"><div class="dayfill"></div><img class="sunico px" src="${SPR.sun}"></div>
     <span class="pill"><img class="px ico" src="${SPR.star}"><b id="hStars">${c.stars}</b></span>
     ${MATS.map(([m, , , t]) => `<span class="pill"><i class="blk ico t-${t}"></i><b>${c[m]}</b></span>`).join('')}</div>`;
@@ -1849,7 +1855,7 @@ function renderMap() {
   const c = S.child;
   const done = qDone(c);
   mount(`<div class="screen sky">${hud('logout')}
-    <div class="mapdog"><button class="mapme" data-act="bag">${framedAvatar(c)}</button>${dogHTML()}<div class="dogsay">${questComplete(c) ? '🎁 ' : ''}${zy(questLine(c))}</div></div>
+    <div class="mapdog">${dogHTML()}<div class="dogsay">${questComplete(c) ? '🎁 ' : ''}${zy(questLine(c))}</div></div>
     <div class="mapgrid">${BIOMES.map(b => `<button class="biome tiled t-${b.tex} ${b.open ? '' : 'locked'} ${blocked(c, b.id) ? 'rest' : ''} ${questComplete(c) ? '' : done[b.id] ? 'did' : 'todo'}" data-act="biome" data-v="${b.id}">
       ${questComplete(c) ? '' : done[b.id] ? `<span class="flag did">✓ ${zy('今天完成')}</span>` : `<span class="flag todo">⭐ ${zy('今天還沒來')}</span>`}
       ${blocked(c, b.id) ? `<span class="flag rest">💤 ${zy('先去別的地方')}</span>` : ''}
@@ -2042,7 +2048,6 @@ function renderHouse(opt = {}) {
   }
   mount(`<div class="screen sky">${hud('tomap')}
     ${cheer ? `<div class="badge hcheer">🎉 ${zy(cheer)}</div>` : ''}<div class="hmsg">${zy(msg)}</div>${body}${pal}
-    <div class="badges">${BADGES.map(b => `<span class="bd ${c.badges.includes(b.id) ? '' : 'no'}">🏅 ${zy(b.name)}</span>`).join('')}</div>
     <div class="mapbar"><button class="btn green big" data-act="tomap">${zy('去冒險拿材料')} ▶</button></div>${petBuddy()}</div>`);
   if (opt.built) SFX.win();
   if (!opt.quiet || opt.built) speak(say);
@@ -2599,6 +2604,8 @@ function renderPetList(first) {
       <div class="bagtop">${framedAvatar(c, 'big')}<div><div class="hmsg">${zy('🎒 背包')}</div>
         <div class="bagrow"><span class="pill">🏅 ${zy('獎牌')} <b>${nb}</b></span><span class="pill">${ICO.gold()} ${zy('金礦')} <b>${c.gold}</b></span><span class="pill">${ICO.bomb()} ${zy('炸彈')} <b>${c.bombs || 0}</b></span></div></div></div>
       <div class="shead">🖼 ${zy('頭像框')}　<span class="sm">${zy('獎牌越多，可以換越漂亮的框')}</span></div><div class="frgrid">${frames}</div>
+      <div class="shead">🏅 ${zy('我的獎牌')}　<span class="sm">${zy(`已經拿到 ${nb} 個`)}</span></div>
+      <div class="badges">${BADGES.map(b => `<span class="bd ${c.badges.includes(b.id) ? '' : 'no'}">🏅 ${zy(b.name)}</span>`).join('')}</div>
       <div class="shead">🐾 ${zy('我的寵物')}　<span class="sm">${zy('點一下就換牠陪你')}</span></div>${pets}
       <div class="pnote2">${zy('想要更多寵物，可以到商店用金礦買')}</div>
     </div></div>`);
