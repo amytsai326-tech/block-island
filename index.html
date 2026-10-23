@@ -277,11 +277,13 @@ input{user-select:text;-webkit-user-select:text}
 /* 注音：照課本排法，符號直排在字的右邊；二三四聲在最後一個符號的右上，輕聲點在最上面 */
 .zc{display:inline-flex;align-items:center;white-space:nowrap}
 .zp{display:inline-flex;flex-direction:column;align-items:center;font-size:max(.3em,10px);line-height:1.05;margin:0 .45em 0 .1em;font-weight:700;letter-spacing:0;
-  text-shadow:1px 1px 0 rgba(0,0,0,.8),-1px 0 0 rgba(0,0,0,.5);font-family:"PingFang TC","Microsoft JhengHei",sans-serif}
+  text-shadow:1px 1px 0 rgba(0,0,0,.55);font-family:"PingFang TC","Microsoft JhengHei",sans-serif}
 .zs{position:relative;display:block}
 .zt{position:absolute;left:100%;top:-.15em;margin-left:.05em}
 .zn{display:block;line-height:.55}
-.bubble .zp,.dogsay .zp{text-shadow:none}
+/* 淺色底上的深色字，注音不要加陰影，不然會有重影 */
+.bubble .zp,.dogsay .zp,.dollwrap .zp,.card2 .zp,.dopt .zp,.pcard .zp,.lock .zp,.dside .zp{text-shadow:none}
+.dtabs .btn .zp{text-shadow:1px 1px 0 rgba(0,0,0,.4)}
 /* 說說看 */
 .mic{font-size:clamp(28px,4vw,44px);padding:.3em 1.2em;background:#e8692b}
 .mic.on{background:#c62828;animation:pulse 1s infinite}
@@ -363,6 +365,7 @@ input{user-select:text;-webkit-user-select:text}
 .reel div{height:100%;width:0;background:linear-gradient(#8ee86a,#3fa82a)}
 .card2{background:#fff6dc;color:#3b2f22;text-shadow:none;min-width:min(80vw,320px)}
 .card2 .title{color:#3b2f22;text-shadow:none}
+.adoptimg{width:min(50vw,220px)}
 .fcardimg{background:#dfe8ee;padding:12px 24px;box-shadow:0 0 0 3px #3b2f22}
 .fcardimg img{width:150px}
 .fname{font-size:28px;font-weight:900}
@@ -2511,6 +2514,15 @@ function renderPetList(first) {
     ${first ? '' : `<div class="pnote2">${zy('想要更多寵物，可以到商店用金礦買')}</div>`}</div>`);
   if (first) speak('選一隻小動物帶回家！以後釣到魚就可以餵牠喔！');
 }
+// 第一次選寵物：先跳出確認，避免小孩不小心點錯
+function adoptAsk(id) {
+  SFX.tap();
+  document.getElementById('adoptask')?.remove();
+  document.querySelector('.screen').insertAdjacentHTML('beforeend', `<div class="fishq" id="adoptask"><div class="fqbox card2">
+    <img class="adoptimg" src="${petImg(id)}" alt=""><div class="fname">${zy(`要帶${petName(id)}回家嗎？`)}</div>
+    <div class="row"><button class="btn green big" data-act="adoptok" data-v="${id}">${zy('確認')}</button><button class="btn big" data-act="adoptno">${zy('返回')}</button></div></div></div>`);
+  speak(`要帶${petName(id)}回家嗎？`);
+}
 function adopt(id) {
   const c = S.child, own = c.pets.find(p => p.id === id), first = !c.pets.length;
   if (own) { c.pet = id; save(); SFX.tap(); speak(`換${petName(id)}陪你了！`); return renderPetList(false); }
@@ -3205,7 +3217,9 @@ app.addEventListener('click', e => {
     case 'village': speak('家族村莊還在建造中，之後大家蓋的房子都會住在一起喔！'); break;
     case 'pond': SFX.tap(); renderPond(); if (curPet(S.child)) speak('歡迎來到釣魚池！按拋竿開始釣魚，釣到的魚答對問題就可以餵小動物！'); break;
     case 'bag': case 'petlist': SFX.tap(); renderPetList(false); break;
-    case 'adopt': adopt(v); break;
+    case 'adopt': if (S.child.pets.length) adopt(v); else adoptAsk(v); break;
+    case 'adoptok': adopt(v); break;
+    case 'adoptno': SFX.tap(); document.getElementById('adoptask')?.remove(); break;
     case 'pethide': S.data.petHide = true; saveLocal(); document.getElementById('petbuddy').outerHTML = petBuddy(); break;
     case 'petshow': S.data.petHide = false; saveLocal(); el.outerHTML = petBuddy(); break;
     case 'mine': SFX.tap(); renderMine(); speak('金礦山到了！金礦旁邊的石頭會閃光，看準了再放炸彈！'); break;
