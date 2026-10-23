@@ -429,7 +429,7 @@ async function shareFile(file, title) {
 }
 // 備份所有孩子的進度，換新 iPad 時用來還原
 function exportBackup() {
-  const body = JSON.stringify({ app: 'block-island', v: 1, savedAt: Date.now(), data: S.data });
+  const body = JSON.stringify({ app: 'block-island', v: 1, savedAt: Date.now(), data: { ...S.data, cloud: undefined } });
   shareFile(new File([body], `學習島備份-${today()}.json`, { type: 'application/json' }), '學習島備份');
 }
 async function restoreBackup(file) {
@@ -441,7 +441,116 @@ async function restoreBackup(file) {
   alert('還原完成！');
   renderLogin();
 }
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S.data)); } catch (e) {} }
+function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(S.data)); } catch (e) {} }
+// 存檔時記下這個孩子的更新時間（雲端合併時用），並排程雲端備份
+function save() {
+  if (S.child) S.child.upd = Date.now();
+  saveLocal();
+  scheduleCloud();
+}
+
+/* ---------- 雲端備份（Firebase 免費方案：匿名登入 + Firestore） ---------- */
+// 這兩個是 Firebase 網頁用的公開識別碼，不是密碼；資料靠「家庭代碼」和 Firestore 規則保護
+const FB = { apiKey: 'AIzaSyAcuC3KOATADWWTfKLLxCYtnstWfwgTLdI', projectId: 'block-island-8fd4a' };
+const cloudOn = () => !!(S.data.cloud && S.data.cloud.code);
+const docURL = code => `https://firestore.googleapis.com/v1/projects/${FB.projectId}/databases/(default)/documents/families/${code}`;
+let fbTok = null;
+async function fbToken() {
+  if (fbTok && Date.now() < fbTok.exp - 60000) return fbTok.id;
+  const cl = S.data.cloud || (S.data.cloud = {});
+  let r = null;
+  if (cl.rt) r = await fetch(`https://securetoken.googleapis.com/v1/token?key=${FB.apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(cl.rt) }).then(x => x.json()).catch(() => null);
+  if (!r || !r.id_token) {
+    const s = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${FB.apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ returnSecureToken: true }) }).then(x => x.json());
+    r = { id_token: s.idToken, refresh_token: s.refreshToken, expires_in: s.expiresIn };
+  }
+  if (!r.id_token) throw new Error('auth');
+  fbTok = { id: r.id_token, exp: Date.now() + (+r.expires_in || 3600) * 1000 };
+  cl.rt = r.refresh_token; saveLocal();
+  return fbTok.id;
+}
+async function cloudGet(code) {
+  const r = await fetch(docURL(code), { headers: { Authorization: 'Bearer ' + await fbToken() } });
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error('get ' + r.status);
+  return JSON.parse((await r.json()).fields.data.stringValue);
+}
+async function cloudPut(code, d) {
+  const copy = { ...d, cloud: undefined };
+  const body = { fields: { data: { stringValue: JSON.stringify(copy) }, savedAt: { integerValue: String(Date.now()) } } };
+  const r = await fetch(docURL(code), { method: 'PATCH', headers: { Authorization: 'Bearer ' + await fbToken(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  if (!r.ok) throw new Error('put ' + r.status);
+}
+// 兩台 iPad 用同一組家庭代碼時：每個孩子保留比較新的那一份，今天的遊玩時間取比較多的，刪掉的孩子不會再跑回來
+function mergeData(local, remote) {
+  const del = new Set([...(local.deleted || []), ...(remote.deleted || [])]), pickC = new Map();
+  [...remote.children, ...local.children].forEach(c => {
+    if (del.has(c.id)) return;
+    const o = pickC.get(c.id);
+    if (!o || (c.upd || 0) >= (o.upd || 0)) pickC.set(c.id, c);
+  });
+  const ids = [...new Set([...local.children, ...remote.children].map(c => c.id))].filter(id => pickC.has(id));
+  const usage = JSON.parse(JSON.stringify(local.usage || {}));
+  Object.entries(remote.usage || {}).forEach(([day, kids]) => {
+    usage[day] = usage[day] || {};
+    Object.entries(kids).forEach(([id, u]) => { if (!usage[day][id] || u.sec > usage[day][id].sec) usage[day][id] = u; });
+  });
+  return { ...local, children: ids.map(id => pickC.get(id)), usage, deleted: [...del] };
+}
+let cloudTimer = null, cloudBusy = false;
+function scheduleCloud(ms = 15000) {
+  if (!cloudOn()) return;
+  clearTimeout(cloudTimer);
+  cloudTimer = setTimeout(cloudSync, ms);
+}
+// 先下載雲端那份合併，再把合併後的結果上傳；沒網路就等下次
+async function cloudSync() {
+  if (!cloudOn() || cloudBusy || !navigator.onLine) return;
+  cloudBusy = true;
+  const cl = S.data.cloud;
+  try {
+    const remote = await cloudGet(cl.code);
+    if (remote) {
+      const merged = normalize(mergeData(S.data, remote));
+      merged.cloud = cl; S.data = merged;
+      if (S.child) S.child = S.data.children.find(c => c.id === S.child.id) || S.child;
+    }
+    await cloudPut(cl.code, S.data);
+    cl.last = Date.now(); cl.err = ''; saveLocal();
+    if (S.screen === 'login') renderLogin();
+    if (S.screen === 'parent') renderParent();
+  } catch (e) { cl.err = String(e.message || e); saveLocal(); }
+  cloudBusy = false;
+}
+function newFamilyCode() {
+  const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', r = crypto.getRandomValues(new Uint8Array(20));
+  return [...r].map(x => A[x % A.length]).join('').match(/.{4}/g).join('-');
+}
+const cleanCode = s => (s.toUpperCase().replace(/[^A-Z0-9]/g, '').match(/.{1,4}/g) || []).join('-');
+async function cloudStart() {
+  S.data.cloud = { ...(S.data.cloud || {}), code: newFamilyCode() };
+  saveLocal(); renderParent();
+  await cloudSync();
+  alert(S.data.cloud.err ? '目前連不上雲端，有網路時會自動備份。' : '雲端備份開啟了！請把家庭代碼記下來（例如截圖），換新 iPad 時要用。');
+}
+// 用家庭代碼找回（新 iPad）或加入（另一台 iPad 一起同步）
+async function cloudJoin(raw) {
+  const code = cleanCode(raw || '');
+  if (code.replace(/-/g, '').length < 20) { alert('家庭代碼是 20 個英文字母和數字，請再確認一次。'); return; }
+  let remote;
+  try { remote = await cloudGet(code); } catch (e) { alert('連不上雲端，請確認網路後再試一次。'); return; }
+  if (!remote) { alert('找不到這組家庭代碼，請再確認一次。'); return; }
+  if (!confirm(`找到 ${remote.children.map(c => c.name).join('、')} 的進度，要放到這台 iPad 嗎？這台 iPad 原本的孩子進度也會一起保留。`)) return;
+  const cl = { ...(S.data.cloud || {}), code };
+  S.data = normalize(mergeData(S.data, remote)); S.data.cloud = cl;
+  saveLocal(); await cloudSync();
+  alert('完成！之後兩邊的進度會自動同步。');
+  renderLogin();
+}
+window.addEventListener('online', () => cloudSync());
+document.addEventListener('visibilitychange', () => { if (document.hidden) cloudSync(); else scheduleCloud(1000); });
 function U(c) {
   const u = S.data.usage, d = today();
   u[d] = u[d] || {};
@@ -1917,7 +2026,16 @@ function renderParent() {
         <div class="pnote">${SRC ? '說說看需要網路，孩子的聲音會交給 Apple 的語音辨識處理。第一次使用時 iPad 會詢問是否允許麥克風和語音辨識。' : '這個瀏覽器不支援語音辨識，英文會照常出點選題。'}</div>
         <div class="prow"><span>孩子帳號</span>${pb('p-addchild', '', 0, '＋ 新增孩子', '')}</div>
         <div class="prow"><span>家長密碼</span>${pb('p-pin', '', 0, '變更密碼')}</div>
-        <div class="psec">備份與換新 iPad</div>
+        <div class="psec">☁️ 雲端自動備份</div>
+        ${cloudOn() ? `
+        <div class="prow"><span>家庭代碼</span><b style="font-size:20px;letter-spacing:1px">${S.data.cloud.code}</b></div>
+        <div class="prow"><span>狀態</span><b>${S.data.cloud.err ? '⚠️ 上次沒備份成功（有網路時會自動再試）' : S.data.cloud.last ? '✓ 上次備份 ' + new Date(S.data.cloud.last).toLocaleString('zh-TW', { hour12: false }) : '等待第一次備份'}</b></div>
+        <div class="prow">${pb('p-cloudnow', '', 0, '立即備份', '')} ${pb('p-cloudshare', '', 0, '分享家庭代碼', 'light')} ${pb('p-cloudoff', '', 0, '停止這台的雲端備份', 'red')}</div>
+        <div class="pnote">玩的時候會自動存到雲端。請把家庭代碼記下來（截圖或存到備忘錄）：換新 iPad 或另一台 iPad 要一起同步時，在那台輸入這組代碼就好。</div>`
+        : `<div class="prow"><span>還沒開啟</span>${pb('p-cloudstart', '', 0, '☁️ 開啟雲端自動備份', '')}</div>
+        <div class="prow"><span>已經有家庭代碼？</span><span><input class="pname" id="cjoin" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX" style="width:250px"> ${pb('p-cloudjoin', '', 0, '找回／一起同步', '')}</span></div>
+        <div class="pnote">開啟後，進度會自動存到雲端（Firebase 免費方案）。換新 iPad 時輸入家庭代碼就能找回；兩台 iPad 輸入同一組代碼，孩子的進度會自動同步。</div>`}
+        <div class="psec">手動備份檔</div>
         <div class="prow"><span>備份所有孩子的進度</span>${pb('p-backup', '', 0, '📤 備份進度', '')}</div>
         <div class="prow"><span>用備份檔還原</span><label class="pbtn light">📥 選擇備份檔<input type="file" accept=".json,application/json" data-act="p-restore" hidden></label></div>
         <div class="pnote">進度只存在這台 iPad 上。換新 iPad 時：在舊 iPad 按「備份進度」，把檔案存到「檔案」（iCloud）或用 AirDrop／LINE 傳過去；新 iPad 打開遊戲後按「選擇備份檔」就能接著玩。平常也建議偶爾備份一次。注音錄音請用上面的「匯出錄音」另外放到網站。</div>
@@ -1947,9 +2065,21 @@ function parentAct(a, c, d, v) {
     case 'p-lock': c.lock = v; break;
     case 'p-addchild': renderSetup(); return;
     case 'p-backup': exportBackup(); return;
+    case 'p-cloudstart': cloudStart(); return;
+    case 'p-cloudjoin': cloudJoin(document.getElementById('cjoin').value); return;
+    case 'p-cloudnow': cloudSync().then(() => { renderParent(); alert(S.data.cloud.err ? '目前連不上雲端，請確認網路。' : '備份完成！'); }); return;
+    case 'p-cloudshare': {
+      const text = `學習島的家庭代碼：${S.data.cloud.code}`;
+      if (navigator.share) navigator.share({ text }).catch(() => {}); else prompt('請複製家庭代碼：', S.data.cloud.code);
+      return;
+    }
+    case 'p-cloudoff':
+      if (!confirm('停止後，這台 iPad 的進度不會再自動存到雲端（雲端上已存的資料不會刪除）。確定嗎？')) return;
+      S.data.cloud = { rt: S.data.cloud.rt }; saveLocal(); renderParent(); return;
     case 'p-delchild':
       if (!confirm(`確定要刪除「${c.name}」的帳號和所有進度嗎？這個動作無法復原。`)) return;
       S.data.children = S.data.children.filter(x => x !== c);
+      (S.data.deleted = S.data.deleted || []).push(c.id);
       save();
       return S.data.children.length ? renderParent() : renderSetup();
     case 'p-rec': if (!S.recBusy) recordSym(v); return;
@@ -1973,9 +2103,11 @@ function parentAct(a, c, d, v) {
       S.data.pin = p; alert('密碼已更新'); break;
     }
     case 'p-reset':
-      if (!confirm('確定要清除所有孩子的進度和學習紀錄嗎？這個動作無法復原。')) return;
+      if (!confirm('確定要清除這台 iPad 上所有孩子的進度和學習紀錄嗎？這個動作無法復原（雲端上的備份不會被刪除）。')) return;
       S.data = defaultData(); save(); return renderSetup();
   }
+  // 家長改了孩子的設定，也算這個孩子的更新（雲端合併時以較新的為準）
+  if (c) c.upd = Date.now();
   save(); renderParent();
 }
 
@@ -2106,7 +2238,8 @@ function renderSetup() {
     <div class="pcards">
       <div class="pcard" style="grid-column:1/-1">
         <div class="pnote">先幫每個孩子建立帳號。孩子不用打字，之後點自己的頭像就能進去，每個人的星星、材料、等級和紀錄都分開。換新 iPad 的話，可以直接用舊 iPad 的「備份進度」檔案還原。</div>
-        <div class="prow"><span>📥 從備份還原</span><label class="pbtn light">選擇備份檔<input type="file" accept=".json,application/json" data-act="p-restore" hidden></label></div>
+        <div class="prow"><span>☁️ 用家庭代碼找回</span><span><input class="pname" id="cjoin" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX" style="width:250px"> ${pb('p-cloudjoin', '', 0, '找回進度', '')}</span></div>
+        <div class="prow"><span>📥 從備份檔還原</span><label class="pbtn light">選擇備份檔<input type="file" accept=".json,application/json" data-act="p-restore" hidden></label></div>
       </div>
       <div class="pcard"><h3>新增孩子</h3>
         <div class="prow"><span>名字</span><input class="pname" id="sname" placeholder="例如：小寶" maxlength="8"></div>
@@ -2151,7 +2284,7 @@ setInterval(() => {
     else if (!(S.screen === 'result' && Date.now() - S.resultAt < 6000)) goodbye();
   }
 }, 1000);
-document.addEventListener('visibilitychange', save);
+document.addEventListener('visibilitychange', saveLocal);
 
 S.data = load();
 pickVoice();
@@ -2159,6 +2292,7 @@ initArt();
 renderLogin();
 loadRecs();
 loadSiteRecs();
+scheduleCloud(2000);
 
 // 放到網址上才會啟用離線快取；直接開檔案時略過
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
