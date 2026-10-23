@@ -42,7 +42,7 @@ input{user-select:text;-webkit-user-select:text}
 .title{font-size:clamp(36px,7vw,80px);font-weight:900;text-shadow:5px 5px 0 #2f4f2f;letter-spacing:.06em;z-index:1}
 .title.sm{font-size:clamp(32px,5vw,56px)}
 .sub{font-size:clamp(18px,2.6vw,28px);font-weight:900;text-shadow:2px 2px 0 #335;z-index:1}
-.kids{display:flex;gap:5vw;z-index:1;margin-bottom:14vh}
+.kids{display:flex;flex-wrap:wrap;justify-content:center;gap:4vw;z-index:1;margin-bottom:14vh;max-width:94vw}
 .kid{background:rgba(0,0,0,.28);border:0;padding:18px 22px 14px;color:#fff;font:inherit;font-weight:900;position:relative;cursor:pointer;
   box-shadow:0 0 0 4px #1e1e1e,inset -5px -5px 0 rgba(0,0,0,.3),inset 5px 5px 0 rgba(255,255,255,.2);animation:bob 3s ease-in-out infinite}
 .kid:nth-child(2){animation-delay:-1.5s}
@@ -175,6 +175,64 @@ input{user-select:text;-webkit-user-select:text}
 .keys{display:grid;grid-template-columns:repeat(3,72px);gap:10px}
 .keys .pbtn{font-size:26px;height:60px}
 
+/* 小汪 */
+.dog{position:relative;width:var(--dw,96px);height:var(--dw,96px);flex:none;cursor:pointer;filter:drop-shadow(3px 3px 0 rgba(0,0,0,.35))}
+.dog img{position:absolute;inset:0;width:100%;height:100%;opacity:0}
+.dog .d0,.dog img.acc{opacity:1}
+.dog.talk .d0{animation:mouthA .36s steps(1) infinite}
+.dog.talk .d1{animation:mouthB .36s steps(1) infinite}
+.dog.happy .d0{opacity:0}.dog.happy .d2{opacity:1}
+.dog.happy{animation:bob .45s ease-in-out infinite}
+.dog.sad{animation:tilt 1s ease-in-out 2}
+@keyframes mouthA{0%{opacity:1}50%{opacity:0}}
+@keyframes mouthB{0%{opacity:0}50%{opacity:1}}
+@keyframes tilt{25%{transform:rotate(-10deg)}75%{transform:rotate(10deg)}}
+.dogsay{position:relative;background:#fff;color:#2b2b2b;font-weight:900;font-size:clamp(17px,2.2vw,24px);padding:8px 16px;box-shadow:0 0 0 3px #1e1e1e,5px 5px 0 rgba(0,0,0,.25);max-width:min(60vw,560px);text-shadow:none}
+.mapdog{display:flex;align-items:center;gap:14px;justify-content:center;padding:6px 16px 0;flex:none;--dw:clamp(70px,9vw,96px)}
+.qrow{display:flex;align-items:center;justify-content:center;gap:16px;flex:none;--dw:clamp(64px,8vw,92px);padding:0 12px}
+.qrow .qcard{margin:0}
+.answers.wait{opacity:.3;pointer-events:none;filter:grayscale(.6)}
+.hifive{position:absolute;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;z-index:8;cursor:pointer}
+.hfbox{background:#fff;color:#2b2b2b;padding:20px 34px;box-shadow:0 0 0 5px #1e1e1e,8px 8px 0 rgba(0,0,0,.3);display:flex;flex-direction:column;align-items:center;gap:8px;animation:pop .35s}
+.hfbox img{width:clamp(110px,16vw,170px);height:clamp(110px,16vw,170px)}
+.paw{font-size:clamp(60px,9vw,96px);animation:pulse .8s ease-in-out infinite}
+.hft{font-size:clamp(24px,3.4vw,38px);font-weight:900}
+.hifive.clap .paw{animation:pop .3s;transform:scale(1.3)}
+
+/* 星星商店 */
+.shop{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:6px 18px 24px}
+.shead{font-weight:900;font-size:clamp(20px,2.8vw,28px);text-shadow:2px 2px 0 #000;margin:14px 0 8px}
+.sgrid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.shopi{border:0;font:inherit;color:#fff;cursor:pointer;background:rgba(0,0,0,.35);padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;
+  box-shadow:0 0 0 3px #1e1e1e,inset 0 -6px 0 rgba(0,0,0,.3);font-weight:900}
+.shopi.sel{box-shadow:0 0 0 4px #ffe14d,inset 0 -6px 0 rgba(0,0,0,.3);animation:pulse 1s ease-in-out infinite}
+.shopi.use{background:rgba(76,175,80,.55)}
+.sicon{width:72px;height:72px;display:flex;align-items:center;justify-content:center}
+.sicon>.blk,.sicon>img{width:64px;height:64px;box-shadow:0 0 0 2px #1e1e1e}
+.pv{position:relative;width:64px;height:64px;display:block}
+.pv img{position:absolute;inset:0;width:100%;height:100%}
+.sname{font-size:18px;text-shadow:2px 2px 0 #000}
+.sprice{font-size:17px;color:#ffe14d;text-shadow:2px 2px 0 #000}
+/* 秘密圖案 */
+.lockbox{background:#2f3a52;padding:22px 28px;box-shadow:0 0 0 4px #1e1e1e;display:flex;flex-direction:column;align-items:center;gap:14px;animation:pop .3s}
+.lockgrid{display:grid;grid-template-columns:repeat(3,auto);gap:14px}
+.lockbtn{font-size:clamp(48px,7vw,70px);width:clamp(84px,11vw,110px);height:clamp(84px,11vw,110px);border:0;background:#f3ead7;cursor:pointer;box-shadow:0 0 0 3px #1e1e1e}
+.kid .klock{position:absolute;top:8px;left:10px;font-size:22px}
+.pbtn.sel{outline:3px solid #e8892b}
+
+/* 拖曳加法 */
+.build{display:flex;align-items:center;gap:clamp(10px,2.5vw,30px);--b:min(8vw,6.5vh,70px)}
+.bzone{display:flex;flex-direction:column;align-items:center;gap:10px;background:rgba(0,0,0,.25);padding:10px 14px;box-shadow:0 0 0 3px #1e1e1e}
+.bzone.over{outline:5px solid #ffe14d}
+.bzn{font-size:calc(var(--b)*.8);font-weight:900;text-shadow:3px 3px 0 #000;line-height:1}
+.bz-area{display:grid;gap:4px}
+.slot{width:var(--b);height:var(--b);outline:3px dashed rgba(255,255,255,.75);outline-offset:-6px;background:rgba(255,255,255,.12)}
+.slot.full{outline:none;box-shadow:inset 0 0 0 2px rgba(0,0,0,.22);animation:pop .25s;cursor:pointer}
+.src{width:calc(var(--b)*1.25);height:calc(var(--b)*1.25);margin-top:6px;box-shadow:0 0 0 3px #1e1e1e,0 6px 0 rgba(0,0,0,.35);touch-action:none;cursor:grab;
+  display:flex;align-items:center;justify-content:center;font-size:calc(var(--b)*.55);animation:bob 1.6s ease-in-out infinite}
+.ghost{position:fixed;left:0;top:0;width:var(--gb);height:var(--gb);pointer-events:none;z-index:20;transform:translate(-50%,-50%) scale(1.1);
+  box-shadow:0 0 0 3px #1e1e1e,0 10px 20px rgba(0,0,0,.4);background-size:100% 100%;image-rendering:pixelated}
+
 /* 每日任務 */
 .questbar{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 16px 0;font-weight:900;font-size:clamp(16px,2.2vw,24px);text-shadow:2px 2px 0 #000;flex:none}
 .qi{background:rgba(0,0,0,.35);padding:3px 12px;box-shadow:0 0 0 2px #1e1e1e}
@@ -185,11 +243,14 @@ input{user-select:text;-webkit-user-select:text}
 .flag.rest{right:10px;background:rgba(0,0,0,.7)}
 .biome.todo{box-shadow:0 0 0 4px #1e1e1e,0 0 0 8px #ffd83a,inset 0 -10px 0 rgba(0,0,0,.25)}
 .biome.rest{filter:grayscale(.7) brightness(.75)}
-/* 注音：iPad 的 Safari 會把注音直排在字的右邊，其他瀏覽器顯示在字上方 */
-ruby{ruby-align:center}
-rt{font-size:.36em;font-weight:700;line-height:1;letter-spacing:0;text-shadow:1px 1px 0 rgba(0,0,0,.8),-1px 0 0 rgba(0,0,0,.5);font-family:"PingFang TC","Microsoft JhengHei",sans-serif}
-.bubble rt,.parent rt{text-shadow:none}
-@supports (ruby-position:inter-character){ruby{ruby-position:inter-character}rt{font-size:.3em}}
+/* 注音：照課本排法，符號直排在字的右邊；二三四聲在最後一個符號的右上，輕聲點在最上面 */
+.zc{display:inline-flex;align-items:center;white-space:nowrap}
+.zp{display:inline-flex;flex-direction:column;align-items:center;font-size:max(.3em,10px);line-height:1.05;margin:0 .45em 0 .1em;font-weight:700;letter-spacing:0;
+  text-shadow:1px 1px 0 rgba(0,0,0,.8),-1px 0 0 rgba(0,0,0,.5);font-family:"PingFang TC","Microsoft JhengHei",sans-serif}
+.zs{position:relative;display:block}
+.zt{position:absolute;left:100%;top:-.15em;margin-left:.05em}
+.zn{display:block;line-height:.55}
+.bubble .zp,.dogsay .zp{text-shadow:none}
 /* 說說看 */
 .mic{font-size:clamp(28px,4vw,44px);padding:.3em 1.2em;background:#e8692b}
 .mic.on{background:#c62828;animation:pulse 1s infinite}
@@ -281,7 +342,7 @@ const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.f
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 /* ---------- 中文字旁加注音 ---------- */
 // 字典由 tools/make-zhuyin.js 依照本檔用到的字自動產生（常用讀音，台灣讀法另外修正）
-/* ZYDICT-START */const ZYDICT = {"方":"ㄈㄤ","塊":"ㄎㄨㄞˋ","學":"ㄒㄩㄝˊ","習":"ㄒㄧˊ","島":"ㄉㄠˇ","登":"ㄉㄥ","入":"ㄖㄨˋ","地":"ㄉㄧˋ","圖":"ㄊㄨˊ","即":"ㄐㄧˊ","將":"ㄐㄧㄤ","開":"ㄎㄞ","放":"ㄈㄤˋ","遊":"ㄧㄡˊ","戲":"ㄒㄧˋ","結":"ㄐㄧㄝˊ","果":"ㄍㄨㄛˇ","家":"ㄐㄧㄚ","晚":"ㄨㄢˇ","安":"ㄢ","長":"ㄔㄤˊ","每":"ㄇㄟˇ","日":"ㄖˋ","任":"ㄖㄣˋ","務":"ㄨˋ","注":"ㄓㄨˋ","音":"ㄧㄣ","的":"˙ㄉㄜ","會":"ㄏㄨㄟˋ","把":"ㄅㄚˇ","直":"ㄓˊ","排":"ㄆㄞˊ","在":"ㄗㄞˋ","字":"ㄗˋ","右":"ㄧㄡˋ","邊":"ㄅㄧㄢ","其":"ㄑㄧˊ","他":"ㄊㄚ","瀏":"ㄌㄧㄡˊ","覽":"ㄌㄢˇ","器":"ㄑㄧˋ","顯":"ㄒㄧㄢˇ","示":"ㄕˋ","上":"ㄕㄤˋ","說":"ㄕㄨㄛ","看":"ㄎㄢˋ","英":"ㄧㄥ","文":"ㄨㄣˊ","專":"ㄓㄨㄢ","力":"ㄌㄧˋ","礦":"ㄎㄨㄤˋ","洞":"ㄉㄨㄥˋ","工":"ㄍㄨㄥ","具":"ㄐㄩˋ","中":"ㄓㄨㄥ","旁":"ㄆㄤˊ","加":"ㄐㄧㄚ","典":"ㄉㄧㄢˇ","由":"ㄧㄡˊ","依":"ㄧ","照":"ㄓㄠˋ","本":"ㄅㄣˇ","檔":"ㄉㄤˇ","用":"ㄩㄥˋ","到":"ㄉㄠˋ","自":"ㄗˋ","動":"ㄉㄨㄥˋ","產":"ㄔㄢˇ","生":"ㄕㄥ","常":"ㄔㄤˊ","讀":"ㄉㄨˊ","台":"ㄊㄞˊ","灣":"ㄨㄢ","法":"ㄈㄚˇ","另":"ㄌㄧㄥˋ","外":"ㄨㄞˋ","修":"ㄒㄧㄡ","正":"ㄓㄥˋ","破":"ㄆㄛˋ","詞":"ㄘˊ","語":"ㄩˇ","決":"ㄐㄩㄝˊ","定":"ㄉㄧㄥˋ","比":"ㄅㄧˇ","單":"ㄉㄢ","優":"ㄧㄡ","先":"ㄒㄧㄢ","數":"ㄕㄨˋ","得":"ㄉㄜˊ","玩":"ㄨㄢˊ","記":"ㄐㄧˋ","覺":"ㄐㄩㄝˊ","少":"ㄕㄠˇ","了":"˙ㄌㄜ","解":"ㄐㄧㄝˇ","什":"ㄕㄣˊ","麼":"˙ㄇㄜ","怎":"ㄗㄣˇ","這":"ㄓㄜˋ","還":"ㄏㄞˊ","有":"ㄧㄡˇ","要":"ㄧㄠˋ","沒":"ㄇㄟˊ","東":"ㄉㄨㄥ","西":"ㄒㄧ","朋":"ㄆㄥˊ","友":"ㄧㄡˇ","休":"ㄒㄧㄡ","息":"ㄒㄧ","時":"ㄕˊ","候":"ㄏㄡˋ","一":"ㄧ","下":"ㄒㄧㄚˋ","大":"ㄉㄚˋ","重":"ㄓㄨㄥˋ","新":"ㄒㄧㄣ","空":"ㄎㄨㄥ","間":"ㄐㄧㄢ","答":"ㄉㄚˊ","對":"ㄉㄨㄟˋ","案":"ㄢˋ","回":"ㄏㄨㄟˊ","轉":"ㄓㄨㄢˇ","成":"ㄔㄥˊ","帶":"ㄉㄞˋ","可":"ㄎㄜˇ","後":"ㄏㄡˋ","關":"ㄍㄨㄢ","掉":"ㄉㄧㄠˋ","非":"ㄈㄟ","原":"ㄩㄢˊ","樣":"ㄧㄤˋ","資":"ㄗ","料":"ㄌㄧㄠˋ","小":"ㄒㄧㄠˇ","探":"ㄊㄢˋ","險":"ㄒㄧㄢˇ","四":"ㄙˋ","個":"ㄍㄜˋ","區":"ㄑㄩ","域":"ㄩˋ","各":"ㄍㄜˋ","過":"ㄍㄨㄛˋ","完":"ㄨㄢˊ","前":"ㄑㄧㄢˊ","同":"ㄊㄨㄥˊ","最":"ㄗㄨㄟˋ","多":"ㄉㄨㄛ","連":"ㄌㄧㄢˊ","錄":"ㄌㄨˋ","剛":"ㄍㄤ","好":"ㄏㄠˇ","發":"ㄈㄚ","寶":"ㄅㄠˇ","箱":"ㄒㄧㄤ","傳":"ㄔㄨㄢˊ","今":"ㄐㄧㄣ","種":"ㄓㄨㄥˇ","材":"ㄘㄞˊ","聲":"ㄕㄥ","調":"ㄉㄧㄠˋ","整":"ㄓㄥˇ","體":"ㄊㄧˇ","速":"ㄙㄨˋ","電":"ㄉㄧㄢˋ","腦":"ㄋㄠˇ","快":"ㄎㄨㄞˋ","預":"ㄩˋ","設":"ㄕㄜˋ","慢":"ㄇㄢˋ","些":"ㄒㄧㄝ","型":"ㄒㄧㄥˊ","裝":"ㄓㄨㄤ","置":"ㄓˋ","內":"ㄋㄟˋ","建":"ㄐㄧㄢˋ","式":"ㄕˋ","版":"ㄅㄢˇ","換":"ㄏㄨㄢˋ","事":"ㄕˋ","口":"ㄎㄡˇ","序":"ㄒㄩˋ","念":"ㄋㄧㄢˋ","出":"ㄔㄨ","段":"ㄉㄨㄢˋ","符":"ㄈㄨˊ","號":"ㄏㄠˋ","就":"ㄐㄧㄡˋ","播":"ㄅㄛ","偶":"ㄡˇ","爾":"ㄦˇ","不":"ㄅㄨˋ","觸":"ㄔㄨˋ","保":"ㄅㄠˇ","底":"ㄉㄧˇ","標":"ㄅㄧㄠ","準":"ㄓㄨㄣˇ","己":"ㄐㄧˇ","存":"ㄘㄨㄣˊ","網":"ㄨㄤˇ","站":"ㄓㄢˋ","所":"ㄙㄨㄛˇ","共":"ㄍㄨㄥˋ","兩":"ㄌㄧㄤˇ","者":"ㄓㄜˇ","都":"ㄉㄡ","打":"ㄉㄚˇ","包":"ㄅㄠ","交":"ㄐㄧㄠ","給":"ㄍㄟˇ","分":"ㄈㄣ","享":"ㄒㄧㄤˇ","選":"ㄒㄩㄢˇ","無":"ㄨˊ","使":"ㄕˇ","麥":"ㄇㄞˋ","克":"ㄎㄜˋ","風":"ㄈㄥ","請":"ㄑㄧㄥˇ","允":"ㄩㄣˇ","許":"ㄒㄩ","再":"ㄗㄞˋ","試":"ㄕˋ","次":"ㄘˋ","儲":"ㄔㄨˇ","失":"ㄕ","敗":"ㄅㄞˋ","像":"ㄒㄧㄤˋ","素":"ㄙㄨˋ","質":"ㄓˊ","題":"ㄊㄧˊ","目":"ㄇㄨˋ","以":"ㄧˇ","二":"ㄦˋ","位":"ㄨㄟˋ","減":"ㄐㄧㄢˇ","九":"ㄐㄧㄡˇ","乘":"ㄔㄥˊ","幾":"ㄐㄧˇ","十":"ㄕˊ","喔":"ㄛ","是":"ㄕˋ","三":"ㄙㄢ","哪":"ㄋㄚˇ","等":"ㄉㄥˇ","於":"ㄩˊ","合":"ㄏㄜˊ","起":"ㄑㄧˇ","來":"ㄌㄞˊ","例":"ㄌㄧˋ","改":"ㄍㄞˇ","玻":"ㄅㄛ","爸":"ㄅㄚˋ","坡":"ㄆㄛ","葡":"ㄆㄨˊ","萄":"ㄊㄠˊ","摸":"ㄇㄛ","貓":"ㄇㄠ","咪":"ㄇㄧ","佛":"ㄈㄛˊ","飛":"ㄈㄟ","機":"ㄐㄧ","象":"ㄒㄧㄤˋ","特":"ㄊㄜˋ","兔":"ㄊㄨˋ","子":"ㄗˇ","訥":"ㄋㄜˋ","牛":"ㄋㄧㄡˊ","勒":"ㄌㄜˋ","老":"ㄌㄠˇ","虎":"ㄏㄨˇ","哥":"ㄍㄜ","狗":"ㄍㄡˇ","科":"ㄎㄜ","恐":"ㄎㄨㄥˇ","龍":"ㄌㄨㄥˊ","喝":"ㄏㄜ","花":"ㄏㄨㄚ","朵":"ㄉㄨㄛˇ","基":"ㄐㄧ","雞":"ㄐㄧ","七":"ㄑㄧ","汽":"ㄑㄧˋ","車":"ㄔㄜ","瓜":"ㄍㄨㄚ","知":"ㄓ","豬":"ㄓㄨ","吃":"ㄔ","帆":"ㄈㄢ","船":"ㄔㄨㄢˊ","師":"ㄕ","獅":"ㄕ","嘴":"ㄗㄨㄟˇ","巴":"ㄅㄚ","疵":"ㄘ","草":"ㄘㄠˇ","莓":"ㄇㄟˊ","思":"ㄙ","雨":"ㄩˇ","傘":"ㄙㄢˇ","衣":"ㄧ","服":"ㄈㄨˊ","屋":"ㄨ","烏":"ㄨ","龜":"ㄍㄨㄟ","迂":"ㄩ","魚":"ㄩˊ","啊":"˙ㄚ","鴨":"ㄧㄚ","公":"ㄍㄨㄥ","叫":"ㄐㄧㄠˋ","鵝":"ㄜˊ","白":"ㄅㄞˊ","欸":"ㄞˇ","椰":"ㄧㄝ","哀":"ㄞ","愛":"ㄞˋ","心":"ㄒㄧㄣ","誒":"ㄟ","杯":"ㄅㄟ","凹":"ㄠ","書":"ㄕㄨ","歐":"ㄡ","猴":"ㄏㄡˊ","飯":"ㄈㄢˋ","恩":"ㄣ","門":"ㄇㄣˊ","骯":"ㄤ","綿":"ㄇㄧㄢˊ","羊":"ㄧㄤˊ","鞥":"ㄥ","蜜":"ㄇㄧˋ","蜂":"ㄈㄥ","兒":"ㄦˊ","耳":"ㄦˇ","容":"ㄖㄨㄥˊ","易":"ㄧˋ","搞":"ㄍㄠˇ","混":"ㄏㄨㄣˋ","拼":"ㄆㄧㄣ","只":"ㄓˇ","項":"ㄒㄧㄤˋ","必":"ㄅㄧˋ","媽":"ㄇㄚ","八":"ㄅㄚ","拉":"ㄌㄚ","哈":"ㄏㄚ","哭":"ㄎㄨ","姑":"ㄍㄨ","粗":"ㄘㄨ","蘇":"ㄙㄨ","刀":"ㄉㄠ","高":"ㄍㄠ","黑":"ㄏㄟ","拍":"ㄆㄞ","偷":"ㄊㄡ","收":"ㄕㄡ","溝":"ㄍㄡ","山":"ㄕㄢ","跟":"ㄍㄣ","森":"ㄙㄣ","湯":"ㄊㄤ","幫":"ㄅㄤ","張":"ㄓㄤ","燈":"ㄉㄥ","抓":"ㄓㄨㄚ","刷":"ㄕㄨㄚ","天":"ㄊㄧㄢ","偏":"ㄆㄧㄢ","冬":"ㄉㄨㄥ","金":"ㄐㄧㄣ","光":"ㄍㄨㄤ","窗":"ㄔㄨㄤ","雙":"ㄕㄨㄤ","星":"ㄒㄧㄥ","聽":"ㄊㄧㄥ","香":"ㄒㄧㄤ","江":"ㄐㄧㄤ","春":"ㄔㄨㄣ","秋":"ㄑㄧㄡ","推":"ㄊㄨㄟ","吹":"ㄔㄨㄟ","飄":"ㄆㄧㄠ","歡":"ㄏㄨㄢ","官":"ㄍㄨㄢ","軍":"ㄐㄩㄣ","麻":"ㄇㄚˊ","馬":"ㄇㄚˇ","罵":"ㄇㄚˋ","拔":"ㄅㄚˊ","熟":"ㄕㄨˊ","鼠":"ㄕㄨˇ","樹":"ㄕㄨˋ","糖":"ㄊㄤˊ","躺":"ㄊㄤˇ","燙":"ㄊㄤˋ","急":"ㄐㄧˊ","玉":"ㄩˋ","五":"ㄨˇ","霧":"ㄨˋ","妻":"ㄑㄧ","騎":"ㄑㄧˊ","氣":"ㄑㄧˋ","蛙":"ㄨㄚ","娃":"ㄨㄚˊ","瓦":"ㄨㄚˇ","襪":"ㄨㄚˋ","鍋":"ㄍㄨㄛ","國":"ㄍㄨㄛˊ","通":"ㄊㄨㄥ","桶":"ㄊㄨㄥˇ","痛":"ㄊㄨㄥˋ","灰":"ㄏㄨㄟ","毀":"ㄏㄨㄟˇ","房":"ㄈㄤˊ","訪":"ㄈㄤˇ","找":"ㄓㄠˇ","全":"ㄑㄩㄢˊ","部":"ㄅㄨˋ","母":"ㄇㄨˇ","韻":"ㄩㄣˋ","挑":"ㄊㄧㄠ","戰":"ㄓㄢˋ","錯":"ㄘㄨㄛˋ","介":"ㄐㄧㄝˋ","或":"ㄏㄨㄛˋ","隨":"ㄙㄨㄟˊ","第":"ㄉㄧˋ","接":"ㄐㄧㄝ","寫":"ㄒㄧㄝˇ","名":"ㄇㄧㄥˊ","稱":"ㄔㄥ","尾":"ㄨㄟˇ","配":"ㄆㄟˋ","然":"ㄖㄢˊ","確":"ㄑㄩㄝˋ","相":"ㄒㄧㄤ","練":"ㄌㄧㄢˋ","仔":"ㄗˇ","細":"ㄒㄧˋ","辨":"ㄅㄧㄢˋ","識":"ㄕˋ","需":"ㄒㄩ","路":"ㄌㄨˋ","固":"ㄍㄨˋ","話":"ㄏㄨㄚˋ","角":"ㄐㄧㄠˇ","色":"ㄙㄜˋ","問":"ㄨㄣˋ","孩":"ㄏㄞˊ","含":"ㄏㄢˊ","裡":"ㄌㄧˇ","何":"ㄏㄜˊ","算":"ㄙㄨㄢˋ","表":"ㄅㄧㄠˇ","很":"ㄏㄣˇ","棒":"ㄅㄤˋ","嘗":"ㄔㄤˊ","我":"ㄨㄛˇ","們":"ㄇㄣˊ","著":"˙ㄓㄜ","差":"ㄔㄚ","複":"ㄈㄨˋ","也":"ㄧㄝˇ","按":"ㄢˋ","權":"ㄑㄩㄢˊ","限":"ㄒㄧㄢˋ","之":"ㄓ","跳":"ㄊㄧㄠˋ","辦":"ㄅㄢˋ","木":"ㄇㄨˋ","頭":"ㄊㄡˊ","沙":"ㄕㄚ","岩":"ㄧㄢˊ","璃":"ㄌㄧˊ","級":"ㄐㄧˊ","身":"ㄕㄣ","與":"ㄩˇ","獎":"ㄐㄧㄤˇ","勵":"ㄌㄧˋ","漠":"ㄇㄛˋ","雪":"ㄒㄩㄝˇ","拿":"ㄋㄚˊ","石":"ㄕˊ","蓋":"ㄍㄞˋ","築":"ㄓㄨˋ","座":"ㄗㄨㄛˋ","去":"ㄑㄩˋ","隻":"ㄓ","物":"ㄨˋ","搬":"ㄅㄢ","進":"ㄐㄧㄣˋ","瞭":"ㄌㄧㄠˋ","望":"ㄨㄤˋ","塔":"ㄊㄚˇ","冰":"ㄅㄧㄥ","城":"ㄔㄥˊ","堡":"ㄅㄠˇ","王":"ㄨㄤˊ","格":"ㄍㄜˊ","從":"ㄘㄨㄥˊ","往":"ㄨㄤˇ","累":"ㄌㄟˋ","計":"ㄐㄧˋ","集":"ㄐㄧˊ","扣":"ㄎㄡˋ","面":"ㄇㄧㄢˋ","量":"ㄌㄧㄤˋ","剩":"ㄕㄥˋ","手":"ㄕㄡˇ","達":"ㄉㄚˊ","人":"ㄖㄣˊ","畫":"ㄏㄨㄚˋ","走":"ㄗㄡˇ","清":"ㄑㄧㄥ","避":"ㄅㄧˋ","免":"ㄇㄧㄢˇ","離":"ㄌㄧˊ","作":"ㄗㄨㄛˋ","太":"ㄊㄞˋ","陽":"ㄧㄤˊ","囉":"˙ㄌㄨㄛ","點":"ㄉㄧㄢˇ","你":"ㄋㄧˇ","始":"ㄕˇ","冒":"ㄇㄠˋ","別":"ㄅㄧㄝˊ","族":"ㄗㄨˊ","村":"ㄘㄨㄣ","莊":"ㄓㄨㄤ","套":"ㄊㄠˋ","流":"ㄌㄧㄡˊ","程":"ㄔㄥˊ","支":"ㄓ","援":"ㄩㄢˊ","提":"ㄊㄧˊ","升":"ㄕㄥ","變":"ㄅㄧㄢˋ","厲":"ㄌㄧˋ","害":"ㄏㄞˋ","降":"ㄐㄧㄤˋ","告":"ㄍㄠˋ","訴":"ㄙㄨˋ","挫":"ㄘㄨㄛˋ","折":"ㄓㄜˊ","感":"ㄍㄢˇ","和":"ㄏㄜˊ","布":"ㄅㄨˋ","棄":"ㄑㄧˋ","越":"ㄩㄝˋ","想":"ㄒㄧㄤˇ","係":"ㄒㄧˋ","已":"ㄧˇ","經":"ㄐㄧㄥ","夠":"ㄍㄡˋ","顆":"ㄎㄜ","乎":"ㄏㄨ","額":"ㄜˊ","返":"ㄈㄢˇ","徽":"ㄏㄨㄟ","章":"ㄓㄤ","為":"ㄨㄟˋ","代":"ㄉㄞˋ","熱":"ㄖㄜˋ","鬧":"ㄋㄠˋ","能":"ㄋㄥˊ","明":"ㄇㄧㄥˊ","見":"ㄐㄧㄢˋ","局":"ㄐㄩˊ","繼":"ㄐㄧˋ","續":"ㄒㄩˋ","憶":"ㄧˋ","翻":"ㄈㄢ","牌":"ㄆㄞˊ","卡":"ㄎㄚˇ","片":"ㄆㄧㄢˋ","擊":"ㄐㄧˊ","楚":"ㄔㄨˇ","亮":"ㄌㄧㄤˋ","順":"ㄕㄨㄣˋ","趕":"ㄍㄢˇ","牠":"ㄊㄚ","綠":"ㄌㄩˋ","怪":"ㄍㄨㄞˋ","迷":"ㄇㄧˊ","宮":"ㄍㄨㄥ","指":"ㄓˇ","那":"ㄋㄚˋ","現":"ㄒㄧㄢˋ","悄":"ㄑㄧㄠ","低":"ㄉㄧ","場":"ㄔㄤˇ","讓":"ㄖㄤˋ","秒":"ㄇㄧㄠˇ","眼":"ㄧㄢˇ","住":"ㄓㄨˋ","停":"ㄊㄧㄥˊ","留":"ㄌㄧㄡˊ","毫":"ㄏㄠˊ","隔":"ㄍㄜˊ","備":"ㄅㄟˋ","誤":"ㄨˋ","悉":"ㄒㄧ","噢":"ㄛ","久":"ㄐㄧㄡˇ","費":"ㄈㄟˋ","列":"ㄌㄧㄝˋ","碰":"ㄆㄥˋ","牆":"ㄑㄧㄤˊ","取":"ㄑㄩˇ","消":"ㄒㄧㄠ","密":"ㄇㄧˋ","碼":"ㄇㄚˇ","度":"ㄉㄨˋ","紀":"ㄐㄧˋ","舊":"ㄐㄧㄡˋ","欄":"ㄌㄢˊ","近":"ㄐㄧㄣˋ","年":"ㄋㄧㄢˊ","齡":"ㄌㄧㄥˊ","歲":"ㄙㄨㄟˋ","鐘":"ㄓㄨㄥ","此":"ㄘˇ","止":"ㄓˇ","才":"ㄘㄞˊ","認":"ㄖㄣˋ","約":"ㄩㄝ","刪":"ㄕㄢ","除":"ㄔㄨˊ","匯":"ㄏㄨㄟˋ","替":"ㄊㄧˋ","份":"ㄈㄣˋ","處":"ㄔㄨˋ","理":"ㄌㄧˇ","詢":"ㄒㄩㄣˊ","否":"ㄈㄡˇ","更":"ㄍㄥˋ","雲":"ㄩㄣˊ","端":"ㄉㄨㄢ","步":"ㄅㄨˋ","互":"ㄏㄨˋ","輸":"ㄕㄨ","嗎":"˙ㄇㄚ","復":"ㄈㄨˋ","件":"ㄐㄧㄢˋ","吧":"˙ㄅㄚ","迎":"ㄧㄥˊ","呢":"˙ㄋㄜ","醒":"ㄒㄧㄥˇ","閃":"ㄕㄢˇ","造":"ㄗㄠˋ","做":"ㄗㄨㄛˋ","道":"ㄉㄠˋ","超":"ㄔㄠ","仍":"ㄖㄥˊ","未":"ㄨㄟˋ","束":"ㄕㄨˋ","址":"ㄓˇ","啟":"ㄑㄧˇ","線":"ㄒㄧㄢˋ","略":"ㄌㄩㄝˋ"};/* ZYDICT-END */
+/* ZYDICT-START */const ZYDICT = {"方":"ㄈㄤ","塊":"ㄎㄨㄞˋ","學":"ㄒㄩㄝˊ","習":"ㄒㄧˊ","島":"ㄉㄠˇ","登":"ㄉㄥ","入":"ㄖㄨˋ","地":"ㄉㄧˋ","圖":"ㄊㄨˊ","即":"ㄐㄧˊ","將":"ㄐㄧㄤ","開":"ㄎㄞ","放":"ㄈㄤˋ","遊":"ㄧㄡˊ","戲":"ㄒㄧˋ","結":"ㄐㄧㄝˊ","果":"ㄍㄨㄛˇ","家":"ㄐㄧㄚ","晚":"ㄨㄢˇ","安":"ㄢ","長":"ㄔㄤˊ","小":"ㄒㄧㄠˇ","汪":"ㄨㄤ","星":"ㄒㄧㄥ","商":"ㄕㄤ","店":"ㄉㄧㄢˋ","秘":"ㄇㄧˋ","密":"ㄇㄧˋ","案":"ㄢˋ","拖":"ㄊㄨㄛ","曳":"ㄧㄝˋ","加":"ㄐㄧㄚ","法":"ㄈㄚˇ","每":"ㄇㄟˇ","日":"ㄖˋ","任":"ㄖㄣˋ","務":"ㄨˋ","注":"ㄓㄨˋ","音":"ㄧㄣ","照":"ㄓㄠˋ","課":"ㄎㄜˋ","本":"ㄅㄣˇ","排":"ㄆㄞˊ","符":"ㄈㄨˊ","號":"ㄏㄠˋ","直":"ㄓˊ","在":"ㄗㄞˋ","字":"ㄗˋ","的":"˙ㄉㄜ","右":"ㄧㄡˋ","邊":"ㄅㄧㄢ","二":"ㄦˋ","三":"ㄙㄢ","四":"ㄙˋ","聲":"ㄕㄥ","最":"ㄗㄨㄟˋ","後":"ㄏㄡˋ","一":"ㄧ","個":"ㄍㄜˋ","上":"ㄕㄤˋ","輕":"ㄑㄧㄥ","點":"ㄉㄧㄢˇ","面":"ㄇㄧㄢˋ","說":"ㄕㄨㄛ","看":"ㄎㄢˋ","英":"ㄧㄥ","文":"ㄨㄣˊ","專":"ㄓㄨㄢ","力":"ㄌㄧˋ","礦":"ㄎㄨㄤˋ","洞":"ㄉㄨㄥˋ","工":"ㄍㄨㄥ","具":"ㄐㄩˋ","中":"ㄓㄨㄥ","旁":"ㄆㄤˊ","典":"ㄉㄧㄢˇ","由":"ㄧㄡˊ","依":"ㄧ","檔":"ㄉㄤˇ","用":"ㄩㄥˋ","到":"ㄉㄠˋ","自":"ㄗˋ","動":"ㄉㄨㄥˋ","產":"ㄔㄢˇ","生":"ㄕㄥ","常":"ㄔㄤˊ","讀":"ㄉㄨˊ","台":"ㄊㄞˊ","灣":"ㄨㄢ","另":"ㄌㄧㄥˋ","外":"ㄨㄞˋ","修":"ㄒㄧㄡ","正":"ㄓㄥˋ","破":"ㄆㄛˋ","詞":"ㄘˊ","語":"ㄩˇ","決":"ㄐㄩㄝˊ","定":"ㄉㄧㄥˋ","比":"ㄅㄧˇ","單":"ㄉㄢ","優":"ㄧㄡ","先":"ㄒㄧㄢ","數":"ㄕㄨˋ","得":"ㄉㄜˊ","玩":"ㄨㄢˊ","記":"ㄐㄧˋ","覺":"ㄐㄩㄝˊ","少":"ㄕㄠˇ","了":"˙ㄌㄜ","解":"ㄐㄧㄝˇ","什":"ㄕㄣˊ","麼":"˙ㄇㄜ","怎":"ㄗㄣˇ","這":"ㄓㄜˋ","還":"ㄏㄞˊ","有":"ㄧㄡˇ","要":"ㄧㄠˋ","沒":"ㄇㄟˊ","東":"ㄉㄨㄥ","西":"ㄒㄧ","朋":"ㄆㄥˊ","友":"ㄧㄡˇ","休":"ㄒㄧㄡ","息":"ㄒㄧ","時":"ㄕˊ","候":"ㄏㄡˋ","下":"ㄒㄧㄚˋ","大":"ㄉㄚˋ","重":"ㄓㄨㄥˋ","新":"ㄒㄧㄣ","空":"ㄎㄨㄥ","間":"ㄐㄧㄢ","答":"ㄉㄚˊ","對":"ㄉㄨㄟˋ","回":"ㄏㄨㄟˊ","把":"ㄅㄚˇ","轉":"ㄓㄨㄢˇ","成":"ㄔㄥˊ","帶":"ㄉㄞˋ","可":"ㄎㄜˇ","關":"ㄍㄨㄢ","掉":"ㄉㄧㄠˋ","非":"ㄈㄟ","原":"ㄩㄢˊ","樣":"ㄧㄤˋ","資":"ㄗ","料":"ㄌㄧㄠˋ","裝":"ㄓㄨㄤ","置":"ㄓˋ","孩":"ㄏㄞˊ","子":"ㄗˇ","會":"ㄏㄨㄟˋ","進":"ㄐㄧㄣˋ","註":"ㄓㄨˋ","冊":"ㄘㄜˋ","畫":"ㄏㄨㄚˋ","補":"ㄅㄨˇ","齊":"ㄑㄧˊ","舊":"ㄐㄧㄡˋ","或":"ㄏㄨㄛˋ","備":"ㄅㄟˋ","份":"ㄈㄣˋ","缺":"ㄑㄩㄝ","欄":"ㄌㄢˊ","位":"ㄨㄟˋ","版":"ㄅㄢˇ","度":"ㄉㄨˋ","也":"ㄧㄝˇ","經":"ㄐㄧㄥ","過":"ㄍㄨㄛˋ","裡":"ㄌㄧˇ","交":"ㄐㄧㄠ","給":"ㄍㄟˇ","分":"ㄈㄣ","享":"ㄒㄧㄤˇ","選":"ㄒㄩㄢˇ","存":"ㄘㄨㄣˊ","不":"ㄅㄨˋ","支":"ㄓ","援":"ㄩㄢˊ","接":"ㄐㄧㄝ","載":"ㄗㄞˋ","所":"ㄙㄨㄛˇ","換":"ㄏㄨㄢˋ","來":"ㄌㄞˊ","是":"ㄕˋ","請":"ㄑㄧㄥˇ","再":"ㄗㄞˋ","次":"ㄘˋ","取":"ㄑㄩˇ","代":"ㄉㄞˋ","目":"ㄇㄨˋ","前":"ㄑㄧㄢˊ","嗎":"˙ㄇㄚ","完":"ㄨㄢˊ","區":"ㄑㄩ","域":"ㄩˋ","各":"ㄍㄜˋ","同":"ㄊㄨㄥˊ","多":"ㄉㄨㄛ","連":"ㄌㄧㄢˊ","錄":"ㄌㄨˋ","剛":"ㄍㄤ","好":"ㄏㄠˇ","發":"ㄈㄚ","寶":"ㄅㄠˇ","箱":"ㄒㄧㄤ","傳":"ㄔㄨㄢˊ","顯":"ㄒㄧㄢˇ","示":"ㄕˋ","今":"ㄐㄧㄣ","種":"ㄓㄨㄥˇ","材":"ㄘㄞˊ","調":"ㄉㄧㄠˋ","整":"ㄓㄥˇ","體":"ㄊㄧˇ","速":"ㄙㄨˋ","電":"ㄉㄧㄢˋ","腦":"ㄋㄠˇ","快":"ㄎㄨㄞˋ","預":"ㄩˋ","設":"ㄕㄜˋ","慢":"ㄇㄢˋ","些":"ㄒㄧㄝ","型":"ㄒㄧㄥˊ","內":"ㄋㄟˋ","建":"ㄐㄧㄢˋ","式":"ㄕˋ","事":"ㄕˋ","口":"ㄎㄡˇ","序":"ㄒㄩˋ","念":"ㄋㄧㄢˋ","出":"ㄔㄨ","段":"ㄉㄨㄢˋ","就":"ㄐㄧㄡˋ","播":"ㄅㄛ","偶":"ㄡˇ","爾":"ㄦˇ","觸":"ㄔㄨˋ","保":"ㄅㄠˇ","底":"ㄉㄧˇ","標":"ㄅㄧㄠ","準":"ㄓㄨㄣˇ","己":"ㄐㄧˇ","網":"ㄨㄤˇ","站":"ㄓㄢˋ","共":"ㄍㄨㄥˋ","兩":"ㄌㄧㄤˇ","者":"ㄓㄜˇ","都":"ㄉㄡ","打":"ㄉㄚˇ","包":"ㄅㄠ","無":"ㄨˊ","使":"ㄕˇ","麥":"ㄇㄞˋ","克":"ㄎㄜˋ","風":"ㄈㄥ","允":"ㄩㄣˇ","許":"ㄒㄩ","試":"ㄕˋ","儲":"ㄔㄨˇ","失":"ㄕ","敗":"ㄅㄞˋ","像":"ㄒㄧㄤˋ","素":"ㄙㄨˋ","質":"ㄓˊ","造":"ㄗㄠˋ","般":"ㄅㄢ","話":"ㄏㄨㄚˋ","張":"ㄓㄤ","嘴":"ㄗㄨㄟˇ","心":"ㄒㄧㄣ","瞇":"ㄇㄧ","眼":"ㄧㄢˇ","吐":"ㄊㄨˇ","舌":"ㄕㄜˊ","題":"ㄊㄧˊ","以":"ㄧˇ","減":"ㄐㄧㄢˇ","九":"ㄐㄧㄡˇ","乘":"ㄔㄥˊ","按":"ㄢˋ","住":"ㄓㄨˋ","格":"ㄍㄜˊ","木":"ㄇㄨˋ","頭":"ㄊㄡˊ","喔":"ㄛ","草":"ㄘㄠˇ","左":"ㄗㄨㄛˇ","已":"ㄧˇ","夠":"ㄍㄡˋ","現":"ㄒㄧㄢˋ","幾":"ㄐㄧˇ","錯":"ㄘㄨㄛˋ","拿":"ㄋㄚˊ","十":"ㄕˊ","哪":"ㄋㄚˇ","手":"ㄕㄡˇ","蓋":"ㄍㄞˋ","才":"ㄘㄞˊ","能":"ㄋㄥˊ","等":"ㄉㄥˇ","於":"ㄩˊ","合":"ㄏㄜˊ","起":"ㄑㄧˇ","例":"ㄌㄧˋ","改":"ㄍㄞˇ","玻":"ㄅㄛ","爸":"ㄅㄚˋ","坡":"ㄆㄛ","葡":"ㄆㄨˊ","萄":"ㄊㄠˊ","摸":"ㄇㄛ","貓":"ㄇㄠ","咪":"ㄇㄧ","佛":"ㄈㄛˊ","飛":"ㄈㄟ","機":"ㄐㄧ","象":"ㄒㄧㄤˋ","特":"ㄊㄜˋ","兔":"ㄊㄨˋ","訥":"ㄋㄜˋ","牛":"ㄋㄧㄡˊ","勒":"ㄌㄜˋ","老":"ㄌㄠˇ","虎":"ㄏㄨˇ","哥":"ㄍㄜ","狗":"ㄍㄡˇ","科":"ㄎㄜ","恐":"ㄎㄨㄥˇ","龍":"ㄌㄨㄥˊ","喝":"ㄏㄜ","花":"ㄏㄨㄚ","朵":"ㄉㄨㄛˇ","基":"ㄐㄧ","雞":"ㄐㄧ","七":"ㄑㄧ","汽":"ㄑㄧˋ","車":"ㄔㄜ","瓜":"ㄍㄨㄚ","知":"ㄓ","豬":"ㄓㄨ","吃":"ㄔ","帆":"ㄈㄢ","船":"ㄔㄨㄢˊ","師":"ㄕ","獅":"ㄕ","巴":"ㄅㄚ","疵":"ㄘ","莓":"ㄇㄟˊ","思":"ㄙ","雨":"ㄩˇ","傘":"ㄙㄢˇ","衣":"ㄧ","服":"ㄈㄨˊ","屋":"ㄨ","烏":"ㄨ","龜":"ㄍㄨㄟ","迂":"ㄩ","魚":"ㄩˊ","啊":"˙ㄚ","鴨":"ㄧㄚ","公":"ㄍㄨㄥ","叫":"ㄐㄧㄠˋ","鵝":"ㄜˊ","白":"ㄅㄞˊ","欸":"ㄞˇ","椰":"ㄧㄝ","哀":"ㄞ","愛":"ㄞˋ","誒":"ㄟ","杯":"ㄅㄟ","凹":"ㄠ","書":"ㄕㄨ","歐":"ㄡ","猴":"ㄏㄡˊ","飯":"ㄈㄢˋ","恩":"ㄣ","門":"ㄇㄣˊ","骯":"ㄤ","綿":"ㄇㄧㄢˊ","羊":"ㄧㄤˊ","鞥":"ㄥ","蜜":"ㄇㄧˋ","蜂":"ㄈㄥ","兒":"ㄦˊ","耳":"ㄦˇ","容":"ㄖㄨㄥˊ","易":"ㄧˋ","搞":"ㄍㄠˇ","混":"ㄏㄨㄣˋ","拼":"ㄆㄧㄣ","只":"ㄓˇ","項":"ㄒㄧㄤˋ","必":"ㄅㄧˋ","媽":"ㄇㄚ","八":"ㄅㄚ","他":"ㄊㄚ","拉":"ㄌㄚ","哈":"ㄏㄚ","哭":"ㄎㄨ","姑":"ㄍㄨ","粗":"ㄘㄨ","蘇":"ㄙㄨ","刀":"ㄉㄠ","高":"ㄍㄠ","黑":"ㄏㄟ","拍":"ㄆㄞ","偷":"ㄊㄡ","收":"ㄕㄡ","溝":"ㄍㄡ","山":"ㄕㄢ","跟":"ㄍㄣ","森":"ㄙㄣ","湯":"ㄊㄤ","幫":"ㄅㄤ","燈":"ㄉㄥ","抓":"ㄓㄨㄚ","刷":"ㄕㄨㄚ","天":"ㄊㄧㄢ","偏":"ㄆㄧㄢ","冬":"ㄉㄨㄥ","金":"ㄐㄧㄣ","光":"ㄍㄨㄤ","窗":"ㄔㄨㄤ","雙":"ㄕㄨㄤ","聽":"ㄊㄧㄥ","香":"ㄒㄧㄤ","江":"ㄐㄧㄤ","春":"ㄔㄨㄣ","秋":"ㄑㄧㄡ","推":"ㄊㄨㄟ","吹":"ㄔㄨㄟ","飄":"ㄆㄧㄠ","歡":"ㄏㄨㄢ","官":"ㄍㄨㄢ","軍":"ㄐㄩㄣ","麻":"ㄇㄚˊ","馬":"ㄇㄚˇ","罵":"ㄇㄚˋ","拔":"ㄅㄚˊ","熟":"ㄕㄨˊ","鼠":"ㄕㄨˇ","樹":"ㄕㄨˋ","糖":"ㄊㄤˊ","躺":"ㄊㄤˇ","燙":"ㄊㄤˋ","急":"ㄐㄧˊ","玉":"ㄩˋ","五":"ㄨˇ","霧":"ㄨˋ","妻":"ㄑㄧ","騎":"ㄑㄧˊ","氣":"ㄑㄧˋ","蛙":"ㄨㄚ","娃":"ㄨㄚˊ","瓦":"ㄨㄚˇ","襪":"ㄨㄚˋ","鍋":"ㄍㄨㄛ","國":"ㄍㄨㄛˊ","通":"ㄊㄨㄥ","桶":"ㄊㄨㄥˇ","痛":"ㄊㄨㄥˋ","灰":"ㄏㄨㄟ","毀":"ㄏㄨㄟˇ","房":"ㄈㄤˊ","訪":"ㄈㄤˇ","找":"ㄓㄠˇ","全":"ㄑㄩㄢˊ","部":"ㄅㄨˋ","母":"ㄇㄨˇ","韻":"ㄩㄣˋ","挑":"ㄊㄧㄠ","戰":"ㄓㄢˋ","介":"ㄐㄧㄝˋ","隨":"ㄙㄨㄟˊ","第":"ㄉㄧˋ","寫":"ㄒㄧㄝˇ","名":"ㄇㄧㄥˊ","稱":"ㄔㄥ","尾":"ㄨㄟˇ","配":"ㄆㄟˋ","然":"ㄖㄢˊ","確":"ㄑㄩㄝˋ","相":"ㄒㄧㄤ","練":"ㄌㄧㄢˋ","仔":"ㄗˇ","細":"ㄒㄧˋ","辨":"ㄅㄧㄢˋ","識":"ㄕˋ","需":"ㄒㄩ","路":"ㄌㄨˋ","固":"ㄍㄨˋ","角":"ㄐㄧㄠˇ","色":"ㄙㄜˋ","問":"ㄨㄣˋ","含":"ㄏㄢˊ","何":"ㄏㄜˊ","算":"ㄙㄨㄢˋ","表":"ㄅㄧㄠˇ","很":"ㄏㄣˇ","棒":"ㄅㄤˋ","嘗":"ㄔㄤˊ","我":"ㄨㄛˇ","們":"ㄇㄣˊ","著":"˙ㄓㄜ","差":"ㄔㄚ","複":"ㄈㄨˋ","權":"ㄑㄩㄢˊ","限":"ㄒㄧㄢˋ","之":"ㄓ","跳":"ㄊㄧㄠˋ","辦":"ㄅㄢˋ","沙":"ㄕㄚ","岩":"ㄧㄢˊ","璃":"ㄌㄧˊ","級":"ㄐㄧˊ","身":"ㄕㄣ","與":"ㄩˇ","獎":"ㄐㄧㄤˇ","勵":"ㄌㄧˋ","漠":"ㄇㄛˋ","雪":"ㄒㄩㄝˇ","石":"ㄕˊ","築":"ㄓㄨˋ","座":"ㄗㄨㄛˋ","去":"ㄑㄩˋ","隻":"ㄓ","物":"ㄨˋ","搬":"ㄅㄢ","瞭":"ㄌㄧㄠˋ","望":"ㄨㄤˋ","塔":"ㄊㄚˇ","冰":"ㄅㄧㄥ","城":"ㄔㄥˊ","堡":"ㄅㄠˇ","王":"ㄨㄤˊ","從":"ㄘㄨㄥˊ","往":"ㄨㄤˇ","累":"ㄌㄟˋ","計":"ㄐㄧˋ","集":"ㄐㄧˊ","扣":"ㄎㄡˋ","量":"ㄌㄧㄤˋ","剩":"ㄕㄥˋ","達":"ㄉㄚˊ","人":"ㄖㄣˊ","探":"ㄊㄢˋ","險":"ㄒㄧㄢˇ","走":"ㄗㄡˇ","器":"ㄑㄧˋ","清":"ㄑㄧㄥ","避":"ㄅㄧˋ","免":"ㄇㄧㄢˇ","離":"ㄌㄧˊ","作":"ㄗㄨㄛˋ","太":"ㄊㄞˋ","陽":"ㄧㄤˊ","囉":"˙ㄌㄨㄛ","慰":"ㄨㄟˋ","提":"ㄊㄧˊ","醒":"ㄒㄧㄥˇ","毛":"ㄇㄠˊ","和":"ㄏㄜˊ","件":"ㄐㄧㄢˋ","睛":"ㄐㄧㄥ","鼻":"ㄅㄧˊ","柴":"ㄔㄞˊ","犬":"ㄑㄩㄢˇ","黃":"ㄏㄨㄤˊ","獵":"ㄌㄧㄝˋ","士":"ㄕˋ","奇":"ㄑㄧˊ","戴":"ㄉㄞˋ","紅":"ㄏㄨㄥˊ","帽":"ㄇㄠˋ","蝴":"ㄏㄨˊ","蝶":"ㄉㄧㄝˊ","酷":"ㄎㄨˋ","墨":"ㄇㄛˋ","鏡":"ㄐㄧㄥˋ","皇":"ㄏㄨㄤˊ","冠":"ㄍㄨㄢ","呼":"ㄏㄨ","買":"ㄇㄞˇ","紹":"ㄕㄠˋ","價":"ㄐㄧㄚˋ","錢":"ㄑㄧㄢˊ","顆":"ㄎㄜ","冒":"ㄇㄠˋ","吧":"˙ㄅㄚ","你":"ㄋㄧˇ","始":"ㄕˇ","別":"ㄅㄧㄝˊ","族":"ㄗㄨˊ","村":"ㄘㄨㄣ","莊":"ㄓㄨㄤ","套":"ㄊㄠˋ","流":"ㄌㄧㄡˊ","程":"ㄔㄥˊ","講":"ㄐㄧㄤˇ","亂":"ㄌㄨㄢˋ","秒":"ㄇㄧㄠˇ","繼":"ㄐㄧˋ","續":"ㄒㄩˋ","耶":"ㄧㄝ","升":"ㄕㄥ","認":"ㄖㄣˋ","真":"ㄓㄣ","懂":"ㄉㄨㄥˇ","變":"ㄅㄧㄢˋ","厲":"ㄌㄧˋ","害":"ㄏㄞˋ","降":"ㄐㄧㄤˋ","告":"ㄍㄠˋ","訴":"ㄙㄨˋ","挫":"ㄘㄨㄛˋ","折":"ㄓㄜˊ","感":"ㄍㄢˇ","布":"ㄅㄨˋ","棄":"ㄑㄧˋ","越":"ㄩㄝˋ","想":"ㄒㄧㄤˇ","係":"ㄒㄧˋ","陪":"ㄆㄟˊ","擔":"ㄉㄢ","乎":"ㄏㄨ","額":"ㄜˊ","返":"ㄈㄢˇ","徽":"ㄏㄨㄟ","章":"ㄓㄤ","為":"ㄨㄟˋ","熱":"ㄖㄜˋ","鬧":"ㄋㄠˋ","明":"ㄇㄧㄥˊ","見":"ㄐㄧㄢˋ","局":"ㄐㄩˊ","憶":"ㄧˋ","翻":"ㄈㄢ","牌":"ㄆㄞˊ","卡":"ㄎㄚˇ","片":"ㄆㄧㄢˋ","擊":"ㄐㄧˊ","楚":"ㄔㄨˇ","亮":"ㄌㄧㄤˋ","順":"ㄕㄨㄣˋ","趕":"ㄍㄢˇ","牠":"ㄊㄚ","綠":"ㄌㄩˋ","怪":"ㄍㄨㄞˋ","迷":"ㄇㄧˊ","宮":"ㄍㄨㄥ","指":"ㄓˇ","那":"ㄋㄚˋ","悄":"ㄑㄧㄠ","低":"ㄉㄧ","場":"ㄔㄤˇ","讓":"ㄖㄤˋ","停":"ㄊㄧㄥˊ","留":"ㄌㄧㄡˊ","毫":"ㄏㄠˊ","隔":"ㄍㄜˊ","誤":"ㄨˋ","悉":"ㄒㄧ","噢":"ㄛ","久":"ㄐㄧㄡˇ","費":"ㄈㄟˋ","列":"ㄌㄧㄝˋ","碰":"ㄆㄥˋ","牆":"ㄑㄧㄤˊ","消":"ㄒㄧㄠ","碼":"ㄇㄚˇ","紀":"ㄐㄧˋ","近":"ㄐㄧㄣˋ","狀":"ㄓㄨㄤˋ","況":"ㄎㄨㄤˋ","議":"ㄧˋ","判":"ㄆㄢˋ","斷":"ㄉㄨㄢˋ","年":"ㄋㄧㄢˊ","齡":"ㄌㄧㄥˊ","歲":"ㄙㄨㄟˋ","迎":"ㄧㄥˊ","鐘":"ㄓㄨㄥ","此":"ㄘˇ","止":"ㄓˇ","刪":"ㄕㄢ","除":"ㄔㄨˊ","帳":"ㄓㄤˋ","約":"ㄩㄝ","匯":"ㄏㄨㄟˋ","替":"ㄊㄧˋ","其":"ㄑㄧˊ","處":"ㄔㄨˋ","理":"ㄌㄧˇ","詢":"ㄒㄩㄣˊ","否":"ㄈㄡˇ","瀏":"ㄌㄧㄡˊ","覽":"ㄌㄢˇ","增":"ㄗㄥ","更":"ㄍㄥˋ","擇":"ㄗㄜˊ","平":"ㄆㄧㄥˊ","復":"ㄈㄨˋ","輸":"ㄕㄨ","至":"ㄓˋ","熊":"ㄒㄩㄥˊ","呢":"˙ㄋㄜ","立":"ㄌㄧˋ","首":"ㄕㄡˇ","頁":"ㄧㄝˋ","如":"ㄖㄨˊ","油":"ㄧㄡˊ","填":"ㄊㄧㄢˊ","做":"ㄗㄨㄛˋ","道":"ㄉㄠˋ","超":"ㄔㄠ","仍":"ㄖㄥˊ","未":"ㄨㄟˋ","束":"ㄕㄨˋ","址":"ㄓˇ","啟":"ㄑㄧˇ","線":"ㄒㄧㄢˋ","略":"ㄌㄩㄝˋ"};/* ZYDICT-END */
 // 破音字依詞語決定讀音，比單字字典優先
 const ZYWORDS = {
   '數數': ['ㄕㄨˇ', 'ㄕㄨˋ'], '數學': ['ㄕㄨˋ', 'ㄒㄩㄝˊ'], '得到': ['ㄉㄜˊ', 'ㄉㄠˋ'], '玩得': ['ㄨㄢˊ', '˙ㄉㄜ'], '記得': ['ㄐㄧˋ', '˙ㄉㄜ'],
@@ -291,7 +352,11 @@ const ZYWORDS = {
   '長大': ['ㄓㄤˇ', 'ㄉㄚˋ'], '重新': ['ㄔㄨㄥˊ', 'ㄒㄧㄣ'], '空間': ['ㄎㄨㄥ', 'ㄐㄧㄢ'], '答對': ['ㄉㄚˊ', 'ㄉㄨㄟˋ'], '答案': ['ㄉㄚˊ', 'ㄢˋ'],
   '回答': ['ㄏㄨㄟˊ', 'ㄉㄚˊ'], '答了': ['ㄉㄚˊ', '˙ㄌㄜ'],
 };
-const rb = (ch, z) => `<ruby>${ch}<rt>${z}</rt></ruby>`;
+function rb(ch, z) {
+  const tone = /[ˊˇˋ]$/.test(z) ? z.slice(-1) : '', syms = [...z.replace(/[˙ˊˇˋ]/g, '')];
+  return `<span class="zc">${ch}<span class="zp">${z[0] === '˙' ? '<span class="zn">˙</span>' : ''}${syms.map((s, i) =>
+    `<span class="zs">${s}${tone && i === syms.length - 1 ? `<span class="zt">${tone}</span>` : ''}</span>`).join('')}</span></span>`;
+}
 // 把文字轉成帶注音的 HTML（家長可在後台關掉）；非中文字照原樣
 function zy(s) {
   s = String(s);
@@ -313,21 +378,57 @@ const today = () => fmt(new Date());
 function mkChild(id, name, age, avatar, level, minLevel, maxLevel) {
   return { id, name, age, avatar, limit: 30, level, minLevel, maxLevel, stars: 0, wood: 0, badges: [], log: [], totalCorrect: 0 };
 }
+// 新裝置沒有孩子資料，會先進入註冊畫面
 function defaultData() {
-  return { pin: '1234', children: [mkChild('c1', '小探險家', 5, 0, 1, 1, 6), mkChild('c2', '大探險家', 9, 1, 7, 5, 9)], usage: {} };
+  return { pin: '1234', children: [], usage: {} };
+}
+// 補齊舊資料或備份檔缺少的欄位（舊版 iPad 上的進度也會經過這裡）
+function normalizeChild(c) {
+  c.stone = c.stone || 0; c.sand = c.sand || 0; c.glass = c.glass || 0;
+  const big = c.age >= 8, L = big ? 3 : 1;
+  c.focus = c.focus || { memory: L, seq: L, react: L, maze: L };
+  c.zy = c.zy || (big ? { level: 5, minLevel: 4, maxLevel: 7 } : { level: 1, minLevel: 1, maxLevel: 4 });
+  c.en = c.en || (big ? { level: 3, minLevel: 2, maxLevel: 6 } : { level: 1, minLevel: 1, maxLevel: 4 });
+  c.owned = c.owned || []; c.skin = c.skin || 'shiba'; c.acc = c.acc || 'none';
+  c.greet = c.greet || ''; c.lock = c.lock || '';
+  return c;
+}
+function normalize(d) {
+  d.pin = d.pin || '1234'; d.usage = d.usage || {};
+  d.children.forEach(normalizeChild);
+  return d;
+}
+function newChild(name, age, avatar) {
+  const big = age >= 8;
+  return normalizeChild(mkChild('c' + Date.now().toString(36), name, age, avatar, big ? 7 : 1, big ? 5 : 1, big ? 9 : 6));
 }
 function load() {
   let d = null;
   try { d = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
-  if (!d || !d.children) d = defaultData();
-  d.children.forEach(c => {
-    c.stone = c.stone || 0; c.sand = c.sand || 0; c.glass = c.glass || 0;
-    const big = c.age >= 8, L = big ? 3 : 1;
-    c.focus = c.focus || { memory: L, seq: L, react: L, maze: L };
-    c.zy = c.zy || (big ? { level: 5, minLevel: 4, maxLevel: 7 } : { level: 1, minLevel: 1, maxLevel: 4 });
-    c.en = c.en || (big ? { level: 3, minLevel: 2, maxLevel: 6 } : { level: 1, minLevel: 1, maxLevel: 4 });
-  });
-  return d;
+  if (!d || !Array.isArray(d.children)) d = defaultData();
+  return normalize(d);
+}
+// 交給 iPad 的分享選單（存到檔案、AirDrop、LINE…）；不支援時直接下載
+async function shareFile(file, title) {
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [file] })) return await navigator.share({ files: [file], title });
+  } catch (e) { if (e.name === 'AbortError') return; }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(file); a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
+}
+// 備份所有孩子的進度，換新 iPad 時用來還原
+function exportBackup() {
+  const body = JSON.stringify({ app: 'block-island', v: 1, savedAt: Date.now(), data: S.data });
+  shareFile(new File([body], `學習島備份-${today()}.json`, { type: 'application/json' }), '學習島備份');
+}
+async function restoreBackup(file) {
+  let d;
+  try { const j = JSON.parse(await file.text()); d = j.data || j; if (!Array.isArray(d.children)) throw 0; }
+  catch (e) { alert('這個檔案不是學習島的備份檔，請再選一次。'); return; }
+  if (!confirm(`要用這個備份（${d.children.map(c => c.name).join('、') || '沒有孩子'}）取代這台 iPad 上目前的進度嗎？`)) return;
+  S.data = normalize(d); save();
+  alert('還原完成！');
+  renderLogin();
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S.data)); } catch (e) {} }
 function U(c) {
@@ -405,11 +506,12 @@ function speak(text, opt = {}) {
   } catch (e) {}
 }
 // 依序念出多段：{text} 中文、{text, en:true} 英文、{sym} 注音符號（有家長錄音就播錄音）
-function sayParts(parts) {
+function sayParts(parts, onDone) {
   stopVoice();
   const tok = sayTok;
   const next = i => {
-    if (tok !== sayTok || i >= parts.length) return;
+    if (tok !== sayTok) return;
+    if (i >= parts.length) return onDone && onDone();
     const p = parts[i];
     let fired = false;
     const done = () => { if (!fired) { fired = true; next(i + 1); } };
@@ -452,12 +554,7 @@ async function loadSiteRecs() {
 async function exportRecs() {
   const items = {};
   for (const [sym, url] of REC) { const blob = await (await fetch(url)).blob(); items[sym] = { type: blob.type, data: await blobToB64(blob) }; }
-  const file = new File([JSON.stringify({ v: 1, items })], 'zhuyin-audio.json', { type: 'application/json' });
-  try {
-    if (navigator.canShare && navigator.canShare({ files: [file] })) return await navigator.share({ files: [file], title: '注音錄音' });
-  } catch (e) { if (e.name === 'AbortError') return; }
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(file); a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
+  shareFile(new File([JSON.stringify({ v: 1, items })], 'zhuyin-audio.json', { type: 'application/json' }), '注音錄音');
 }
 let recDB = null;
 function openRecDB() {
@@ -574,9 +671,19 @@ function initArt() {
   SPR.pig = sprite(['pppppppp', 'pppppppp', 'pkwppwkp', 'pppppppp', 'ppnnnnpp', 'ppknnkpp', 'ppnnnnpp', 'pppppppp'], { p: '#f4a6b4', n: '#e8869a', k: '#3a2a2a', w: '#fff' });
   SPR.mon = sprite(['gGgggGgg', 'ggGggggG', 'gkkggkkg', 'gkkggkkg', 'gggkkggg', 'ggkkkkgg', 'ggkkkkgg', 'ggkggkgg'], { g: '#5cbf4a', G: '#8fdc7a', k: '#1e2a1a' });
   AVATARS.forEach(([rows, pal], i) => SPR['av' + i] = sprite(rows, pal));
+  // 小汪：每種造型都有一般、說話（張嘴）、開心（瞇眼吐舌）三張
+  const DOG = ['bb......bb', 'bbllllllbb', 'bllllllllb', 'blellllelb', 'blellllelb', '.llwwwwll.', '.lwwkkwwl.', '.lwwwwwwl.', '..lwwwwl..', '...llll...'];
+  SKINS.forEach(s => {
+    SPR['dog_' + s.id] = sprite(DOG, s.pal);
+    SPR['dogTalk_' + s.id] = sprite([...DOG.slice(0, 7), '.lwkppkwl.', '..lwppwl..', '...llll...'], s.pal);
+    SPR['dogHappy_' + s.id] = sprite([...DOG.slice(0, 3), 'bllllllllb', 'beelllleeb', ...DOG.slice(5, 7), '.lwkppkwl.', '..lwppwl..', '...lppl...'], s.pal);
+  });
+  SPR.dog = SPR.dog_shiba; SPR.dogTalk = SPR.dogTalk_shiba; SPR.dogHappy = SPR.dogHappy_shiba;
+  ACCS.forEach(a => { if (a.rows) SPR['acc_' + a.id] = sprite(a.rows, a.pal); });
 }
 
 /* ---------- 題目 ---------- */
+const MATH_MANUAL_FROM = 5;
 const LEVELS = [null, '數數 1–10', '數數 11–30', '下一個數字（到 100）', '比大小', '加法（看方塊）', '加法 10 以內', '二位數加法', '二位數減法', '九九乘法'];
 function opts(ans, lo, hi, spread = 3, n = 4, extra = []) {
   const s = new Set([ans]);
@@ -599,12 +706,74 @@ function rods(n) {
   for (let i = 0; i < t; i++) h += '<div class="rod">' + '<i class="blk s t-planks"></i>'.repeat(10) + '</div>';
   return h + '<div class="ones">' + '<i class="blk s t-grass"></i>'.repeat(o) + '</div></div>';
 }
+const buildVis = (a, b) => `<div class="build">${[[a, 'grass'], [b, 'planks']].map(([n, t], z) => `${z ? '<span class="op">+</span>' : ''}
+  <div class="bzone" data-z="${z}"><div class="bzn">${n}</div>
+    <div class="bz-area" style="grid-template-columns:repeat(${Math.min(n, 5)},var(--b))">${'<i class="slot"></i>'.repeat(n)}</div>
+    <div class="src blk t-${t}" data-src="${z}">👆</div></div>`).join('')}</div>`;
+// 拖曳：按住下方的方塊拖到上面的格子裡
+function setupBuild() {
+  const g = S.game, area = document.querySelector('.build');
+  g.bc = [0, 0];
+  if (!area) return;
+  let ghost = null, from = -1;
+  const zoneAt = (x, y) => { const el = document.elementFromPoint(x, y); return el && el.closest('.bzone'); };
+  const move = e => {
+    if (!ghost) return;
+    ghost.style.left = e.clientX + 'px'; ghost.style.top = e.clientY + 'px';
+    const z = zoneAt(e.clientX, e.clientY);
+    document.querySelectorAll('.bzone').forEach(x => x.classList.toggle('over', x === z));
+  };
+  const up = e => {
+    if (!ghost) return;
+    ghost.remove(); ghost = null;
+    window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up);
+    document.querySelectorAll('.bzone').forEach(x => x.classList.remove('over'));
+    const z = zoneAt(e.clientX, e.clientY);
+    if (z && S.game === g) dropBlock(from, +z.dataset.z);
+  };
+  area.querySelectorAll('.src').forEach(s => s.addEventListener('pointerdown', e => {
+    if (S.game !== g || g.state !== 'asking') return;
+    e.preventDefault();
+    from = +s.dataset.src;
+    ghost = document.createElement('div');
+    ghost.className = 'ghost blk t-' + (from ? 'planks' : 'grass');
+    ghost.style.setProperty('--gb', s.getBoundingClientRect().width + 'px');
+    document.body.appendChild(ghost); move(e);
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
+  }));
+}
+function dropBlock(from, to) {
+  const g = S.game, need = [g.q.build.a, g.q.build.b];
+  if (from !== to) { SFX.no(); bubble(from ? '木頭方塊放右邊喔' : '草地方塊放左邊喔'); return; }
+  if (g.bc[to] >= need[to]) { SFX.no(); bubble('這邊已經夠了！'); return; }
+  const slot = document.querySelector(`.bzone[data-z="${to}"] .slot:not(.full)`);
+  slot.className = `slot full blk b t-${to ? 'planks' : 'grass'}`;
+  slot.dataset.act = 'unplace'; slot.dataset.v = to;
+  g.bc[to]++; SFX.tap(); speak(String(g.bc[to]));
+  if (g.bc[0] === need[0] && g.bc[1] === need[1]) {
+    g.building = false; refreshLock();
+    dogSay([{ text: '都放好了！現在數數看，一共有幾個方塊？' }]);
+  }
+}
+// 點一下放錯的方塊可以拿掉
+function unplace(el) {
+  const g = S.game;
+  if (!g || !g.q.build || g.state !== 'asking') return;
+  el.className = 'slot'; el.innerHTML = ''; delete el.dataset.act;
+  g.bc[+el.dataset.v]--; g.building = true; refreshLock();
+}
 const addVis = (a, b, lab) => `<div class="addv">${grid(a, 'grass', 5, lab, 1)}<span class="op">+</span>${grid(b, 'planks', 5, lab, a + 1)}</div>`;
 
 function genQ(L) {
   switch (L) {
-    case 1: { const n = ri(1, 10); return { say: '數數看，有幾個方塊？', display: '有幾個方塊？', rec: `數 ${n} 個方塊`, visual: grid(n, 'grass', 5), hint: grid(n, 'grass', 5, true), answer: n, options: opts(n, 1, 12) }; }
-    case 2: { const n = ri(11, 30); return { say: '數數看，有幾個方塊？十個排成一排喔！', display: '有幾個方塊？', rec: `數 ${n} 個方塊`, visual: grid(n, 'planks', 10), hint: grid(n, 'planks', 10, true), answer: n, options: opts(n, 10, 32) }; }
+    case 1: {
+      const n = ri(1, 10), big = h => `<div style="--b:min(10vw,8vh,96px)">${h}</div>`;
+      return { say: '數數看，有幾個方塊？', display: '有幾個方塊？', rec: `數 ${n} 個方塊`, visual: big(grid(n, 'grass', 5)), hint: big(grid(n, 'grass', 5, true)), answer: n, options: opts(n, 1, 12) };
+    }
+    case 2: {
+      const n = ri(11, 30), big = h => `<div style="--b:min(7.5vw,6.5vh,70px)">${h}</div>`;
+      return { say: '數數看，有幾個方塊？十個排成一排喔！', display: '有幾個方塊？', rec: `數 ${n} 個方塊`, visual: big(grid(n, 'planks', 10)), hint: big(grid(n, 'planks', 10, true)), answer: n, options: opts(n, 10, 32) };
+    }
     case 3: {
       const n = ri(1, 99), line = [n - 2, n - 1, n].filter(v => v >= 1);
       return { say: `${n} 的下一個數字是多少？`, display: `${n} ➜ ?`, visual: '', answer: n + 1,
@@ -618,9 +787,15 @@ function genQ(L) {
       return { say: '這三個數字，哪一個最大？', display: '哪一個最大？', rec: `比大小 ${arr.join('、')}`, visual: '', answer: ans, options: arr,
         hint: `<div class="cmp">${arr.map(v => `<div class="cmpc">${rods(v)}<div class="cmpn">${v}</div></div>`).join('')}</div>` };
     }
-    case 5: case 6: {
+    case 5: {
+      // 動手蓋：把方塊拖進左右兩格，放好了才能回答
+      const a = ri(1, 6), b = ri(1, Math.min(4, 10 - a));
+      return { parts: [{ text: `${a} 加 ${b} 等於多少？` }, { text: `先拖 ${a} 個草地方塊到左邊，再拖 ${b} 個木頭方塊到右邊。` }], replay: [{ text: `${a} 加 ${b} 等於多少？` }],
+        display: `${a} + ${b} = ?`, build: { a, b }, visual: buildVis(a, b), hint: '', answer: a + b, options: opts(a + b, 1, 12) };
+    }
+    case 6: {
       const a = ri(1, 9), b = ri(1, 10 - a);
-      return { say: `${a} 加 ${b} 等於多少？`, display: `${a} + ${b} = ?`, visual: L === 5 ? addVis(a, b, false) : '', hint: addVis(a, b, true), answer: a + b, options: opts(a + b, 1, 12) };
+      return { say: `${a} 加 ${b} 等於多少？`, display: `${a} + ${b} = ?`, visual: '', hint: addVis(a, b, true), answer: a + b, options: opts(a + b, 1, 12) };
     }
     case 7: {
       const a = ri(11, 79), b = ri(11, Math.min(89, 100 - a)), ta = a - a % 10, tb = b - b % 10;
@@ -850,7 +1025,7 @@ function listen(done) {
 }
 function onMic(el) {
   const g = S.game;
-  if (!g || g.state !== 'asking' || g.listening) return;
+  if (!g || g.state !== 'asking' || g.listening || g.talking) return;
   g.listening = true; el.classList.add('on'); el.innerHTML = '👂 ' + zy('我在聽…');
   const heard = document.getElementById('heard'); if (heard) heard.textContent = '';
   listen((alts, err) => {
@@ -958,6 +1133,88 @@ function showBanner() {
   sc.insertAdjacentHTML('beforeend', `<div class="banner" id="banner">🌇 ${zy('太陽快下山了，再玩一下下就要休息囉！')}</div>`);
   setTimeout(() => { const b = document.getElementById('banner'); if (b) b.remove(); }, 8000);
 }
+/* 小汪：解說題目、拍手、安慰、提醒任務 */
+// 造型（毛色）和配件可以在星星商店用星星換；e 是眼睛、k 是鼻子和嘴巴
+const SKINS = [
+  { id: 'shiba', name: '柴犬小汪', price: 0, pal: { b: '#8a5228', l: '#d99a52', w: '#fff1dc', e: '#2a1a10', k: '#2a1a10', p: '#ff7f8f' } },
+  { id: 'gold', name: '黃金獵犬', price: 20, pal: { b: '#b8741a', l: '#f0b44a', w: '#ffe3a8', e: '#2a1a10', k: '#2a1a10', p: '#ff7f8f' } },
+  { id: 'white', name: '雪白狗狗', price: 25, pal: { b: '#cfcfcf', l: '#ffffff', w: '#ffffff', e: '#222222', k: '#222222', p: '#ff8fa0' } },
+  { id: 'husky', name: '哈士奇', price: 30, pal: { b: '#4a4f5a', l: '#8c94a3', w: '#ffffff', e: '#3aa0ff', k: '#1a1a1a', p: '#ff7f8f' } },
+  { id: 'black', name: '黑柴', price: 30, pal: { b: '#1c1c1c', l: '#363230', w: '#e9cfa4', e: '#ffcf5a', k: '#111111', p: '#ff7f8f' } },
+];
+const ACCS = [
+  { id: 'none', name: '不戴配件', price: 0 },
+  { id: 'cap', name: '紅帽子', price: 15, pal: { r: '#d83a3a', R: '#ffffff' }, rows: ['..rrrrrr..', '.rrRrrrrr.', 'rrrrrrrrrr', '..........', '..........', '..........', '..........', '..........', '..........', '..........'] },
+  { id: 'bow', name: '蝴蝶結', price: 15, pal: { p: '#ff6fa8', P: '#c2416f' }, rows: ['..pp..pp..', '..ppPPpp..', '..pp..pp..', '..........', '..........', '..........', '..........', '..........', '..........', '..........'] },
+  { id: 'glasses', name: '酷墨鏡', price: 20, pal: { g: '#111111', w: '#7fd6ff' }, rows: ['..........', '..........', '..........', '.gggggggg.', '.gwg..gwg.', '..........', '..........', '..........', '..........', '..........'] },
+  { id: 'crown', name: '國王皇冠', price: 40, pal: { y: '#ffd23a', r: '#e8323a' }, rows: ['..y.yy.y..', '..yyyyyy..', '..yryyry..', '..........', '..........', '..........', '..........', '..........', '..........', '..........'] },
+];
+const MAT_PRICE = 4;
+function dogHTML(skin, acc) {
+  const c = S.child, s = skin || (c && c.skin) || 'shiba', a = acc || (c && c.acc) || 'none';
+  return `<div class="dog" id="dog" data-act="dogtap"><img class="px d0" src="${SPR['dog_' + s]}"><img class="px d1" src="${SPR['dogTalk_' + s]}"><img class="px d2" src="${SPR['dogHappy_' + s]}">${a !== 'none' ? `<img class="px acc" src="${SPR['acc_' + a]}">` : ''}</div>`;
+}
+function setDog(state, ms) {
+  const d = document.getElementById('dog'); if (!d) return;
+  d.className = 'dog ' + (state || '');
+  clearTimeout(setDog.t);
+  if (ms) setDog.t = setTimeout(() => { if (d.className === 'dog ' + state) d.className = 'dog'; }, ms);
+}
+// 小汪邊說話邊動嘴巴，說完再呼叫 onDone
+function dogSay(parts, onDone, mood) {
+  setDog('talk ' + (mood || ''));
+  sayParts(parts, () => { setDog(''); if (onDone) onDone(); });
+}
+/* ---------- 星星商店：用多的星星換材料、小汪的造型和配件 ---------- */
+const shopItem = id => {
+  const [kind, key] = id.split(':');
+  if (kind === 'm') { const m = MATS.find(x => x[0] === key); return { kind, key, name: `1 個${m[1]}`, price: MAT_PRICE }; }
+  return { kind, key, ...(kind === 's' ? SKINS : ACCS).find(x => x.id === key) };
+};
+const owns = (c, it) => it.price === 0 || c.owned.includes(it.kind + ':' + it.key);
+function renderShop(line) {
+  S.screen = 'shop';
+  const c = S.child, sel = S.shopSel;
+  const card = (id, icon) => {
+    const it = shopItem(id), using = (it.kind === 's' && c.skin === it.key) || (it.kind === 'a' && c.acc === it.key);
+    const tag = it.kind === 'm' ? `⭐ ${it.price}` : using ? `✓ ${zy('使用中')}` : owns(c, it) ? zy('點我換上') : `⭐ ${it.price}`;
+    return `<button class="shopi ${sel === id ? 'sel' : ''} ${using ? 'use' : ''}" data-act="buy" data-v="${id}"><div class="sicon">${icon}</div><div class="sname">${zy(it.name)}</div><div class="sprice">${tag}</div></button>`;
+  };
+  const sec = (title, cards) => `<div class="shead">${title}</div><div class="sgrid2">${cards.join('')}</div>`;
+  mount(`<div class="screen sky">${hud('tomap')}
+    <div class="mapdog">${dogHTML()}<div class="dogsay">${zy(line || '點一下看看，再點一次就買下來！')}</div></div>
+    <div class="shop">
+      ${sec('🧱 ' + zy('換材料'), MATS.map(([m, , , t]) => card('m:' + m, `<i class="blk t-${t}"></i>`)))}
+      ${sec('🐶 ' + zy('小汪的造型'), SKINS.map(s => card('s:' + s.id, `<img class="px" src="${SPR['dog_' + s.id]}">`)))}
+      ${sec('🎩 ' + zy('小汪的配件'), ACCS.map(a => card('a:' + a.id, `<span class="pv"><img class="px" src="${SPR['dog_' + c.skin]}">${a.rows ? `<img class="px" src="${SPR['acc_' + a.id]}">` : ''}</span>`)))}
+    </div></div>`);
+}
+// 點第一下：小汪介紹價錢；再點一下：買下來（已經有的就直接換上）
+function shopTap(id) {
+  const c = S.child, it = shopItem(id);
+  if (it.kind !== 'm' && owns(c, it)) {
+    if (it.kind === 's') c.skin = it.key; else c.acc = it.key;
+    S.shopSel = ''; save(); renderShop(`換上${it.name}了！`); setDog('happy', 1500); speak(`換上${it.name}了！`);
+    return;
+  }
+  if (S.shopSel !== id) {
+    S.shopSel = id; const line = `${it.name}要 ${it.price} 顆星星，再點一次就買下來！`;
+    renderShop(line); dogSay([{ text: line }]);
+    return;
+  }
+  S.shopSel = '';
+  if (c.stars < it.price) { const line = `星星還不夠喔，還差 ${it.price - c.stars} 顆，再去冒險收集吧！`; renderShop(line); dogSay([{ text: line }], null, 'sad'); return; }
+  c.stars -= it.price;
+  if (it.kind === 'm') c[it.key]++;
+  else { c.owned.push(it.kind + ':' + it.key); if (it.kind === 's') c.skin = it.key; else c.acc = it.key; }
+  save(); SFX.win();
+  const line = it.kind === 'm' ? `買到${it.name}了！可以拿去蓋房子喔！` : `換上${it.name}了，好可愛！`;
+  renderShop(line); setDog('happy', 2000); speak(line);
+}
+function questLine(c) {
+  const left = BIOMES.filter(b => !qDone(c)[b.id]).map(b => b.name);
+  return left.length ? `今日任務還有：${left.join('、')}，還沒去喔！` : '今天的任務都完成了，你好棒！';
+}
 function bubble(text, ms = 1500) {
   const b = document.getElementById('bubble'); if (!b) return;
   b.innerHTML = zy(text); b.classList.add('show');
@@ -966,6 +1223,7 @@ function bubble(text, ms = 1500) {
 
 function renderLogin() {
   S.screen = 'login'; S.child = null; S.game = null; S.sunset = false;
+  if (!S.data.children.length) return renderSetup();
   const clouds = [[8, 70, 0], [22, 95, -40], [14, 120, -80]].map(([t, d, dl]) => `<div class="cloud" style="top:${t}%;animation-duration:${d}s;animation-delay:${dl}s"></div>`).join('');
   mount(`<div class="screen sky login">${clouds}
     <div class="title">${zy('方塊學習島')}</div>
@@ -973,7 +1231,7 @@ function renderLogin() {
     <div class="kids">${S.data.children.map(c => {
       const done = remaining(c) <= 0;
       return `<button class="kid ${done ? 'sleep' : ''}" data-act="login" data-id="${c.id}"><img class="face px" src="${avatarURL(c.avatar)}">
-        ${done ? '<div class="zzz">Zzz</div>' : ''}<div class="kname">${zy(c.name)}</div>
+        ${done ? '<div class="zzz">Zzz</div>' : ''}${c.lock ? '<div class="klock">🔒</div>' : ''}<div class="kname">${zy(c.name)}</div>
         <div class="kmeta"><img class="px" src="${SPR.star}" style="width:18px;vertical-align:-2px"> ${c.stars}</div></button>`;
     }).join('')}</div>
     <div class="ground"><div class="grassrow t-grassside tiled"></div><div class="dirtrow t-dirt tiled"></div></div>
@@ -985,12 +1243,12 @@ function renderMap() {
   const c = S.child;
   const done = qDone(c);
   mount(`<div class="screen sky">${hud('logout')}
-    <div class="questbar">${questComplete(c) ? '🎁 ' + zy('今日任務完成！可以自由探險囉') : `${zy('今日任務')} ${BIOMES.map(b => `<span class="qi ${done[b.id] ? 'done' : ''}">${b.sym} ${done[b.id] ? '✓' : ''}</span>`).join('')}`}</div>
+    <div class="mapdog">${dogHTML()}<div class="dogsay">${questComplete(c) ? '🎁 ' : ''}${zy(questLine(c))}</div></div>
     <div class="mapgrid">${BIOMES.map(b => `<button class="biome tiled t-${b.tex} ${b.open ? '' : 'locked'} ${blocked(c, b.id) ? 'rest' : ''} ${questComplete(c) ? '' : done[b.id] ? 'did' : 'todo'}" data-act="biome" data-v="${b.id}">
       ${questComplete(c) ? '' : done[b.id] ? `<span class="flag did">✓ ${zy('今天完成')}</span>` : `<span class="flag todo">⭐ ${zy('今天還沒來')}</span>`}
       ${blocked(c, b.id) ? `<span class="flag rest">💤 ${zy('先去別的地方')}</span>` : ''}
       <div class="sym">${b.sym}</div><div class="bname">${zy(b.name)}</div>${SUBJ[b.id] ? `<div class="lv">Lv${P(c, b.id).level} ${zy(SUBJ[b.id].levels[P(c, b.id).level])}</div>` : ''}</button>`).join('')}</div>
-    <div class="mapbar"><button class="btn orange big" data-act="house">🏠 ${zy('我的家')}</button><button class="btn big" data-act="village">🏘 ${zy('家族村莊')}</button></div></div>`);
+    <div class="mapbar"><button class="btn orange big" data-act="house">🏠 ${zy('我的家')}</button><button class="btn green big" data-act="shop">🛒 ${zy('星星商店')}</button><button class="btn big" data-act="village">🏘 ${zy('家族村莊')}</button></div></div>`);
 }
 
 // 數學、注音、英文共用同一套出題流程：每關 5 題，題目由 SUBJ[subject].gen 產生
@@ -1008,8 +1266,31 @@ function nextQ(lead) {
   g.q = g.subject === 'eng' && g.idx === g.total - 1 && speakOK() ? genSpeak(p.level) : SUBJ[g.subject].gen(p.level);
   g.q.L = p.level;
   g.attempts = 0; g.wrong = []; g.hintShown = false; g.state = 'asking'; g.listening = false;
+  g.talking = true; g.building = !!g.q.build;
   renderGame();
-  sayParts([...(lead ? [{ text: lead }] : []), ...qParts(g.q)]);
+  if (g.q.build) setupBuild();
+  // 小汪先把題目講完，選項才能按，避免孩子還沒聽完就亂點
+  const unlock = () => { if (S.game === g && g.talking) { g.talking = false; refreshLock(); } };
+  dogSay([...(lead ? [{ text: lead }] : []), ...qParts(g.q)], unlock);
+  later(unlock, 12000);
+}
+function refreshLock() {
+  const g = S.game, a = document.querySelector('.answers');
+  if (g && a) a.classList.toggle('wait', !!(g.talking || g.building));
+}
+// 答對後跟小汪拍手；孩子沒點的話 3.5 秒後自動繼續
+function hiFive(next) {
+  const sc = app.firstElementChild;
+  sc.insertAdjacentHTML('beforeend', `<div class="hifive" id="hifive" data-act="hifive"><div class="hfbox"><img class="px" src="${SPR['dogHappy_' + (S.child.skin || 'shiba')]}"><div class="paw">🐾</div><div class="hft">${zy('跟小汪拍手！')}</div></div></div>`);
+  S.hiNext = next;
+  later(() => doHiFive(false), 3500);
+}
+function doHiFive(tapped) {
+  const ov = document.getElementById('hifive');
+  if (!ov || ov.dataset.done) return;
+  ov.dataset.done = '1';
+  if (tapped) { ov.classList.add('clap'); beep([880, 1175, 1568], .07, 'square', .08); speak(pick(['耶！', '拍拍手！', '好棒喔！'])); }
+  later(() => { ov.remove(); const n = S.hiNext; S.hiNext = null; if (n) n(); }, tapped ? 800 : 0);
 }
 function renderGame() {
   S.screen = 'game';
@@ -1017,15 +1298,18 @@ function renderGame() {
   mount(`<div class="screen sky">${hud('tomap')}
     <div class="gtop"><div class="pips">${Array.from({ length: g.total }, (_, i) => `<i class="blk pip ${i < g.idx ? 't-' + SUBJ[g.subject].tex : ''} ${i === g.idx ? 'cur' : ''}"></i>`).join('')}</div>
       <button class="btn hintbtn" data-act="buyhint">💡 ${zy('提示')} <img class="px ico" src="${SPR.star}">×2</button></div>
-    <div class="qcard"><button class="btn small blue" data-act="say">🔊</button><div class="qtext ${q.dispClass || ''}">${zy(q.display)}</div></div>
+    <div class="qrow">${dogHTML()}<div class="qcard"><button class="btn small blue" data-act="say">🔊</button><div class="qtext ${q.dispClass || ''}">${zy(q.display)}</div></div></div>
     <div class="visual">${g.hintShown ? q.hint : q.visual}</div>
-    ${q.speak ? `<div class="heard" id="heard"></div><div class="answers"><button class="btn mic" data-act="mic">🎤 ${zy('按我說說看')}</button></div>`
-      : `<div class="answers">${q.options.map((o, i) => `<button class="btn ans ${q.optClass || ''} ${g.wrong.includes(o) ? 'off' : ''}" data-act="ans" data-v="${i}">${label(o)}</button>`).join('')}</div>`}
+    ${q.speak ? `<div class="heard" id="heard"></div><div class="answers wait"><button class="btn mic" data-act="mic">🎤 ${zy('按我說說看')}</button></div>`
+      : `<div class="answers wait">${q.options.map((o, i) => `<button class="btn ans ${q.optClass || ''} ${g.wrong.includes(o) ? 'off' : ''}" data-act="ans" data-v="${i}">${label(o)}</button>`).join('')}</div>`}
     <div id="bubble" class="bubble"></div></div>`);
 }
 function showHint() {
-  S.game.hintShown = true;
-  document.querySelector('.visual').innerHTML = S.game.q.hint;
+  const g = S.game;
+  g.hintShown = true;
+  // 拖曳題的提示：在放好的方塊上依序標數字
+  if (g.q.build) { let k = 0; document.querySelectorAll('.bzone .slot.full').forEach(s => { s.innerHTML = `<b style="animation-delay:${k * .15}s">${++k}</b>`; }); return; }
+  document.querySelector('.visual').innerHTML = g.q.hint;
 }
 function logQ(ok) {
   const c = S.child, g = S.game, q = g.q;
@@ -1036,7 +1320,8 @@ function logQ(ok) {
 function adapt(kind) {
   const g = S.game, p = P(S.child, g.subject);
   if (kind === 'first') { g.fs++; g.ff = 0; } else if (kind === 'ok') { g.fs = 0; g.ff = 0; } else { g.ff++; g.fs = 0; }
-  if (g.fs >= 3 && p.level < p.maxLevel) {
+  // 數學 Lv5 以上不自動升級，等家長確認孩子真的懂了再到後台手動升
+  if (g.fs >= 3 && p.level < p.maxLevel && !(g.subject === 'math' && p.level >= MATH_MANUAL_FROM)) {
     p.level++; g.fs = 0; g.levelUp = true;
     setTimeout(() => { bubble('題目升級了！⬆'); speak('你變厲害了，題目升級囉！', { queue: true }); }, 800);
   }
@@ -1045,7 +1330,7 @@ function adapt(kind) {
 }
 function onAnswer(i, el) {
   const g = S.game;
-  if (!g || g.state !== 'asking') return;
+  if (!g || g.state !== 'asking' || g.talking || g.building) return;
   judge(g.q.options[i] === g.q.answer, el, g.q.options[i]);
 }
 // 點選題和口說題共用：答對、第 1 次錯再試、第 2 次錯給提示、第 3 次錯公布答案
@@ -1058,20 +1343,20 @@ function judge(ok, el, v) {
     c.totalCorrect++;
     if (first) { c.stars++; U(c).stars++; g.starsEarned++; g.correctFirst++; }
     const praise = first ? pick(['答對了！', '好厲害！', '太棒了！', '完全正確！']) : pick(['答對了！你沒有放棄，好棒！', '對了！越來越厲害！']);
-    bubble(first ? praise + ' +1 ⭐' : praise); speak(praise);
+    bubble(first ? praise + ' +1 ⭐' : praise); speak(praise); setDog('happy');
     logQ(first); adapt(first ? 'first' : 'ok');
-    later(() => { g.idx++; nextQ(); }, 1500);
+    later(() => hiFive(() => { g.idx++; nextQ(); }), 900);
   } else {
     SFX.no(); g.wrong.push(v);
     if (!q.speak) el.classList.add('off');
     el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
-    if (g.attempts === 1) { bubble(q.speak ? '再說一次看看！' : '再想想看喔！'); speak(q.speak ? '再說一次看看！' : '再想想看喔！'); }
-    else if (g.attempts === 2) { showHint(); bubble('一起看提示 💡'); sayParts([{ text: '沒關係，我們一起看提示！' }, ...(q.hintParts || [])]); }
+    if (g.attempts === 1) { bubble(q.speak ? '再說一次看看！' : '再想想看喔！'); dogSay([{ text: q.speak ? '沒關係，再說一次看看！' : '沒關係，小汪陪你再想想看！' }], null, 'sad'); }
+    else if (g.attempts === 2) { showHint(); bubble('一起看提示 💡'); dogSay([{ text: '別擔心，我們一起看提示！' }, ...(q.hintParts || [])], null, 'sad'); }
     else {
       g.state = 'done';
       document.querySelectorAll('.ans').forEach(b => { if (q.options[+b.dataset.v] === q.answer) { b.classList.remove('off'); b.classList.add('reveal'); } });
       bubble(q.speak ? '很棒的嘗試！👍' : `答案是 ${q.ansLabel || q.answer}`, 2400);
-      sayParts(q.revealParts || [{ text: '答案是' }, ...(q.ansParts || [{ text: String(q.answer) }]), { text: '，下次一定可以！' }]);
+      dogSay(q.revealParts || [{ text: '答案是' }, ...(q.ansParts || [{ text: String(q.answer) }]), { text: '，下次一定可以！' }]);
       logQ(false); adapt('fail');
       later(() => { g.idx++; nextQ(); }, 2800);
     }
@@ -1084,7 +1369,7 @@ function buyHint() {
   if (g.hintShown) return speak('提示已經打開囉！');
   if (c.stars < 2) return speak('星星不夠喔，先自己試試看！');
   c.stars -= 2; SFX.tap(); showHint(); updateHud(); save();
-  sayParts([{ text: '用兩顆星星換到提示了！' }, ...(g.q.hintParts || [])]);
+  dogSay([{ text: '用兩顆星星換到提示了！' }, ...(g.q.hintParts || [])]);
 }
 function finishRound() {
   const g = S.game, c = S.child, m = SUBJ[g.subject], p = P(c, g.subject);
@@ -1471,6 +1756,13 @@ function renderGate() {
 }
 const pb = (act, id, d, label, cls = 'light', v = '') => `<button class="pbtn ${cls}" data-act="${act}" data-id="${id}" data-d="${d}" data-v="${v}">${label}</button>`;
 // 數學／注音／英文的程度設定與紀錄（舊的數學紀錄沒有 s 欄位）
+// 數學 Lv5 以上要家長手動升級：看這一級最近的答題狀況給建議
+function readiness(log, L) {
+  const recent = log.filter(x => x.L === L).slice(-15), pct = recent.length ? Math.round(recent.filter(x => x.ok).length / recent.length * 100) : 0;
+  if (recent.length < 10) return `Lv${MATH_MANUAL_FROM} 以上不會自動升級。這一級目前只答了 ${recent.length} 題，多玩幾題再判斷。`;
+  if (pct >= 85) return `✅ 這一級最近 ${recent.length} 題一次答對 ${pct}%，看起來真的懂了，可以按「目前」的 + 升級。`;
+  return `這一級最近 ${recent.length} 題一次答對 ${pct}%，建議再多練習（85% 以上再升級）。`;
+}
 function subjSec(c, s, title, note) {
   const p = P(c, s), lv = SUBJ[s].levels, log = c.log.filter(x => (x.s || 'math') === s), ok = log.filter(x => x.ok).length;
   const byL = {};
@@ -1481,6 +1773,7 @@ function subjSec(c, s, title, note) {
     <div class="prow"><span>最低</span><span>${pb('p-min', c.id, -1, '−', 'light', s)} <b>Lv${p.minLevel}</b> ${pb('p-min', c.id, 1, '+', 'light', s)}</span>
       <span>最高</span><span>${pb('p-max', c.id, -1, '−', 'light', s)} <b>Lv${p.maxLevel}</b> ${pb('p-max', c.id, 1, '+', 'light', s)}</span></div>
     ${note ? `<div class="pnote">${note}</div>` : ''}
+    ${s === 'math' && p.level >= MATH_MANUAL_FROM && p.level < lv.length - 1 ? `<div class="pnote"><b>${readiness(log, p.level)}</b></div>` : ''}
     <div class="prow"><span>累計</span><b>${log.length} 題，一次答對 ${log.length ? Math.round(ok / log.length * 100) : 0}%</b></div>
     ${Object.keys(byL).length ? `<table class="ptable"><tr><th>題型</th><th>題數</th><th>一次答對</th></tr>
       ${Object.keys(byL).sort((a, b) => a - b).map(L => `<tr><td>Lv${L} ${lv[L]}</td><td>${byL[L][0]}</td><td>${Math.round(byL[L][1] / byL[L][0] * 100)}%</td></tr>`).join('')}</table>` : ''}
@@ -1497,6 +1790,9 @@ function pCard(c) {
     <div class="psec">基本設定</div>
     <div class="prow"><span>年齡</span><span>${pb('p-age', c.id, -1, '−')} <b>${c.age} 歲</b> ${pb('p-age', c.id, 1, '+')}</span></div>
     <div class="prow"><span>頭像</span><span class="avs">${AVATARS.map((_, i) => `<img class="px av ${i === c.avatar ? 'sel' : ''}" data-act="p-avatar" data-id="${c.id}" data-d="${i}" src="${avatarURL(i)}">`).join('')}</span></div>
+    <div class="prow"><span>登入問候語</span><input class="pname" data-act="p-greet" data-id="${c.id}" value="${esc(c.greet)}" placeholder="${esc(c.name)}，歡迎回來！" maxlength="30"></div>
+    <div class="prow"><span>秘密圖案</span><span>${[['', '不用'], ...LOCKS].map(([id, e]) => pb('p-lock', c.id, 0, e, 'light' + (c.lock === id ? ' sel' : ''), id)).join(' ')}</span></div>
+    <div class="prow"><span>小汪造型</span><b>${esc(SKINS.find(s => s.id === c.skin).name)}　已買 ${c.owned.length} 樣</b></div>
     <div class="psec">遊戲時間</div>
     <div class="prow"><span>每日上限</span><span>${pb('p-limit', c.id, -5, '−5')} <b>${c.limit} 分鐘</b> ${pb('p-limit', c.id, 5, '+5')}</span></div>
     <div class="prow"><span>今天</span><b>已玩 ${Math.floor(u.sec / 60)} 分，剩 ${Math.ceil(rem / 60)} 分${u.extra ? `（含加時 ${u.extra} 分）` : ''}</b></div>
@@ -1506,7 +1802,7 @@ function pCard(c) {
     <div class="prow"><span>收集</span><b>⭐${c.stars}　木頭 ${c.wood}　石頭 ${c.stone}　沙岩 ${c.sand}　玻璃 ${c.glass}</b></div>
     <div class="pnote">最近 7 天遊玩分鐘</div>
     <div class="bars">${days.map(([d, m]) => `<div class="bar"><span>${m}</span><i style="height:${m / maxM * 60}px"></i><span>${d}</span></div>`).join('')}</div>
-    ${subjSec(c, 'math', '數學草原', '減法是 Lv8：把「最高」調到 8 以上才會出現。')}
+    ${subjSec(c, 'math', '數學草原', `Lv1–${MATH_MANUAL_FROM - 1} 會自動升級；Lv${MATH_MANUAL_FROM} 以上要家長按 + 升級。減法是 Lv8。`)}
     ${subjSec(c, 'zhuyin', '注音沙漠', 'Lv1–4 認 37 個符號，Lv5–7 練拼音和聲調。')}
     ${subjSec(c, 'eng', '英文雪原', 'Lv1–3 字母與自然發音，Lv4–6 單字。')}
     <div class="psec">專注力礦洞（會依表現自動升降，Lv1–5）</div>
@@ -1516,6 +1812,7 @@ function pCard(c) {
         <span>${xs.length} 局${xs.length ? `，表現好 ${Math.round(xs.filter(x => x.ok).length / xs.length * 100)}%` : ''}</span></div>`;
     }).join('')}
     <div class="pnote">最近：${fl.slice(-3).reverse().map(x => `${FGAMES[x.g].name}（${esc(x.q)}）`).join('、') || '還沒有紀錄'}</div>
+    <div class="prow" style="margin-top:12px">${pb('p-delchild', c.id, 0, `刪除「${esc(c.name)}」的帳號`, 'red')}</div>
   </div>`;
 }
 function recCard() {
@@ -1538,9 +1835,13 @@ function renderParent() {
         <div class="prow"><span>遊戲中的中文字旁加注音</span><span>${pb('p-zy', '', 1, '開', S.data.zyOn !== false ? '' : 'light')} ${pb('p-zy', '', 0, '關', S.data.zyOn === false ? '' : 'light')}</span></div>
         <div class="prow"><span>英文說說看（每關最後一題用說的）</span><span>${pb('p-speak', '', 1, '開', S.data.speakOn !== false ? '' : 'light')} ${pb('p-speak', '', 0, '關', S.data.speakOn === false ? '' : 'light')}</span></div>
         <div class="pnote">${SRC ? '說說看需要網路，孩子的聲音會交給 Apple 的語音辨識處理。第一次使用時 iPad 會詢問是否允許麥克風和語音辨識。' : '這個瀏覽器不支援語音辨識，英文會照常出點選題。'}</div>
+        <div class="prow"><span>孩子帳號</span>${pb('p-addchild', '', 0, '＋ 新增孩子', '')}</div>
         <div class="prow"><span>家長密碼</span>${pb('p-pin', '', 0, '變更密碼')}</div>
-        <div class="prow"><span>清除所有進度與紀錄</span>${pb('p-reset', '', 0, '全部重設', 'red')}</div>
-        <div class="pnote">資料存在這台 iPad 上。之後的正式版會加上雲端同步，讓兩台 iPad 的進度和家族村莊能互通。</div></div>
+        <div class="psec">備份與換新 iPad</div>
+        <div class="prow"><span>備份所有孩子的進度</span>${pb('p-backup', '', 0, '📤 備份進度', '')}</div>
+        <div class="prow"><span>用備份檔還原</span><label class="pbtn light">📥 選擇備份檔<input type="file" accept=".json,application/json" data-act="p-restore" hidden></label></div>
+        <div class="pnote">進度只存在這台 iPad 上。換新 iPad 時：在舊 iPad 按「備份進度」，把檔案存到「檔案」（iCloud）或用 AirDrop／LINE 傳過去；新 iPad 打開遊戲後按「選擇備份檔」就能接著玩。平常也建議偶爾備份一次。注音錄音請用上面的「匯出錄音」另外放到網站。</div>
+        <div class="prow"><span>清除所有進度與紀錄</span>${pb('p-reset', '', 0, '全部重設', 'red')}</div></div>
     </div></div>`;
   document.querySelector('.parent').scrollTop = top;
 }
@@ -1552,6 +1853,14 @@ function parentAct(a, c, d, v) {
     case 'p-speak': S.data.speakOn = d === 1; S.speakBroken = false; break;
     case 'p-zy': S.data.zyOn = d === 1; break;
     case 'p-recsel': S.recSel = v; break;
+    case 'p-lock': c.lock = v; break;
+    case 'p-addchild': renderSetup(); return;
+    case 'p-backup': exportBackup(); return;
+    case 'p-delchild':
+      if (!confirm(`確定要刪除「${c.name}」的帳號和所有進度嗎？這個動作無法復原。`)) return;
+      S.data.children = S.data.children.filter(x => x !== c);
+      save();
+      return S.data.children.length ? renderParent() : renderSetup();
     case 'p-rec': if (!S.recBusy) recordSym(v); return;
     case 'p-recplay': sayParts([{ sym: v }]); return;
     case 'p-recdel': deleteRec(v).then(renderParent); return;
@@ -1574,14 +1883,14 @@ function parentAct(a, c, d, v) {
     }
     case 'p-reset':
       if (!confirm('確定要清除所有孩子的進度和學習紀錄嗎？這個動作無法復原。')) return;
-      S.data = defaultData(); break;
+      S.data = defaultData(); save(); return renderSetup();
   }
   save(); renderParent();
 }
 
 /* ---------- 事件 ---------- */
 app.addEventListener('click', e => {
-  const el = e.target.closest('[data-act]'); if (!el) return;
+  const el = e.target.closest('[data-act]'); if (!el || el.tagName === 'INPUT') return;
   const a = el.dataset.act, v = el.dataset.v, d = +el.dataset.d || 0;
   const ch = el.dataset.id ? S.data.children.find(c => c.id === el.dataset.id) : null;
   if (a.startsWith('p-') && a !== 'p-name') return parentAct(a, ch, d, v);
@@ -1589,20 +1898,50 @@ app.addEventListener('click', e => {
     case 'login':
       SFX.tap();
       if (remaining(ch) <= 0) { speak(`${ch.name}，今天的時間用完囉，明天再一起玩吧！`); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); return; }
-      S.child = ch; S.warned = false; S.sunset = false; S.endPending = false;
-      renderMap(); speak(`${ch.name}，歡迎回來！` + (questComplete(ch) ? '今天要去哪裡冒險呢？' : '今天的任務是：四個地方都去冒險一次，就能打開寶箱喔！'));
-      if (remaining(ch) <= 180) warnSunset();
+      if (ch.lock) showLock(ch); else enterChild(ch);
       break;
+    case 'unlock': {
+      if (v === ch.lock) { document.getElementById('lock').remove(); SFX.ok(); enterChild(ch); break; }
+      SFX.no(); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+      speak('這不是你的秘密圖案喔，再試一次！');
+      break;
+    }
+    case 'lockclose': document.getElementById('lock').remove(); break;
+    case 'shop': SFX.tap(); S.shopSel = ''; renderShop(); dogSay([{ text: `歡迎來到星星商店！你有 ${S.child.stars} 顆星星，可以換材料，也可以幫小汪換造型喔！` }]); break;
+    case 'buy': shopTap(v); break;
+    case 'su-age': S.su.age = Math.max(3, Math.min(12, S.su.age + d)); document.getElementById('sage').textContent = S.su.age + ' 歲'; break;
+    case 'su-av': S.su.avatar = d; document.querySelectorAll('[data-act="su-av"]').forEach(x => x.classList.toggle('sel', +x.dataset.d === d)); break;
+    case 'su-lock': S.su.lock = v; document.querySelectorAll('[data-act="su-lock"]').forEach(x => x.classList.toggle('sel', x.dataset.v === v)); break;
+    case 'su-add': {
+      const name = document.getElementById('sname').value.trim().slice(0, 8);
+      if (!name) { alert('請先輸入孩子的名字'); return; }
+      const c = newChild(name, S.su.age, S.su.avatar);
+      c.greet = document.getElementById('sgreet').value.trim().slice(0, 30); c.lock = S.su.lock;
+      S.data.children.push(c); save(); renderSetup();
+      break;
+    }
+    case 'su-done': {
+      const pin = document.getElementById('spin').value.trim();
+      if (!S.data.children.length) { alert('請先新增至少一個孩子'); return; }
+      if (!/^\d{4}$/.test(pin)) { alert('家長密碼請輸入 4 位數字'); return; }
+      S.data.pin = pin; save(); renderLogin();
+      break;
+    }
     case 'logout': save(); renderLogin(); break;
     case 'tomap': {
       SFX.tap(); if (remaining(S.child) <= 0) return goodbye();
       const fromRound = S.screen === 'result' || S.screen === 'cave';
       renderMap();
       // 過完一關回到地圖時，提醒今天還沒去的地方
-      const left = BIOMES.filter(b => !qDone(S.child)[b.id]).map(b => b.name);
-      if (fromRound && left.length) speak(`今日任務還有：${left.join('、')}，閃閃發亮的地方還沒去喔！`);
+      if (fromRound) dogSay([{ text: questLine(S.child) }]);
       break;
     }
+    case 'dogtap':
+      if (S.screen === 'map') dogSay([{ text: questLine(S.child) }]);
+      else if (S.screen === 'game' && S.game && S.game.q) dogSay(S.game.q.replay || qParts(S.game.q));
+      break;
+    case 'hifive': doHiFive(true); break;
+    case 'unplace': unplace(el); break;
     case 'biome': {
       const b = BIOMES.find(x => x.id === v);
       if (!b.open) { speak(`${b.name}還在建造中，快要開放囉！`); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); return; }
@@ -1625,7 +1964,7 @@ app.addEventListener('click', e => {
     case 'mz': if (S.fg && S.fg.game === 'maze') mazeTo(S.fg.pos + d); break;
     case 'house': SFX.tap(); renderHouse(); break;
     case 'village': speak('家族村莊還在建造中，之後大家蓋的房子都會住在一起喔！'); break;
-    case 'say': sayParts(S.game.q.replay || qParts(S.game.q)); break;
+    case 'say': dogSay(S.game.q.replay || qParts(S.game.q)); break;
     case 'ans': onAnswer(+v, el); break;
     case 'mic': onMic(el); break;
     case 'buyhint': buyHint(); break;
@@ -1643,13 +1982,58 @@ app.addEventListener('click', e => {
 });
 app.addEventListener('change', e => {
   const el = e.target;
-  if (el.dataset.act === 'p-name') {
-    const c = S.data.children.find(x => x.id === el.dataset.id);
-    c.name = el.value.trim().slice(0, 8) || c.name; save();
-  }
+  const c = S.data.children.find(x => x.id === el.dataset.id);
+  if (el.dataset.act === 'p-name') { c.name = el.value.trim().slice(0, 8) || c.name; save(); }
+  if (el.dataset.act === 'p-greet') { c.greet = el.value.trim().slice(0, 30); save(); }
+  if (el.dataset.act === 'p-restore' && el.files[0]) restoreBackup(el.files[0]);
 });
 document.addEventListener('gesturestart', e => e.preventDefault());
 
+/* ---------- 登入：問候語、秘密圖案、第一次使用的註冊 ---------- */
+const LOCKS = [['dog', '🐶', '小狗'], ['cat', '🐱', '貓咪'], ['rabbit', '🐰', '兔子'], ['bear', '🐻', '熊熊'], ['fish', '🐟', '小魚'], ['star', '⭐', '星星']];
+function enterChild(ch) {
+  S.child = ch; S.warned = false; S.sunset = false; S.endPending = false;
+  renderMap();
+  const hi = ch.greet || `${ch.name}，歡迎回來！`;
+  dogSay([{ text: hi + '我是小汪。' + (questComplete(ch) ? '今天要去哪裡冒險呢？' : '今天的任務是：四個地方都去冒險一次，就能打開寶箱喔！') }]);
+  if (remaining(ch) <= 180) warnSunset();
+}
+// 同一台 iPad 有好幾個孩子時，點自己的秘密圖案才能進去，避免點到別人的頭像
+function showLock(ch) {
+  app.firstElementChild.insertAdjacentHTML('beforeend', `<div class="gate" id="lock"><div class="lockbox">
+    <img class="px" src="${avatarURL(ch.avatar)}" width="84" height="84" style="box-shadow:0 0 0 3px #1e1e1e">
+    <div class="hft">${zy(ch.name + '，點你的秘密圖案')}</div>
+    <div class="lockgrid">${shuffle(LOCKS.slice()).map(([id, e]) => `<button class="lockbtn" data-act="unlock" data-id="${ch.id}" data-v="${id}">${e}</button>`).join('')}</div>
+    <button class="btn small" data-act="lockclose">${zy('不是我')}</button></div></div>`);
+  speak(`${ch.name}，請點你的秘密圖案！`);
+}
+// 第一次使用（或換新 iPad）時，由家長幫每個孩子建立帳號
+function renderSetup() {
+  S.screen = 'setup'; S.su = { age: 5, avatar: S.data.children.length % AVATARS.length, lock: '' };
+  const kids = S.data.children;
+  app.innerHTML = `<div class="screen parent"><div class="ptop"><span>👋 設定孩子的帳號</span>${kids.length ? '<button class="pbtn light" data-act="logout">回到首頁 ▶</button>' : ''}</div>
+    <div class="pcards">
+      <div class="pcard" style="grid-column:1/-1">
+        <div class="pnote">先幫每個孩子建立帳號。孩子不用打字，之後點自己的頭像就能進去，每個人的星星、材料、等級和紀錄都分開。換新 iPad 的話，可以直接用舊 iPad 的「備份進度」檔案還原。</div>
+        <div class="prow"><span>📥 從備份還原</span><label class="pbtn light">選擇備份檔<input type="file" accept=".json,application/json" data-act="p-restore" hidden></label></div>
+      </div>
+      <div class="pcard"><h3>新增孩子</h3>
+        <div class="prow"><span>名字</span><input class="pname" id="sname" placeholder="例如：小寶" maxlength="8"></div>
+        <div class="prow"><span>年齡</span><span>${pb('su-age', '', -1, '−')} <b id="sage">${S.su.age} 歲</b> ${pb('su-age', '', 1, '+')}</span></div>
+        <div class="prow"><span>頭像</span><span class="avs">${AVATARS.map((_, i) => `<img class="px av ${i === S.su.avatar ? 'sel' : ''}" data-act="su-av" data-d="${i}" src="${avatarURL(i)}">`).join('')}</span></div>
+        <div class="prow"><span>登入問候語</span><input class="pname" id="sgreet" placeholder="例如：小寶，今天也要加油喔！" maxlength="30"></div>
+        <div class="pnote">問候語會在孩子登入時由小汪念出來；不填就用「名字，歡迎回來！」。</div>
+        <div class="prow"><span>秘密圖案</span><span>${[['', '不用'], ...LOCKS.map(([id, e]) => [id, e])].map(([id, e]) => `<button class="pbtn light ${id === '' ? 'sel' : ''}" data-act="su-lock" data-v="${id}">${e}</button>`).join(' ')}</span></div>
+        <div class="pnote">同一台 iPad 有兩個以上孩子時建議設定：孩子要點對自己的圖案才能進去。</div>
+        <div class="prow">${pb('su-add', '', 0, '＋ 新增這個孩子', '')}</div>
+      </div>
+      <div class="pcard"><h3>已建立的孩子</h3>
+        ${kids.map(c => `<div class="prow"><span><img class="px" src="${avatarURL(c.avatar)}" width="32" height="32" style="vertical-align:middle"> <b>${esc(c.name)}</b>（${c.age} 歲）</span><span>${c.lock ? '🔒 ' + LOCKS.find(l => l[0] === c.lock)[1] : ''}</span></div>`).join('') || '<div class="pnote">還沒有，請在左邊新增。</div>'}
+        <div class="prow"><span>家長密碼（4 位數字）</span><input class="pname" id="spin" inputmode="numeric" maxlength="4" value="${esc(S.data.pin)}" style="width:110px"></div>
+        <div class="prow">${pb('su-done', '', 0, '完成，開始玩 ▶', '')}</div>
+      </div>
+    </div></div>`;
+}
 function restHere(el) {
   speak('這裡已經連續玩兩關囉，先去別的地方冒險，等一下再回來！');
   if (el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
@@ -1663,7 +2047,7 @@ function warnSunset() {
 /* ---------- 計時 ---------- */
 setInterval(() => {
   const c = S.child;
-  if (!c || !['map', 'game', 'result', 'house', 'cave', 'focus'].includes(S.screen) || document.hidden) return;
+  if (!c || !['map', 'game', 'result', 'house', 'cave', 'focus', 'shop'].includes(S.screen) || document.hidden) return;
   const u = U(c);
   u.sec++;
   if (u.sec % 5 === 0) save();
