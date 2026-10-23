@@ -126,7 +126,16 @@ input{user-select:text;-webkit-user-select:text}
 .row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
 .badge{background:#c9932a;padding:6px 16px;font-weight:900;font-size:22px;box-shadow:0 0 0 3px #1e1e1e;animation:pop .5s}
 .lvup{font-size:24px;font-weight:900;color:#ffe14d;text-shadow:2px 2px 0 #000}
-.house{display:grid;grid-template-columns:repeat(12,var(--hb));--hb:min(5vw,5.8vh);margin:0 auto}
+.house{display:grid;grid-template-columns:repeat(12,var(--hb));--hb:min(4.4vw,4.8vh);margin:0 auto}
+.hrow{flex:1;min-height:0;display:flex;gap:28px;align-items:center;justify-content:center}
+.hcheer{text-align:center;margin:2px auto 0;font-size:clamp(16px,2.2vw,22px)}
+.town{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:4px 10px;flex:none;max-width:42vw}
+.tb{display:flex;flex-direction:column;align-items:center;background:rgba(0,0,0,.25);padding:6px 8px;box-shadow:0 0 0 3px #1e1e1e}
+.house.mini{--hb:9px}
+.town.big{flex:1;align-content:center;gap:18px;max-width:none;min-height:0}
+.town.big .house.mini{--hb:min(1.5vw,2.1vh)}
+.tname{font-weight:900;font-size:16px;text-shadow:2px 2px 0 #000;margin-top:4px}
+.pet{display:inline-block;animation:bob 1.6s ease-in-out infinite;font-size:1.3em}
 .hc{width:var(--hb);height:var(--hb)}
 .hc.need{outline:2px dashed rgba(255,255,255,.7);outline-offset:-4px;background:rgba(255,255,255,.12)}
 .hc.new{animation:pop .5s}
@@ -165,6 +174,27 @@ input{user-select:text;-webkit-user-select:text}
 .dots{font-size:36px;letter-spacing:12px;margin:8px 0 12px;min-height:44px}
 .keys{display:grid;grid-template-columns:repeat(3,72px);gap:10px}
 .keys .pbtn{font-size:26px;height:60px}
+
+/* 每日任務 */
+.questbar{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 16px 0;font-weight:900;font-size:clamp(16px,2.2vw,24px);text-shadow:2px 2px 0 #000;flex:none}
+.qi{background:rgba(0,0,0,.35);padding:3px 12px;box-shadow:0 0 0 2px #1e1e1e}
+.qi.done{background:#4caf50}
+.flag{position:absolute;top:10px;padding:4px 12px;font-size:clamp(14px,1.8vw,18px);font-weight:900;box-shadow:0 0 0 3px #1e1e1e;text-shadow:1px 1px 0 #000;z-index:1}
+.flag.todo{left:10px;background:#e8692b;animation:pulse 1.2s ease-in-out infinite}
+.flag.did{left:10px;background:#4caf50}
+.flag.rest{right:10px;background:rgba(0,0,0,.7)}
+.biome.todo{box-shadow:0 0 0 4px #1e1e1e,0 0 0 8px #ffd83a,inset 0 -10px 0 rgba(0,0,0,.25)}
+.biome.rest{filter:grayscale(.7) brightness(.75)}
+/* 注音：iPad 的 Safari 會把注音直排在字的右邊，其他瀏覽器顯示在字上方 */
+ruby{ruby-align:center}
+rt{font-size:.36em;font-weight:700;line-height:1;letter-spacing:0;text-shadow:1px 1px 0 rgba(0,0,0,.8),-1px 0 0 rgba(0,0,0,.5);font-family:"PingFang TC","Microsoft JhengHei",sans-serif}
+.bubble rt,.parent rt{text-shadow:none}
+@supports (ruby-position:inter-character){ruby{ruby-position:inter-character}rt{font-size:.3em}}
+/* 說說看 */
+.mic{font-size:clamp(28px,4vw,44px);padding:.3em 1.2em;background:#e8692b}
+.mic.on{background:#c62828;animation:pulse 1s infinite}
+.heard{font-size:clamp(18px,2.4vw,26px);font-weight:900;text-shadow:2px 2px 0 #000;min-height:1.4em;text-align:center}
+.askline{font-family:"Avenir Next","Trebuchet MS",sans-serif}
 
 /* 注音、英文 */
 .ans.emo{font-size:clamp(44px,7vw,80px);background:#f3ead7;text-shadow:none}
@@ -249,6 +279,33 @@ const ri = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 const pick = a => a[Math.floor(Math.random() * a.length)];
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+/* ---------- 中文字旁加注音 ---------- */
+// 字典由 tools/make-zhuyin.js 依照本檔用到的字自動產生（常用讀音，台灣讀法另外修正）
+/* ZYDICT-START */const ZYDICT = {"方":"ㄈㄤ","塊":"ㄎㄨㄞˋ","學":"ㄒㄩㄝˊ","習":"ㄒㄧˊ","島":"ㄉㄠˇ","登":"ㄉㄥ","入":"ㄖㄨˋ","地":"ㄉㄧˋ","圖":"ㄊㄨˊ","即":"ㄐㄧˊ","將":"ㄐㄧㄤ","開":"ㄎㄞ","放":"ㄈㄤˋ","遊":"ㄧㄡˊ","戲":"ㄒㄧˋ","結":"ㄐㄧㄝˊ","果":"ㄍㄨㄛˇ","家":"ㄐㄧㄚ","晚":"ㄨㄢˇ","安":"ㄢ","長":"ㄔㄤˊ","每":"ㄇㄟˇ","日":"ㄖˋ","任":"ㄖㄣˋ","務":"ㄨˋ","注":"ㄓㄨˋ","音":"ㄧㄣ","的":"˙ㄉㄜ","會":"ㄏㄨㄟˋ","把":"ㄅㄚˇ","直":"ㄓˊ","排":"ㄆㄞˊ","在":"ㄗㄞˋ","字":"ㄗˋ","右":"ㄧㄡˋ","邊":"ㄅㄧㄢ","其":"ㄑㄧˊ","他":"ㄊㄚ","瀏":"ㄌㄧㄡˊ","覽":"ㄌㄢˇ","器":"ㄑㄧˋ","顯":"ㄒㄧㄢˇ","示":"ㄕˋ","上":"ㄕㄤˋ","說":"ㄕㄨㄛ","看":"ㄎㄢˋ","英":"ㄧㄥ","文":"ㄨㄣˊ","專":"ㄓㄨㄢ","力":"ㄌㄧˋ","礦":"ㄎㄨㄤˋ","洞":"ㄉㄨㄥˋ","工":"ㄍㄨㄥ","具":"ㄐㄩˋ","中":"ㄓㄨㄥ","旁":"ㄆㄤˊ","加":"ㄐㄧㄚ","典":"ㄉㄧㄢˇ","由":"ㄧㄡˊ","依":"ㄧ","照":"ㄓㄠˋ","本":"ㄅㄣˇ","檔":"ㄉㄤˇ","用":"ㄩㄥˋ","到":"ㄉㄠˋ","自":"ㄗˋ","動":"ㄉㄨㄥˋ","產":"ㄔㄢˇ","生":"ㄕㄥ","常":"ㄔㄤˊ","讀":"ㄉㄨˊ","台":"ㄊㄞˊ","灣":"ㄨㄢ","法":"ㄈㄚˇ","另":"ㄌㄧㄥˋ","外":"ㄨㄞˋ","修":"ㄒㄧㄡ","正":"ㄓㄥˋ","破":"ㄆㄛˋ","詞":"ㄘˊ","語":"ㄩˇ","決":"ㄐㄩㄝˊ","定":"ㄉㄧㄥˋ","比":"ㄅㄧˇ","單":"ㄉㄢ","優":"ㄧㄡ","先":"ㄒㄧㄢ","數":"ㄕㄨˋ","得":"ㄉㄜˊ","玩":"ㄨㄢˊ","記":"ㄐㄧˋ","覺":"ㄐㄩㄝˊ","少":"ㄕㄠˇ","了":"˙ㄌㄜ","解":"ㄐㄧㄝˇ","什":"ㄕㄣˊ","麼":"˙ㄇㄜ","怎":"ㄗㄣˇ","這":"ㄓㄜˋ","還":"ㄏㄞˊ","有":"ㄧㄡˇ","要":"ㄧㄠˋ","沒":"ㄇㄟˊ","東":"ㄉㄨㄥ","西":"ㄒㄧ","朋":"ㄆㄥˊ","友":"ㄧㄡˇ","休":"ㄒㄧㄡ","息":"ㄒㄧ","時":"ㄕˊ","候":"ㄏㄡˋ","一":"ㄧ","下":"ㄒㄧㄚˋ","大":"ㄉㄚˋ","重":"ㄓㄨㄥˋ","新":"ㄒㄧㄣ","空":"ㄎㄨㄥ","間":"ㄐㄧㄢ","答":"ㄉㄚˊ","對":"ㄉㄨㄟˋ","案":"ㄢˋ","回":"ㄏㄨㄟˊ","轉":"ㄓㄨㄢˇ","成":"ㄔㄥˊ","帶":"ㄉㄞˋ","可":"ㄎㄜˇ","後":"ㄏㄡˋ","關":"ㄍㄨㄢ","掉":"ㄉㄧㄠˋ","非":"ㄈㄟ","原":"ㄩㄢˊ","樣":"ㄧㄤˋ","資":"ㄗ","料":"ㄌㄧㄠˋ","小":"ㄒㄧㄠˇ","探":"ㄊㄢˋ","險":"ㄒㄧㄢˇ","四":"ㄙˋ","個":"ㄍㄜˋ","區":"ㄑㄩ","域":"ㄩˋ","各":"ㄍㄜˋ","過":"ㄍㄨㄛˋ","完":"ㄨㄢˊ","前":"ㄑㄧㄢˊ","同":"ㄊㄨㄥˊ","最":"ㄗㄨㄟˋ","多":"ㄉㄨㄛ","連":"ㄌㄧㄢˊ","錄":"ㄌㄨˋ","剛":"ㄍㄤ","好":"ㄏㄠˇ","發":"ㄈㄚ","寶":"ㄅㄠˇ","箱":"ㄒㄧㄤ","傳":"ㄔㄨㄢˊ","今":"ㄐㄧㄣ","種":"ㄓㄨㄥˇ","材":"ㄘㄞˊ","聲":"ㄕㄥ","調":"ㄉㄧㄠˋ","整":"ㄓㄥˇ","體":"ㄊㄧˇ","速":"ㄙㄨˋ","電":"ㄉㄧㄢˋ","腦":"ㄋㄠˇ","快":"ㄎㄨㄞˋ","預":"ㄩˋ","設":"ㄕㄜˋ","慢":"ㄇㄢˋ","些":"ㄒㄧㄝ","型":"ㄒㄧㄥˊ","裝":"ㄓㄨㄤ","置":"ㄓˋ","內":"ㄋㄟˋ","建":"ㄐㄧㄢˋ","式":"ㄕˋ","版":"ㄅㄢˇ","換":"ㄏㄨㄢˋ","事":"ㄕˋ","口":"ㄎㄡˇ","序":"ㄒㄩˋ","念":"ㄋㄧㄢˋ","出":"ㄔㄨ","段":"ㄉㄨㄢˋ","符":"ㄈㄨˊ","號":"ㄏㄠˋ","就":"ㄐㄧㄡˋ","播":"ㄅㄛ","偶":"ㄡˇ","爾":"ㄦˇ","不":"ㄅㄨˋ","觸":"ㄔㄨˋ","保":"ㄅㄠˇ","底":"ㄉㄧˇ","標":"ㄅㄧㄠ","準":"ㄓㄨㄣˇ","己":"ㄐㄧˇ","存":"ㄘㄨㄣˊ","網":"ㄨㄤˇ","站":"ㄓㄢˋ","所":"ㄙㄨㄛˇ","共":"ㄍㄨㄥˋ","兩":"ㄌㄧㄤˇ","者":"ㄓㄜˇ","都":"ㄉㄡ","打":"ㄉㄚˇ","包":"ㄅㄠ","交":"ㄐㄧㄠ","給":"ㄍㄟˇ","分":"ㄈㄣ","享":"ㄒㄧㄤˇ","選":"ㄒㄩㄢˇ","無":"ㄨˊ","使":"ㄕˇ","麥":"ㄇㄞˋ","克":"ㄎㄜˋ","風":"ㄈㄥ","請":"ㄑㄧㄥˇ","允":"ㄩㄣˇ","許":"ㄒㄩ","再":"ㄗㄞˋ","試":"ㄕˋ","次":"ㄘˋ","儲":"ㄔㄨˇ","失":"ㄕ","敗":"ㄅㄞˋ","像":"ㄒㄧㄤˋ","素":"ㄙㄨˋ","質":"ㄓˊ","題":"ㄊㄧˊ","目":"ㄇㄨˋ","以":"ㄧˇ","二":"ㄦˋ","位":"ㄨㄟˋ","減":"ㄐㄧㄢˇ","九":"ㄐㄧㄡˇ","乘":"ㄔㄥˊ","幾":"ㄐㄧˇ","十":"ㄕˊ","喔":"ㄛ","是":"ㄕˋ","三":"ㄙㄢ","哪":"ㄋㄚˇ","等":"ㄉㄥˇ","於":"ㄩˊ","合":"ㄏㄜˊ","起":"ㄑㄧˇ","來":"ㄌㄞˊ","例":"ㄌㄧˋ","改":"ㄍㄞˇ","玻":"ㄅㄛ","爸":"ㄅㄚˋ","坡":"ㄆㄛ","葡":"ㄆㄨˊ","萄":"ㄊㄠˊ","摸":"ㄇㄛ","貓":"ㄇㄠ","咪":"ㄇㄧ","佛":"ㄈㄛˊ","飛":"ㄈㄟ","機":"ㄐㄧ","象":"ㄒㄧㄤˋ","特":"ㄊㄜˋ","兔":"ㄊㄨˋ","子":"ㄗˇ","訥":"ㄋㄜˋ","牛":"ㄋㄧㄡˊ","勒":"ㄌㄜˋ","老":"ㄌㄠˇ","虎":"ㄏㄨˇ","哥":"ㄍㄜ","狗":"ㄍㄡˇ","科":"ㄎㄜ","恐":"ㄎㄨㄥˇ","龍":"ㄌㄨㄥˊ","喝":"ㄏㄜ","花":"ㄏㄨㄚ","朵":"ㄉㄨㄛˇ","基":"ㄐㄧ","雞":"ㄐㄧ","七":"ㄑㄧ","汽":"ㄑㄧˋ","車":"ㄔㄜ","瓜":"ㄍㄨㄚ","知":"ㄓ","豬":"ㄓㄨ","吃":"ㄔ","帆":"ㄈㄢ","船":"ㄔㄨㄢˊ","師":"ㄕ","獅":"ㄕ","嘴":"ㄗㄨㄟˇ","巴":"ㄅㄚ","疵":"ㄘ","草":"ㄘㄠˇ","莓":"ㄇㄟˊ","思":"ㄙ","雨":"ㄩˇ","傘":"ㄙㄢˇ","衣":"ㄧ","服":"ㄈㄨˊ","屋":"ㄨ","烏":"ㄨ","龜":"ㄍㄨㄟ","迂":"ㄩ","魚":"ㄩˊ","啊":"˙ㄚ","鴨":"ㄧㄚ","公":"ㄍㄨㄥ","叫":"ㄐㄧㄠˋ","鵝":"ㄜˊ","白":"ㄅㄞˊ","欸":"ㄞˇ","椰":"ㄧㄝ","哀":"ㄞ","愛":"ㄞˋ","心":"ㄒㄧㄣ","誒":"ㄟ","杯":"ㄅㄟ","凹":"ㄠ","書":"ㄕㄨ","歐":"ㄡ","猴":"ㄏㄡˊ","飯":"ㄈㄢˋ","恩":"ㄣ","門":"ㄇㄣˊ","骯":"ㄤ","綿":"ㄇㄧㄢˊ","羊":"ㄧㄤˊ","鞥":"ㄥ","蜜":"ㄇㄧˋ","蜂":"ㄈㄥ","兒":"ㄦˊ","耳":"ㄦˇ","容":"ㄖㄨㄥˊ","易":"ㄧˋ","搞":"ㄍㄠˇ","混":"ㄏㄨㄣˋ","拼":"ㄆㄧㄣ","只":"ㄓˇ","項":"ㄒㄧㄤˋ","必":"ㄅㄧˋ","媽":"ㄇㄚ","八":"ㄅㄚ","拉":"ㄌㄚ","哈":"ㄏㄚ","哭":"ㄎㄨ","姑":"ㄍㄨ","粗":"ㄘㄨ","蘇":"ㄙㄨ","刀":"ㄉㄠ","高":"ㄍㄠ","黑":"ㄏㄟ","拍":"ㄆㄞ","偷":"ㄊㄡ","收":"ㄕㄡ","溝":"ㄍㄡ","山":"ㄕㄢ","跟":"ㄍㄣ","森":"ㄙㄣ","湯":"ㄊㄤ","幫":"ㄅㄤ","張":"ㄓㄤ","燈":"ㄉㄥ","抓":"ㄓㄨㄚ","刷":"ㄕㄨㄚ","天":"ㄊㄧㄢ","偏":"ㄆㄧㄢ","冬":"ㄉㄨㄥ","金":"ㄐㄧㄣ","光":"ㄍㄨㄤ","窗":"ㄔㄨㄤ","雙":"ㄕㄨㄤ","星":"ㄒㄧㄥ","聽":"ㄊㄧㄥ","香":"ㄒㄧㄤ","江":"ㄐㄧㄤ","春":"ㄔㄨㄣ","秋":"ㄑㄧㄡ","推":"ㄊㄨㄟ","吹":"ㄔㄨㄟ","飄":"ㄆㄧㄠ","歡":"ㄏㄨㄢ","官":"ㄍㄨㄢ","軍":"ㄐㄩㄣ","麻":"ㄇㄚˊ","馬":"ㄇㄚˇ","罵":"ㄇㄚˋ","拔":"ㄅㄚˊ","熟":"ㄕㄨˊ","鼠":"ㄕㄨˇ","樹":"ㄕㄨˋ","糖":"ㄊㄤˊ","躺":"ㄊㄤˇ","燙":"ㄊㄤˋ","急":"ㄐㄧˊ","玉":"ㄩˋ","五":"ㄨˇ","霧":"ㄨˋ","妻":"ㄑㄧ","騎":"ㄑㄧˊ","氣":"ㄑㄧˋ","蛙":"ㄨㄚ","娃":"ㄨㄚˊ","瓦":"ㄨㄚˇ","襪":"ㄨㄚˋ","鍋":"ㄍㄨㄛ","國":"ㄍㄨㄛˊ","通":"ㄊㄨㄥ","桶":"ㄊㄨㄥˇ","痛":"ㄊㄨㄥˋ","灰":"ㄏㄨㄟ","毀":"ㄏㄨㄟˇ","房":"ㄈㄤˊ","訪":"ㄈㄤˇ","找":"ㄓㄠˇ","全":"ㄑㄩㄢˊ","部":"ㄅㄨˋ","母":"ㄇㄨˇ","韻":"ㄩㄣˋ","挑":"ㄊㄧㄠ","戰":"ㄓㄢˋ","錯":"ㄘㄨㄛˋ","介":"ㄐㄧㄝˋ","或":"ㄏㄨㄛˋ","隨":"ㄙㄨㄟˊ","第":"ㄉㄧˋ","接":"ㄐㄧㄝ","寫":"ㄒㄧㄝˇ","名":"ㄇㄧㄥˊ","稱":"ㄔㄥ","尾":"ㄨㄟˇ","配":"ㄆㄟˋ","然":"ㄖㄢˊ","確":"ㄑㄩㄝˋ","相":"ㄒㄧㄤ","練":"ㄌㄧㄢˋ","仔":"ㄗˇ","細":"ㄒㄧˋ","辨":"ㄅㄧㄢˋ","識":"ㄕˋ","需":"ㄒㄩ","路":"ㄌㄨˋ","固":"ㄍㄨˋ","話":"ㄏㄨㄚˋ","角":"ㄐㄧㄠˇ","色":"ㄙㄜˋ","問":"ㄨㄣˋ","孩":"ㄏㄞˊ","含":"ㄏㄢˊ","裡":"ㄌㄧˇ","何":"ㄏㄜˊ","算":"ㄙㄨㄢˋ","表":"ㄅㄧㄠˇ","很":"ㄏㄣˇ","棒":"ㄅㄤˋ","嘗":"ㄔㄤˊ","我":"ㄨㄛˇ","們":"ㄇㄣˊ","著":"˙ㄓㄜ","差":"ㄔㄚ","複":"ㄈㄨˋ","也":"ㄧㄝˇ","按":"ㄢˋ","權":"ㄑㄩㄢˊ","限":"ㄒㄧㄢˋ","之":"ㄓ","跳":"ㄊㄧㄠˋ","辦":"ㄅㄢˋ","木":"ㄇㄨˋ","頭":"ㄊㄡˊ","沙":"ㄕㄚ","岩":"ㄧㄢˊ","璃":"ㄌㄧˊ","級":"ㄐㄧˊ","身":"ㄕㄣ","與":"ㄩˇ","獎":"ㄐㄧㄤˇ","勵":"ㄌㄧˋ","漠":"ㄇㄛˋ","雪":"ㄒㄩㄝˇ","拿":"ㄋㄚˊ","石":"ㄕˊ","蓋":"ㄍㄞˋ","築":"ㄓㄨˋ","座":"ㄗㄨㄛˋ","去":"ㄑㄩˋ","隻":"ㄓ","物":"ㄨˋ","搬":"ㄅㄢ","進":"ㄐㄧㄣˋ","瞭":"ㄌㄧㄠˋ","望":"ㄨㄤˋ","塔":"ㄊㄚˇ","冰":"ㄅㄧㄥ","城":"ㄔㄥˊ","堡":"ㄅㄠˇ","王":"ㄨㄤˊ","格":"ㄍㄜˊ","從":"ㄘㄨㄥˊ","往":"ㄨㄤˇ","累":"ㄌㄟˋ","計":"ㄐㄧˋ","集":"ㄐㄧˊ","扣":"ㄎㄡˋ","面":"ㄇㄧㄢˋ","量":"ㄌㄧㄤˋ","剩":"ㄕㄥˋ","手":"ㄕㄡˇ","達":"ㄉㄚˊ","人":"ㄖㄣˊ","畫":"ㄏㄨㄚˋ","走":"ㄗㄡˇ","清":"ㄑㄧㄥ","避":"ㄅㄧˋ","免":"ㄇㄧㄢˇ","離":"ㄌㄧˊ","作":"ㄗㄨㄛˋ","太":"ㄊㄞˋ","陽":"ㄧㄤˊ","囉":"˙ㄌㄨㄛ","點":"ㄉㄧㄢˇ","你":"ㄋㄧˇ","始":"ㄕˇ","冒":"ㄇㄠˋ","別":"ㄅㄧㄝˊ","族":"ㄗㄨˊ","村":"ㄘㄨㄣ","莊":"ㄓㄨㄤ","套":"ㄊㄠˋ","流":"ㄌㄧㄡˊ","程":"ㄔㄥˊ","支":"ㄓ","援":"ㄩㄢˊ","提":"ㄊㄧˊ","升":"ㄕㄥ","變":"ㄅㄧㄢˋ","厲":"ㄌㄧˋ","害":"ㄏㄞˋ","降":"ㄐㄧㄤˋ","告":"ㄍㄠˋ","訴":"ㄙㄨˋ","挫":"ㄘㄨㄛˋ","折":"ㄓㄜˊ","感":"ㄍㄢˇ","和":"ㄏㄜˊ","布":"ㄅㄨˋ","棄":"ㄑㄧˋ","越":"ㄩㄝˋ","想":"ㄒㄧㄤˇ","係":"ㄒㄧˋ","已":"ㄧˇ","經":"ㄐㄧㄥ","夠":"ㄍㄡˋ","顆":"ㄎㄜ","乎":"ㄏㄨ","額":"ㄜˊ","返":"ㄈㄢˇ","徽":"ㄏㄨㄟ","章":"ㄓㄤ","為":"ㄨㄟˋ","代":"ㄉㄞˋ","熱":"ㄖㄜˋ","鬧":"ㄋㄠˋ","能":"ㄋㄥˊ","明":"ㄇㄧㄥˊ","見":"ㄐㄧㄢˋ","局":"ㄐㄩˊ","繼":"ㄐㄧˋ","續":"ㄒㄩˋ","憶":"ㄧˋ","翻":"ㄈㄢ","牌":"ㄆㄞˊ","卡":"ㄎㄚˇ","片":"ㄆㄧㄢˋ","擊":"ㄐㄧˊ","楚":"ㄔㄨˇ","亮":"ㄌㄧㄤˋ","順":"ㄕㄨㄣˋ","趕":"ㄍㄢˇ","牠":"ㄊㄚ","綠":"ㄌㄩˋ","怪":"ㄍㄨㄞˋ","迷":"ㄇㄧˊ","宮":"ㄍㄨㄥ","指":"ㄓˇ","那":"ㄋㄚˋ","現":"ㄒㄧㄢˋ","悄":"ㄑㄧㄠ","低":"ㄉㄧ","場":"ㄔㄤˇ","讓":"ㄖㄤˋ","秒":"ㄇㄧㄠˇ","眼":"ㄧㄢˇ","住":"ㄓㄨˋ","停":"ㄊㄧㄥˊ","留":"ㄌㄧㄡˊ","毫":"ㄏㄠˊ","隔":"ㄍㄜˊ","備":"ㄅㄟˋ","誤":"ㄨˋ","悉":"ㄒㄧ","噢":"ㄛ","久":"ㄐㄧㄡˇ","費":"ㄈㄟˋ","列":"ㄌㄧㄝˋ","碰":"ㄆㄥˋ","牆":"ㄑㄧㄤˊ","取":"ㄑㄩˇ","消":"ㄒㄧㄠ","密":"ㄇㄧˋ","碼":"ㄇㄚˇ","度":"ㄉㄨˋ","紀":"ㄐㄧˋ","舊":"ㄐㄧㄡˋ","欄":"ㄌㄢˊ","近":"ㄐㄧㄣˋ","年":"ㄋㄧㄢˊ","齡":"ㄌㄧㄥˊ","歲":"ㄙㄨㄟˋ","鐘":"ㄓㄨㄥ","此":"ㄘˇ","止":"ㄓˇ","才":"ㄘㄞˊ","認":"ㄖㄣˋ","約":"ㄩㄝ","刪":"ㄕㄢ","除":"ㄔㄨˊ","匯":"ㄏㄨㄟˋ","替":"ㄊㄧˋ","份":"ㄈㄣˋ","處":"ㄔㄨˋ","理":"ㄌㄧˇ","詢":"ㄒㄩㄣˊ","否":"ㄈㄡˇ","更":"ㄍㄥˋ","雲":"ㄩㄣˊ","端":"ㄉㄨㄢ","步":"ㄅㄨˋ","互":"ㄏㄨˋ","輸":"ㄕㄨ","嗎":"˙ㄇㄚ","復":"ㄈㄨˋ","件":"ㄐㄧㄢˋ","吧":"˙ㄅㄚ","迎":"ㄧㄥˊ","呢":"˙ㄋㄜ","醒":"ㄒㄧㄥˇ","閃":"ㄕㄢˇ","造":"ㄗㄠˋ","做":"ㄗㄨㄛˋ","道":"ㄉㄠˋ","超":"ㄔㄠ","仍":"ㄖㄥˊ","未":"ㄨㄟˋ","束":"ㄕㄨˋ","址":"ㄓˇ","啟":"ㄑㄧˇ","線":"ㄒㄧㄢˋ","略":"ㄌㄩㄝˋ"};/* ZYDICT-END */
+// 破音字依詞語決定讀音，比單字字典優先
+const ZYWORDS = {
+  '數數': ['ㄕㄨˇ', 'ㄕㄨˋ'], '數學': ['ㄕㄨˋ', 'ㄒㄩㄝˊ'], '得到': ['ㄉㄜˊ', 'ㄉㄠˋ'], '玩得': ['ㄨㄢˊ', '˙ㄉㄜ'], '記得': ['ㄐㄧˋ', '˙ㄉㄜ'],
+  '覺得': ['ㄐㄩㄝˊ', '˙ㄉㄜ'], '少了': ['ㄕㄠˇ', '˙ㄌㄜ'], '了解': ['ㄌㄧㄠˇ', 'ㄐㄧㄝˇ'], '什麼': ['ㄕㄣˊ', '˙ㄇㄜ'], '怎麼': ['ㄗㄣˇ', '˙ㄇㄜ'],
+  '這麼': ['ㄓㄜˋ', '˙ㄇㄜ'], '還有': ['ㄏㄞˊ', 'ㄧㄡˇ'], '還要': ['ㄏㄞˊ', 'ㄧㄠˋ'], '還沒': ['ㄏㄞˊ', 'ㄇㄟˊ'], '地方': ['ㄉㄧˋ', '˙ㄈㄤ'],
+  '東西': ['ㄉㄨㄥ', '˙ㄒㄧ'], '朋友': ['ㄆㄥˊ', '˙ㄧㄡ'], '休息': ['ㄒㄧㄡ', '˙ㄒㄧ'], '時候': ['ㄕˊ', '˙ㄏㄡ'], '一下': ['ㄧ', 'ㄒㄧㄚˋ'],
+  '長大': ['ㄓㄤˇ', 'ㄉㄚˋ'], '重新': ['ㄔㄨㄥˊ', 'ㄒㄧㄣ'], '空間': ['ㄎㄨㄥ', 'ㄐㄧㄢ'], '答對': ['ㄉㄚˊ', 'ㄉㄨㄟˋ'], '答案': ['ㄉㄚˊ', 'ㄢˋ'],
+  '回答': ['ㄏㄨㄟˊ', 'ㄉㄚˊ'], '答了': ['ㄉㄚˊ', '˙ㄌㄜ'],
+};
+const rb = (ch, z) => `<ruby>${ch}<rt>${z}</rt></ruby>`;
+// 把文字轉成帶注音的 HTML（家長可在後台關掉）；非中文字照原樣
+function zy(s) {
+  s = String(s);
+  if (S.data && S.data.zyOn === false) return esc(s);
+  let out = '', i = 0;
+  while (i < s.length) {
+    const w = [s.substr(i, 2)].find(x => ZYWORDS[x]);
+    if (w) { [...w].forEach((ch, k) => out += rb(ch, ZYWORDS[w][k])); i += 2; continue; }
+    const ch = s[i];
+    out += ZYDICT[ch] ? rb(ch, ZYDICT[ch]) : esc(ch);
+    i++;
+  }
+  return out;
+}
 const fmt = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 const today = () => fmt(new Date());
 
@@ -279,6 +336,22 @@ function U(c) {
   return u[d][c.id] = u[d][c.id] || { sec: 0, extra: 0, stars: 0, q: 0 };
 }
 const remaining = c => (c.limit + U(c).extra) * 60 - U(c).sec;
+
+/* ---------- 每日任務：四個區域各過 1 關；任務完成前同一區最多連玩 2 關 ---------- */
+const QUEST = ['math', 'zhuyin', 'eng', 'focus'];
+const qDone = c => { const u = U(c); return u.done = u.done || {}; };
+const questComplete = c => QUEST.every(b => qDone(c)[b] > 0);
+const blocked = (c, b) => !questComplete(c) && U(c).last === b && U(c).run >= 2;
+// 記錄過了一關；剛好完成任務時發寶箱，回傳要顯示的文字
+function questRecord(b) {
+  const c = S.child, u = U(c), was = questComplete(c);
+  qDone(c)[b] = (qDone(c)[b] || 0) + 1;
+  if (u.last === b) u.run++; else { u.last = b; u.run = 1; }
+  if (was || !questComplete(c) || u.chest) return '';
+  u.chest = true; c.stars += 5; u.stars += 5;
+  MATS.forEach(([m]) => c[m] += 2);
+  return '🎁 今日任務完成！寶箱：+5 ⭐、每種材料 +2';
+}
 
 /* ---------- 聲音 ---------- */
 let AC = null;
@@ -314,7 +387,8 @@ function utter(text, en, rate) {
   const u = new SpeechSynthesisUtterance(text);
   u.lang = en ? 'en-US' : 'zh-TW';
   const v = en ? EN : ZH; if (v) u.voice = v;
-  u.rate = rate || (en ? .8 : .9); u.pitch = en ? 1 : 1.1;
+  // 家長後台可調整整體語速（iPad 的語音比電腦快，預設放慢一些）
+  u.rate = (rate || (en ? .8 : .9)) * ((S.data && S.data.voiceRate) || .85); u.pitch = en ? 1 : 1.1;
   return u;
 }
 let sayTok = 0, curAudio = null;
@@ -339,8 +413,9 @@ function sayParts(parts) {
     const p = parts[i];
     let fired = false;
     const done = () => { if (!fired) { fired = true; next(i + 1); } };
-    if (p.sym && REC.has(p.sym)) {
-      const a = curAudio = new Audio(REC.get(p.sym));
+    const rec = p.sym && (REC.get(p.sym) || SITEREC.get(p.sym));
+    if (rec) {
+      const a = curAudio = new Audio(rec);
       a.onended = done; a.onerror = done; a.play().catch(done);
       setTimeout(done, 3000);
       return;
@@ -358,8 +433,32 @@ function sayParts(parts) {
 }
 
 /* ---------- 家長錄音（注音符號的標準發音） ---------- */
-// 錄音存在這台 iPad 的 IndexedDB，不會上傳
-const REC = new Map();
+// REC：這台 iPad 自己錄的（存在 IndexedDB）；SITEREC：放在網站上的 zhuyin-audio.json，所有 iPad 共用。兩者都有時用這台自己錄的
+const REC = new Map(), SITEREC = new Map();
+const b64ToBlob = (b64, type) => { const s = atob(b64), u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return new Blob([u], { type }); };
+function blobToB64(blob) {
+  return new Promise(res => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.readAsDataURL(blob); });
+}
+async function loadSiteRecs() {
+  if (!location.protocol.startsWith('http')) return;
+  try {
+    const r = await fetch('zhuyin-audio.json');
+    if (!r.ok) return;
+    const d = await r.json();
+    Object.entries(d.items || {}).forEach(([sym, it]) => SITEREC.set(sym, URL.createObjectURL(b64ToBlob(it.data, it.type))));
+  } catch (e) {}
+}
+// 把這台 iPad 的錄音打包成 zhuyin-audio.json，交給 iPad 的分享選單（存到檔案、AirDrop、LINE…）
+async function exportRecs() {
+  const items = {};
+  for (const [sym, url] of REC) { const blob = await (await fetch(url)).blob(); items[sym] = { type: blob.type, data: await blobToB64(blob) }; }
+  const file = new File([JSON.stringify({ v: 1, items })], 'zhuyin-audio.json', { type: 'application/json' });
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [file] })) return await navigator.share({ files: [file], title: '注音錄音' });
+  } catch (e) { if (e.name === 'AbortError') return; }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(file); a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
+}
 let recDB = null;
 function openRecDB() {
   return recDB ? Promise.resolve(recDB) : new Promise((res, rej) => {
@@ -526,12 +625,12 @@ function genQ(L) {
     case 7: {
       const a = ri(11, 79), b = ri(11, Math.min(89, 100 - a)), ta = a - a % 10, tb = b - b % 10;
       return { say: `${a} 加 ${b} 等於多少？`, display: `${a} + ${b} = ?`, visual: '', answer: a + b, options: opts(a + b, 0, 100, 2, 4, [a + b + 10, a + b - 10]),
-        hint: `<div class="steps">先加十位：${ta} + ${tb} = ${ta + tb}<br>再加個位：${a % 10} + ${b % 10} = ${a % 10 + b % 10}<br>合起來：${ta + tb} + ${a % 10 + b % 10} = ?</div>` };
+        hint: `<div class="steps">${zy(`先加十位：${ta} + ${tb} = ${ta + tb}`)}<br>${zy(`再加個位：${a % 10} + ${b % 10} = ${a % 10 + b % 10}`)}<br>${zy(`合起來：${ta + tb} + ${a % 10 + b % 10} = ?`)}</div>` };
     }
     case 8: {
       const a = ri(25, 99), b = ri(11, a - 5), tb = b - b % 10;
       return { say: `${a} 減 ${b} 等於多少？`, display: `${a} − ${b} = ?`, visual: '', answer: a - b, options: opts(a - b, 0, 100, 2, 4, [a - b + 10, a - b - 10]),
-        hint: `<div class="steps">先減十位：${a} − ${tb} = ${a - tb}<br>再減個位：${a - tb} − ${b % 10} = ?</div>` };
+        hint: `<div class="steps">${zy(`先減十位：${a} − ${tb} = ${a - tb}`)}<br>${zy(`再減個位：${a - tb} − ${b % 10} = ?`)}</div>` };
     }
     case 9: {
       const a = ri(2, 9), b = ri(2, 9);
@@ -579,7 +678,7 @@ function zySymQ(pool, n) {
   if (mate && n > 3) for (const m of mate) if (pool.includes(m)) o.add(m);
   while (o.size < n) o.add(pick([...pool]));
   return { parts: [{ text: '聽聽看，是哪一個注音？' }, { sym: s }], replay: [{ sym: s }], display: '是哪一個？', visual: LISTEN,
-    hint: `<div class="tip"><span class="emo">${ZY[s][2]}</span><span>${ZY[s][1]}</span></div>`, hintParts: [{ sym: s }, { text: `，${ZY[s][1]}的` }, { sym: s }],
+    hint: `<div class="tip"><span class="emo">${ZY[s][2]}</span><span>${zy(ZY[s][1])}</span></div>`, hintParts: [{ sym: s }, { text: `，${ZY[s][1]}的` }, { sym: s }],
     answer: s, options: shuffle([...o]), optClass: 'zy', ansParts: [{ sym: s }], rec: `聽音找 ${s}` };
 }
 // 拼錯的選項：換成容易搞混的符號、換介音，或隨機換一個聲母／韻母
@@ -598,14 +697,14 @@ function zySpellQ(list) {
   const [ch, sp] = pick(list), arr = [...sp];
   return { parts: [{ text: '聽聽看，' }, { text: ch, rate: .7 }, { text: '要怎麼拼？' }], replay: [{ text: ch, rate: .7 }],
     display: `「${ch}」怎麼拼？`, visual: LISTEN,
-    hint: `<div class="tip">第一個音是 <span class="zyb">${arr[0]}</span></div>`, hintParts: [{ text: '第一個音是' }, { sym: arr[0] }],
+    hint: `<div class="tip">${zy('第一個音是')} <span class="zyb">${arr[0]}</span></div>`, hintParts: [{ text: '第一個音是' }, { sym: arr[0] }],
     answer: sp, options: shuffle([sp, ...zyVariants(arr).slice(0, 3)]), optClass: 'zy', ansParts: [{ text: ch }], rec: `拼「${ch}」` };
 }
 function zyToneQ() {
   const [chars, base] = pick(ZY_TONES), t = ri(0, 3), ch = chars[t];
   return { parts: [{ text: '聽聽看，' }, { text: ch, rate: .7 }, { text: '是哪一個？' }], replay: [{ text: ch, rate: .7 }],
     display: `「${ch}」怎麼拼？`, visual: LISTEN,
-    hint: `<div class="tones">${TONE_NAME.map(n => `<span>${n}</span>`).join('')}${TONE_MK.map(m => `<b>${base}${m}</b>`).join('')}</div>`,
+    hint: `<div class="tones">${TONE_NAME.map(n => `<span>${zy(n)}</span>`).join('')}${TONE_MK.map(m => `<b>${base}${m}</b>`).join('')}</div>`,
     hintParts: [...chars].flatMap((c, i) => [{ text: TONE_NAME[i] }, { text: c, rate: .7 }]),
     answer: base + TONE_MK[t], options: TONE_MK.map(m => base + m), optClass: 'zy', ansParts: [{ text: ch }], rec: `「${ch}」的聲調` };
 }
@@ -616,7 +715,10 @@ function genZY(L) {
 
 /* ---------- 英文 ---------- */
 const ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-const lname = L => L === 'A' ? 'ay' : L;
+// 直接給大寫字母時 iPad 會念成「capital B」，所以改用字母名稱的拼讀
+const LNAME = { A: 'ay', B: 'bee', C: 'see', D: 'dee', E: 'ee', F: 'eff', G: 'jee', H: 'aitch', I: 'eye', J: 'jay', K: 'kay', L: 'ell', M: 'em',
+  N: 'en', O: 'oh', P: 'pee', Q: 'cue', R: 'are', S: 'ess', T: 'tee', U: 'you', V: 'vee', W: 'double you', X: 'ex', Y: 'why', Z: 'zee' };
+const lname = L => LNAME[L.toUpperCase()];
 // 每個字母的例字（X 用結尾是 x 的 fox）
 const LWORD = { A: 'apple', B: 'ball', C: 'cat', D: 'dog', E: 'egg', F: 'fish', G: 'grapes', H: 'hat', I: 'insect', J: 'juice', K: 'kite', L: 'lion', M: 'moon',
   N: 'nose', O: 'octopus', P: 'pig', Q: 'queen', R: 'rabbit', S: 'sun', T: 'tree', U: 'umbrella', V: 'van', W: 'watch', X: 'fox', Y: 'yo-yo', Z: 'zebra' };
@@ -679,10 +781,91 @@ function genEN(L) {
       const w = pick(CVC), i = ri(0, 2), l = w[i], vowel = 'aeiou'.includes(l);
       return { parts: [{ text: '少了哪一個字母？' }, { text: w, en: true }], replay: [{ text: w, en: true }],
         display: [...w].map((c, k) => k === i ? '_' : c).join(' '), dispClass: 'en', visual: `<div class="bigemo">${EMO[w]}</div>`,
-        hint: `<div class="tip"><span class="emo">${EMO[w]}</span><span>🔊 慢慢聽</span></div>`, hintParts: [{ text: w, en: true, rate: .4 }],
+        hint: `<div class="tip"><span class="emo">${EMO[w]}</span><span>🔊 ${zy('慢慢聽')}</span></div>`, hintParts: [{ text: w, en: true, rate: .4 }],
         answer: l, options: letterOpts(l, 4, vowel ? 'aeiou' : 'bcdfghjklmnprstvwz'), optClass: 'word', ansParts: [{ text: w, en: true }], rec: `${w} 少了 ${l}` };
     }
   }
+}
+
+/* ---------- 英文說說看（用裝置的語音辨識，需要網路） ---------- */
+const SRC = window.SpeechRecognition || window.webkitSpeechRecognition;
+const speakOK = () => !!SRC && S.data.speakOn !== false && !S.speakBroken;
+const SAY_EASY = ['apple', 'ball', 'cat', 'dog', 'egg', 'fish', 'hat', 'juice', 'kite', 'lion', 'moon', 'nose', 'pig', 'queen', 'rabbit', 'sun', 'tree', 'van', 'watch', 'fox', 'zebra'];
+const SAY_MORE = [...SAY_EASY, 'cow', 'bird', 'duck', 'frog', 'bee', 'bear', 'banana', 'cake', 'milk', 'star', 'car', 'bus', 'bed', 'cup', 'book', 'box', 'key', 'hand', 'shoe', 'house', 'flower', 'bike'];
+// 固定對話：角色用英文問，孩子用英文回答，答案含有 expect 裡任何一個字就算對；any 表示說什麼都算
+const DIALOGS = [
+  { ask: 'What color is it?', emo: '🍎', expect: ['red', 'read'], model: "It's red." },
+  { ask: 'What color is it?', emo: '🍌', expect: ['yellow'], model: "It's yellow." },
+  { ask: 'What color is it?', emo: '🐸', expect: ['green'], model: "It's green." },
+  { ask: 'What color is it?', emo: '🐳', expect: ['blue', 'blew'], model: "It's blue." },
+  { ask: 'What animal is it?', emo: '🐶', expect: ['dog', 'puppy'], model: "It's a dog." },
+  { ask: 'What animal is it?', emo: '🐱', expect: ['cat', 'kitty'], model: "It's a cat." },
+  { ask: 'What animal is it?', emo: '🐷', expect: ['pig'], model: "It's a pig." },
+  { ask: 'How many apples?', emo: '🍎🍎🍎', expect: ['three', '3'], model: 'Three apples.' },
+  { ask: 'How many stars?', emo: '⭐⭐', expect: ['two', '2', 'to', 'too'], model: 'Two stars.' },
+  { ask: 'How many balls?', emo: '⚽⚽⚽⚽', expect: ['four', '4', 'for'], model: 'Four balls.' },
+  { ask: 'How are you?', emo: '😊', expect: ['fine', 'good', 'great', 'ok', 'okay', 'happy'], model: "I'm fine, thank you." },
+  { ask: 'Do you like ice cream?', emo: '🍦', expect: ['yes', 'no', 'yeah', 'yep'], model: 'Yes, I do.' },
+  { ask: 'Is it big or small?', emo: '🐘', expect: ['big'], model: "It's big." },
+  { ask: 'Is it hot or cold?', emo: '🔥', expect: ['hot'], model: "It's hot." },
+  { ask: "What's your name?", emo: '👋', any: true, model: 'My name is ...' },
+];
+function genSpeak(L) {
+  if (L >= 5) {
+    const d = pick(DIALOGS);
+    return { speak: { expect: d.expect, any: d.any }, parts: [{ text: d.ask, en: true }, { text: '用英文回答看看！' }], replay: [{ text: d.ask, en: true }],
+      display: d.ask, dispClass: 'en askline', visual: `<div class="bigemo">${d.emo}</div>`,
+      hint: `<div class="tip"><span class="en">${d.model}</span></div>`, hintParts: [{ text: '可以這樣說' }, { text: d.model, en: true }],
+      answer: d.model, options: [], revealParts: [{ text: '很棒的嘗試！我們一起說：' }, { text: d.model, en: true }], rec: `對話：${d.ask}` };
+  }
+  const repeat = L <= 2, w = pick(repeat ? SAY_EASY : SAY_MORE), ask = repeat ? [{ text: '跟我說' }, { text: w, en: true }] : [{ text: '這是什麼？用英文說說看！' }];
+  return { speak: { expect: [w] }, parts: ask, replay: repeat ? [{ text: w, en: true }] : ask,
+    display: repeat ? w : '用英文說說看', dispClass: repeat ? 'en' : '', visual: `<div class="bigemo">${EMO[w]}</div>`,
+    hint: tipWord(w), hintParts: [{ text: '跟我說' }, { text: w, en: true }],
+    answer: w, options: [], revealParts: [{ text: '很棒的嘗試！我們一起說：' }, { text: w, en: true }], rec: repeat ? `跟著說 ${w}` : `看圖說 ${w}` };
+}
+function lev(a, b) {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[a.length][b.length];
+}
+// 小孩的發音不一定標準，差一個字母或多了複數 s 也算對
+function heardMatch(alts, expect) {
+  const words = t => t.toLowerCase().replace(/[^a-z0-9' ]/g, ' ').split(/\s+/).filter(Boolean);
+  const near = (x, w) => x === w || x === w + 's' || (w.length >= 4 && lev(x, w) <= 1);
+  return alts.some(t => words(t).some(x => expect.some(w => near(x, w))));
+}
+function listen(done) {
+  const r = new SRC();
+  r.lang = 'en-US'; r.interimResults = false; r.maxAlternatives = 5;
+  let fin = false;
+  const end = (alts, err) => { if (!fin) { fin = true; done(alts, err); } };
+  r.onresult = e => end([...e.results[0]].map(a => a.transcript));
+  r.onerror = e => end([], e.error);
+  r.onend = () => end([]);
+  stopVoice();
+  try { r.start(); } catch (e) { return end([], 'start'); }
+  later(() => { try { r.stop(); } catch (e) {} }, 7000);
+}
+function onMic(el) {
+  const g = S.game;
+  if (!g || g.state !== 'asking' || g.listening) return;
+  g.listening = true; el.classList.add('on'); el.innerHTML = '👂 ' + zy('我在聽…');
+  const heard = document.getElementById('heard'); if (heard) heard.textContent = '';
+  listen((alts, err) => {
+    if (S.game !== g) return;
+    g.listening = false; el.classList.remove('on'); el.innerHTML = '🎤 ' + zy('按我說說看');
+    if (err && err !== 'no-speech' && err !== 'aborted') {
+      // 沒給麥克風權限就之後都不出口說題；沒網路只跳過這一題
+      if (err === 'not-allowed' || err === 'service-not-allowed') S.speakBroken = true;
+      g.state = 'done'; bubble('麥克風沒辦法用，這題先跳過', 2000); speak('麥克風沒辦法用，這題先跳過喔！');
+      return later(() => { g.idx++; nextQ(); }, 2200);
+    }
+    if (!alts.length) { bubble('沒聽到，再說一次'); speak('沒有聽到喔，再按一次說說看！'); return; }
+    if (heard) heard.textContent = '聽到：' + alts[0];
+    judge(g.q.speak.any || heardMatch(alts, g.q.speak.expect), el, alts[0]);
+  });
 }
 
 /* ---------- 各科共用設定 ---------- */
@@ -701,15 +884,33 @@ const BIOMES = [
   { id: 'eng', name: '英文雪原', sym: 'ABC', tex: 'snow', open: true, say: '英文雪原，出發！' },
   { id: 'focus', name: '專注力礦洞', sym: '◆', tex: 'deep', open: true, say: '專注力礦洞，出發！' },
 ];
-const HOUSE = ['.........C..', '....RRRR.C..', '...RRRRRRC..', '..RRRRRRRR..', '...LGPPGL...', '...LPGGPL...', '...LGDDGL...', '...LPDDPL...', '.AAAAAAAAAA.', 'gggggggggggg'];
-const HTEX = { R: 'log', L: 'cobble', P: 'planks', G: 'glass', D: 'door', A: 'sandstone', C: 'cobble', g: 'grassside' };
-const HMAT = { R: 'wood', P: 'wood', D: 'wood', L: 'stone', C: 'stone', G: 'glass', A: 'sand' };
+const HTEX = { R: 'log', L: 'cobble', P: 'planks', G: 'glass', D: 'door', A: 'sandstone', C: 'cobble', S: 'stone', g: 'grassside' };
+const HMAT = { R: 'wood', P: 'wood', D: 'wood', L: 'stone', C: 'stone', S: 'stone', G: 'glass', A: 'sand' };
 // [材料, 名稱, 在哪裡拿, 材質]
 const MATS = [['wood', '木頭', '數學草原', 'planks'], ['stone', '石頭', '專注力礦洞', 'cobble'], ['sand', '沙岩', '注音沙漠', 'sandstone'], ['glass', '玻璃', '英文雪原', 'glass']];
-const HOUSE_ORDER = { wood: [], stone: [], sand: [], glass: [] };
-for (let r = HOUSE.length - 1; r >= 0; r--) for (let c = 0; c < 12; c++) {
-  const ch = HOUSE[r][c];
-  if (HMAT[ch]) HOUSE_ORDER[HMAT[ch]].push(r * 12 + c);
+// 依序要蓋的建築，每座偏重不同材料（所以要去不同區域）；蓋好一座就有一隻小動物搬進來
+const BUILDS = [
+  { name: '小木屋', pet: ['🐷', '小豬'], plan: ['.........C..', '....RRRR.C..', '...RRRRRRC..', '..RRRRRRRR..', '...LGPPGL...', '...LPGGPL...', '...LGDDGL...', '...LPDDPL...', '.AAAAAAAAAA.', 'gggggggggggg'] },
+  { name: '瞭望塔', pet: ['🐔', '小雞'], plan: ['....RRRR....', '...RRRRRR...', '....LGGL....', '....LLLL....', '....LGGL....', '....LLLL....', '....LGGL....', '....LDDL....', '..AAAAAAAA..', 'gggggggggggg'] },
+  { name: '金字塔', pet: ['🐱', '貓咪'], plan: ['.....AA.....', '....AAAA....', '...AAGGAA...', '..AAAAAAAA..', '.AAAAAAAAAA.', 'AAAAADDAAAAA', 'AAAAADDAAAAA', 'gggggggggggg'] },
+  { name: '冰雪城堡', pet: ['🐶', '小狗'], plan: ['..G......G..', '.GGG....GGG.', '.GGG.GG.GGG.', '.GGGGGGGGGG.', '.GGGGGGGGGG.', '.GGGGDDGGGG.', '.GGGGDDGGGG.', '.SSSSSSSSSS.', 'gggggggggggg'] },
+  { name: '國王城堡', pet: ['🐴', '小馬'], plan: ['L.L.L..L.L.L', 'LLLLL..LLLLL', 'LGLGL..LGLGL', 'LLLLLLLLLLLL', 'LLGLLRRLLGLL', 'LLLLLDDLLLLL', 'LLLLLDDLLLLL', 'AAAAAAAAAAAA', 'gggggggggggg'] },
+];
+// 每座建築各材料的格子，從下往上蓋
+BUILDS.forEach(b => {
+  b.order = { wood: [], stone: [], sand: [], glass: [] };
+  for (let r = b.plan.length - 1; r >= 0; r--) for (let c = 0; c < 12; c++) { const ch = b.plan[r][c]; if (HMAT[ch]) b.order[HMAT[ch]].push(r * 12 + c); }
+});
+// 材料是累計收集的，不會花掉：依序扣掉前面建築用量，剩下的拿來蓋目前這座
+function buildState(c) {
+  const used = { wood: 0, stone: 0, sand: 0, glass: 0 };
+  for (let i = 0; i < BUILDS.length; i++) {
+    const b = BUILDS[i], have = {};
+    MATS.forEach(([m]) => have[m] = Math.max(0, c[m] - used[m]));
+    if (!MATS.every(([m]) => have[m] >= b.order[m].length)) return { cur: i, have };
+    MATS.forEach(([m]) => used[m] += b.order[m].length);
+  }
+  return { cur: BUILDS.length, have: {} };
 }
 const BADGES = [
   { id: 'first', name: '第一次過關', test: () => true },
@@ -719,14 +920,15 @@ const BADGES = [
   { id: 'cave', name: '礦洞探險家', test: c => new Set(c.log.filter(x => x.s === 'focus').map(x => x.g)).size >= 4 },
   { id: 'zy', name: '注音小達人', test: c => c.zy.level >= 5 },
   { id: 'abc', name: 'ABC 小達人', test: c => c.en.level >= 4 },
-  { id: 'house', name: '蓋好第一間房子', test: c => MATS.every(([m]) => c[m] >= HOUSE_ORDER[m].length) },
+  { id: 'house', name: '蓋好第一間房子', test: c => buildState(c).cur >= 1 },
+  { id: 'island', name: '五座建築全部完成', test: c => buildState(c).cur >= BUILDS.length },
 ];
 
 /* ---------- 畫面 ---------- */
 function hud(back) {
   const c = S.child;
   return `<div class="hud"><button class="btn small" data-act="${back}">⬅</button>
-    <img class="hface px" src="${avatarURL(c.avatar)}"><span class="hname">${esc(c.name)}</span>
+    <img class="hface px" src="${avatarURL(c.avatar)}"><span class="hname">${zy(c.name)}</span>
     <div class="daybar"><div class="dayfill"></div><img class="sunico px" src="${SPR.sun}"></div>
     <span class="pill"><img class="px ico" src="${SPR.star}"><b id="hStars">${c.stars}</b></span>
     ${MATS.map(([m, , , t]) => `<span class="pill"><i class="blk ico t-${t}"></i><b>${c[m]}</b></span>`).join('')}</div>`;
@@ -753,12 +955,12 @@ function mount(html) {
 function showBanner() {
   const sc = app.firstElementChild; if (!sc) return;
   sc.classList.add('sunset');
-  sc.insertAdjacentHTML('beforeend', '<div class="banner" id="banner">🌇 太陽快下山了，再玩一下下就要休息囉！</div>');
+  sc.insertAdjacentHTML('beforeend', `<div class="banner" id="banner">🌇 ${zy('太陽快下山了，再玩一下下就要休息囉！')}</div>`);
   setTimeout(() => { const b = document.getElementById('banner'); if (b) b.remove(); }, 8000);
 }
 function bubble(text, ms = 1500) {
   const b = document.getElementById('bubble'); if (!b) return;
-  b.textContent = text; b.classList.add('show');
+  b.innerHTML = zy(text); b.classList.add('show');
   clearTimeout(bubble.t); bubble.t = setTimeout(() => b.classList.remove('show'), ms);
 }
 
@@ -766,12 +968,12 @@ function renderLogin() {
   S.screen = 'login'; S.child = null; S.game = null; S.sunset = false;
   const clouds = [[8, 70, 0], [22, 95, -40], [14, 120, -80]].map(([t, d, dl]) => `<div class="cloud" style="top:${t}%;animation-duration:${d}s;animation-delay:${dl}s"></div>`).join('');
   mount(`<div class="screen sky login">${clouds}
-    <div class="title">方塊學習島</div>
-    <div class="sub">點你的頭像，開始冒險！</div>
+    <div class="title">${zy('方塊學習島')}</div>
+    <div class="sub">${zy('點你的頭像，開始冒險！')}</div>
     <div class="kids">${S.data.children.map(c => {
       const done = remaining(c) <= 0;
       return `<button class="kid ${done ? 'sleep' : ''}" data-act="login" data-id="${c.id}"><img class="face px" src="${avatarURL(c.avatar)}">
-        ${done ? '<div class="zzz">Zzz</div>' : ''}<div class="kname">${esc(c.name)}</div>
+        ${done ? '<div class="zzz">Zzz</div>' : ''}<div class="kname">${zy(c.name)}</div>
         <div class="kmeta"><img class="px" src="${SPR.star}" style="width:18px;vertical-align:-2px"> ${c.stars}</div></button>`;
     }).join('')}</div>
     <div class="ground"><div class="grassrow t-grassside tiled"></div><div class="dirtrow t-dirt tiled"></div></div>
@@ -781,15 +983,19 @@ function renderLogin() {
 function renderMap() {
   S.screen = 'map'; S.game = null;
   const c = S.child;
+  const done = qDone(c);
   mount(`<div class="screen sky">${hud('logout')}
-    <div class="mapgrid">${BIOMES.map(b => `<button class="biome tiled t-${b.tex} ${b.open ? '' : 'locked'}" data-act="biome" data-v="${b.id}">
-      <div class="sym">${b.sym}</div><div class="bname">${b.name}</div>${SUBJ[b.id] ? `<div class="lv">Lv${P(c, b.id).level} ${SUBJ[b.id].levels[P(c, b.id).level]}</div>` : ''}</button>`).join('')}</div>
-    <div class="mapbar"><button class="btn orange big" data-act="house">🏠 我的家</button><button class="btn big" data-act="village">🏘 家族村莊</button></div></div>`);
+    <div class="questbar">${questComplete(c) ? '🎁 ' + zy('今日任務完成！可以自由探險囉') : `${zy('今日任務')} ${BIOMES.map(b => `<span class="qi ${done[b.id] ? 'done' : ''}">${b.sym} ${done[b.id] ? '✓' : ''}</span>`).join('')}`}</div>
+    <div class="mapgrid">${BIOMES.map(b => `<button class="biome tiled t-${b.tex} ${b.open ? '' : 'locked'} ${blocked(c, b.id) ? 'rest' : ''} ${questComplete(c) ? '' : done[b.id] ? 'did' : 'todo'}" data-act="biome" data-v="${b.id}">
+      ${questComplete(c) ? '' : done[b.id] ? `<span class="flag did">✓ ${zy('今天完成')}</span>` : `<span class="flag todo">⭐ ${zy('今天還沒來')}</span>`}
+      ${blocked(c, b.id) ? `<span class="flag rest">💤 ${zy('先去別的地方')}</span>` : ''}
+      <div class="sym">${b.sym}</div><div class="bname">${zy(b.name)}</div>${SUBJ[b.id] ? `<div class="lv">Lv${P(c, b.id).level} ${zy(SUBJ[b.id].levels[P(c, b.id).level])}</div>` : ''}</button>`).join('')}</div>
+    <div class="mapbar"><button class="btn orange big" data-act="house">🏠 ${zy('我的家')}</button><button class="btn big" data-act="village">🏘 ${zy('家族村莊')}</button></div></div>`);
 }
 
 // 數學、注音、英文共用同一套出題流程：每關 5 題，題目由 SUBJ[subject].gen 產生
 function startGame(subject = 'math', lead = '') {
-  S.again = () => startGame(subject);
+  S.again = () => startGame(subject); S.lastBiome = subject;
   S.game = { subject, idx: 0, total: 5, correctFirst: 0, starsEarned: 0, fs: 0, ff: 0, levelUp: false };
   nextQ(lead);
 }
@@ -798,8 +1004,10 @@ function nextQ(lead) {
   const g = S.game, p = P(S.child, g.subject);
   if (S.endPending && g.idx < g.total) return goodbye();
   if (g.idx >= g.total) return finishRound();
-  g.q = SUBJ[g.subject].gen(p.level); g.q.L = p.level;
-  g.attempts = 0; g.wrong = []; g.hintShown = false; g.state = 'asking';
+  // 英文每關最後一題是口說題（裝置不支援語音辨識時就照常出點選題）
+  g.q = g.subject === 'eng' && g.idx === g.total - 1 && speakOK() ? genSpeak(p.level) : SUBJ[g.subject].gen(p.level);
+  g.q.L = p.level;
+  g.attempts = 0; g.wrong = []; g.hintShown = false; g.state = 'asking'; g.listening = false;
   renderGame();
   sayParts([...(lead ? [{ text: lead }] : []), ...qParts(g.q)]);
 }
@@ -808,10 +1016,11 @@ function renderGame() {
   const g = S.game, q = g.q, label = q.optLabel || (o => o);
   mount(`<div class="screen sky">${hud('tomap')}
     <div class="gtop"><div class="pips">${Array.from({ length: g.total }, (_, i) => `<i class="blk pip ${i < g.idx ? 't-' + SUBJ[g.subject].tex : ''} ${i === g.idx ? 'cur' : ''}"></i>`).join('')}</div>
-      <button class="btn hintbtn" data-act="buyhint">💡 提示 <img class="px ico" src="${SPR.star}">×2</button></div>
-    <div class="qcard"><button class="btn small blue" data-act="say">🔊</button><div class="qtext ${q.dispClass || ''}">${q.display}</div></div>
+      <button class="btn hintbtn" data-act="buyhint">💡 ${zy('提示')} <img class="px ico" src="${SPR.star}">×2</button></div>
+    <div class="qcard"><button class="btn small blue" data-act="say">🔊</button><div class="qtext ${q.dispClass || ''}">${zy(q.display)}</div></div>
     <div class="visual">${g.hintShown ? q.hint : q.visual}</div>
-    <div class="answers">${q.options.map((o, i) => `<button class="btn ans ${q.optClass || ''} ${g.wrong.includes(o) ? 'off' : ''}" data-act="ans" data-v="${i}">${label(o)}</button>`).join('')}</div>
+    ${q.speak ? `<div class="heard" id="heard"></div><div class="answers"><button class="btn mic" data-act="mic">🎤 ${zy('按我說說看')}</button></div>`
+      : `<div class="answers">${q.options.map((o, i) => `<button class="btn ans ${q.optClass || ''} ${g.wrong.includes(o) ? 'off' : ''}" data-act="ans" data-v="${i}">${label(o)}</button>`).join('')}</div>`}
     <div id="bubble" class="bubble"></div></div>`);
 }
 function showHint() {
@@ -835,11 +1044,15 @@ function adapt(kind) {
   if (g.ff >= 2 && p.level > p.minLevel) { p.level--; g.ff = 0; }
 }
 function onAnswer(i, el) {
-  const g = S.game, c = S.child;
+  const g = S.game;
   if (!g || g.state !== 'asking') return;
-  const q = g.q, v = q.options[i];
+  judge(g.q.options[i] === g.q.answer, el, g.q.options[i]);
+}
+// 點選題和口說題共用：答對、第 1 次錯再試、第 2 次錯給提示、第 3 次錯公布答案
+function judge(ok, el, v) {
+  const g = S.game, c = S.child, q = g.q;
   g.attempts++;
-  if (v === q.answer) {
+  if (ok) {
     g.state = 'done'; SFX.ok(); el.classList.add('good');
     const first = g.attempts === 1;
     c.totalCorrect++;
@@ -849,14 +1062,16 @@ function onAnswer(i, el) {
     logQ(first); adapt(first ? 'first' : 'ok');
     later(() => { g.idx++; nextQ(); }, 1500);
   } else {
-    SFX.no(); g.wrong.push(v); el.classList.add('off', 'shake');
-    if (g.attempts === 1) { bubble('再想想看喔！'); speak('再想想看喔！'); }
+    SFX.no(); g.wrong.push(v);
+    if (!q.speak) el.classList.add('off');
+    el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+    if (g.attempts === 1) { bubble(q.speak ? '再說一次看看！' : '再想想看喔！'); speak(q.speak ? '再說一次看看！' : '再想想看喔！'); }
     else if (g.attempts === 2) { showHint(); bubble('一起看提示 💡'); sayParts([{ text: '沒關係，我們一起看提示！' }, ...(q.hintParts || [])]); }
     else {
       g.state = 'done';
       document.querySelectorAll('.ans').forEach(b => { if (q.options[+b.dataset.v] === q.answer) { b.classList.remove('off'); b.classList.add('reveal'); } });
-      bubble(`答案是 ${q.ansLabel || q.answer}`, 2400);
-      sayParts([{ text: '答案是' }, ...(q.ansParts || [{ text: String(q.answer) }]), { text: '，下次一定可以！' }]);
+      bubble(q.speak ? '很棒的嘗試！👍' : `答案是 ${q.ansLabel || q.answer}`, 2400);
+      sayParts(q.revealParts || [{ text: '答案是' }, ...(q.ansParts || [{ text: String(q.answer) }]), { text: '，下次一定可以！' }]);
       logQ(false); adapt('fail');
       later(() => { g.idx++; nextQ(); }, 2800);
     }
@@ -876,7 +1091,7 @@ function finishRound() {
   const bonus = g.correctFirst >= 4 ? 2 : 0;
   c.stars += bonus; U(c).stars += bonus; c[m.mat] += 3;
   S.game = null;
-  showResult({ stars: g.starsEarned + bonus, mat: m.tex, back: 'tomap', bonus: bonus ? '幾乎全對！額外 +2 ⭐' : '',
+  showResult({ stars: g.starsEarned + bonus, mat: m.tex, back: 'tomap', bonus: bonus ? '幾乎全對！額外 +2 ⭐' : '', quest: questRecord(g.subject),
     up: g.levelUp ? `⬆ 升級到 Lv${p.level} ${m.levels[p.level]}` : '', say: `過關了！你得到 ${g.starsEarned + bonus} 顆星星，還有 3 個${m.matName}！` });
 }
 function showResult(r) {
@@ -886,38 +1101,57 @@ function showResult(r) {
   save(); SFX.win();
   S.screen = 'result'; S.resultAt = Date.now();
   mount(`<div class="screen sky">${hud(r.back)}
-    <div class="panel"><div class="title sm">過關了！🎉</div>
+    <div class="panel"><div class="title sm">${zy('過關了！')}🎉</div>
       <div class="rewards"><div class="rw"><img class="px" src="${SPR.star}">+${r.stars}</div><div class="rw"><i class="blk t-${r.mat}"></i>+3</div></div>
-      ${r.bonus ? `<div class="lvup">${r.bonus}</div>` : ''}${r.up ? `<div class="lvup">${r.up}</div>` : ''}
-      ${newBadges.map(b => `<div class="badge">🏅 ${b.name}</div>`).join('')}
-      <div class="row"><button class="btn green big" data-act="again">再玩一次 ▶</button><button class="btn orange" data-act="house">🏠 我的家</button><button class="btn" data-act="${r.back}">返回</button></div>
+      ${r.bonus ? `<div class="lvup">${zy(r.bonus)}</div>` : ''}${r.up ? `<div class="lvup">${zy(r.up)}</div>` : ''}${r.quest ? `<div class="badge">${zy(r.quest)}</div>` : ''}
+      ${buildState(c).cur > (c.builtSeen || 0) ? `<div class="badge">🏠 ${zy('材料夠了，新建築蓋好了！去「我的家」看看')}</div>` : ''}
+      ${newBadges.map(b => `<div class="badge">🏅 ${zy(b.name)}</div>`).join('')}
+      <div class="row"><button class="btn green big" data-act="again">${zy('再玩一次')} ▶</button><button class="btn orange" data-act="house">🏠 ${zy('我的家')}</button><button class="btn" data-act="${r.back}">${zy('返回')}</button></div>
     </div></div>`);
-  speak(r.say + (newBadges.length ? `還拿到新徽章：${newBadges.map(b => b.name).join('、')}！` : ''));
+  speak(r.say + (r.quest ? '今天四個地方都冒險過了，任務完成！打開寶箱！' : '') + (buildState(c).cur > (c.builtSeen || 0) ? '新建築蓋好了，快去我的家看看！' : '') + (newBadges.length ? `還拿到新徽章：${newBadges.map(b => b.name).join('、')}！` : ''));
 }
 
-function renderHouse() {
-  S.screen = 'house';
-  const c = S.child, filled = new Set(), fresh = new Set(), needs = [], where = [];
-  MATS.forEach(([m, name, place]) => {
-    const list = HOUSE_ORDER[m], b = Math.min(c[m], list.length);
-    list.slice(0, b).forEach(i => filled.add(i));
-    list.slice(Math.max(0, b - 3), b).forEach(i => fresh.add(i));
-    if (b < list.length) { needs.push(`${list.length - b} 個${name}`); where.push(`${place}可以拿${name}`); }
-  });
+// filled 為空代表整座都已蓋好
+function planHTML(plan, filled, fresh) {
   let cells = '';
-  HOUSE.forEach((row, r) => [...row].forEach((ch, col) => {
+  plan.forEach((row, r) => [...row].forEach((ch, col) => {
     const i = r * 12 + col;
     if (ch === '.') cells += '<i class="hc"></i>';
-    else if (ch === 'g' || filled.has(i)) cells += `<i class="blk hc t-${HTEX[ch]} ${fresh.has(i) ? 'new' : ''}"></i>`;
+    else if (ch === 'g' || !filled || filled.has(i)) cells += `<i class="blk hc t-${HTEX[ch]} ${fresh && fresh.has(i) ? 'new' : ''}"></i>`;
     else cells += '<i class="hc need"></i>';
   }));
-  const need = needs.join('、');
-  const msg = need ? `還需要 ${need}，就能蓋好房子！` : '房子蓋好了！好漂亮！🎉';
+  return `<div class="house ${filled ? '' : 'mini'}">${cells}</div>`;
+}
+function renderHouse() {
+  S.screen = 'house';
+  const c = S.child, st = buildState(c), all = st.cur >= BUILDS.length;
+  const justBuilt = st.cur > (c.builtSeen || 0) ? BUILDS[st.cur - 1] : null;
+  c.builtSeen = st.cur; save();
+  const town = st.cur ? `<div class="town ${all ? 'big' : ''}">${BUILDS.slice(0, st.cur).map(b =>
+    `<div class="tb">${planHTML(b.plan)}<div class="tname"><span class="pet">${b.pet[0]}</span> ${zy(b.name)}</div></div>`).join('')}</div>` : '';
+  const cheer = justBuilt ? `${justBuilt.name}蓋好了！${justBuilt.pet[1]}搬進來囉！` : '';
+  let body, msg, say;
+  if (all) {
+    body = town; msg = '五座建築全部蓋好了！你的小島好熱鬧！🎉';
+    say = cheer + '你把整座小島都蓋好了，太厲害了！';
+  } else {
+    const b = BUILDS[st.cur], filled = new Set(), fresh = new Set(), needs = [], where = [];
+    MATS.forEach(([m, name, place]) => {
+      const list = b.order[m], n = Math.min(st.have[m], list.length);
+      list.slice(0, n).forEach(i => filled.add(i));
+      list.slice(Math.max(0, n - 3), n).forEach(i => fresh.add(i));
+      if (n < list.length) { needs.push(`${list.length - n} 個${name}`); where.push(`${place}可以拿${name}`); }
+    });
+    body = `<div class="hrow">${town}${planHTML(b.plan, filled, fresh)}</div>`;
+    msg = `正在蓋：${b.name}　還需要 ${needs.join('、')}`;
+    say = `${cheer}${st.cur ? '下一座是' : '這是你的'}${b.name}！還需要 ${needs.join('、')}，就能蓋好囉！${where.join('，')}。蓋好會有${b.pet[1]}搬進來喔！`;
+  }
   mount(`<div class="screen sky">${hud('tomap')}
-    <div class="hmsg">${msg}</div><div class="house">${cells}</div>
-    <div class="badges">${BADGES.map(b => `<span class="bd ${c.badges.includes(b.id) ? '' : 'no'}">🏅 ${b.name}</span>`).join('')}</div>
-    <div class="mapbar"><button class="btn green big" data-act="tomap">去冒險拿材料 ▶</button></div></div>`);
-  speak(need ? `這是你的家！還需要 ${need}，就能蓋好囉！${where.join('，')}。` : '你的房子蓋好了，好漂亮！');
+    ${cheer ? `<div class="badge hcheer">🎉 ${zy(cheer)}</div>` : ''}<div class="hmsg">${zy(msg)}</div>${body}
+    <div class="badges">${BADGES.map(b => `<span class="bd ${c.badges.includes(b.id) ? '' : 'no'}">🏅 ${zy(b.name)}</span>`).join('')}</div>
+    <div class="mapbar"><button class="btn green big" data-act="tomap">${zy('去冒險拿材料')} ▶</button></div></div>`);
+  if (justBuilt) SFX.win();
+  speak(say);
 }
 
 function goodbye() {
@@ -927,9 +1161,9 @@ function goodbye() {
   const tws = Array.from({ length: 24 }, () => `<i class="tw" style="left:${ri(2, 98)}%;top:${ri(2, 60)}%;animation-delay:-${ri(0, 24) / 10}s"></i>`).join('');
   app.innerHTML = `<div class="screen night">${tws}<img class="moon px" src="${SPR.moon}">
     <div class="panel"><div style="position:relative"><img class="byeface px" src="${avatarURL(c.avatar)}"><div class="zzz">Zzz</div></div>
-      <div class="title sm">今天玩得好棒！</div><div class="sub">太陽下山了，我們明天見 🌙</div>
-      <div class="rewards"><div class="rw"><img class="px" src="${SPR.star}">+${u.stars}</div><div class="rw">${[u.q ? `答了 ${u.q} 題` : '', u.g ? `玩了 ${u.g} 局` : ''].filter(Boolean).join('・') || '明天繼續'}</div></div>
-      <button class="btn green big" data-act="logout">晚安 👋</button></div></div>`;
+      <div class="title sm">${zy('今天玩得好棒！')}</div><div class="sub">${zy('太陽下山了，我們明天見')} 🌙</div>
+      <div class="rewards"><div class="rw"><img class="px" src="${SPR.star}">+${u.stars}</div><div class="rw">${zy([u.q ? `答了 ${u.q} 題` : '', u.g ? `玩了 ${u.g} 局` : ''].filter(Boolean).join('・') || '明天繼續')}</div></div>
+      <button class="btn green big" data-act="logout">${zy('晚安')} 👋</button></div></div>`;
   speak(`${c.name}，今天玩得好棒！太陽下山了，我們明天見，晚安！`);
 }
 
@@ -954,19 +1188,19 @@ function renderCave() {
   };
   mount(`<div class="screen cave">${hud('tomap')}
     <div class="cavegrid">${Object.entries(FGAMES).map(([id, g]) => `<button class="fgame" data-act="fgame" data-v="${id}">
-      <div class="ficon">${icons[id]}</div><div class="bname">${g.name}</div><div class="lv">Lv${c.focus[id]}</div></button>`).join('')}</div></div>`);
+      <div class="ficon">${icons[id]}</div><div class="bname">${zy(g.name)}</div><div class="lv">Lv${c.focus[id]}</div></button>`).join('')}</div></div>`);
 }
 function startFocus(id) {
-  S.again = () => startFocus(id);
+  S.again = () => startFocus(id); S.lastBiome = 'focus';
   ({ memory: startMemory, seq: startSeq, react: startReact, maze: startMaze })[id]();
 }
 function focusShell(cap, hint, inner) {
   S.screen = 'focus';
   mount(`<div class="screen cave">${hud('tocave')}
-    <div class="gtop"><div class="cap" id="cap">${cap}</div>${hint ? `<button class="btn hintbtn" data-act="fhint">💡 提示 <img class="px ico" src="${SPR.star}">×2</button>` : ''}</div>
+    <div class="gtop"><div class="cap" id="cap">${zy(cap)}</div>${hint ? `<button class="btn hintbtn" data-act="fhint">💡 ${zy('提示')} <img class="px ico" src="${SPR.star}">×2</button>` : ''}</div>
     <div class="farea">${inner}</div><div id="bubble" class="bubble"></div></div>`);
 }
-const setCap = t => { const e = document.getElementById('cap'); if (e) e.textContent = t; };
+const setCap = t => { const e = document.getElementById('cap'); if (e) e.innerHTML = zy(t); };
 function payHint() {
   const c = S.child;
   if (c.stars < 2) { speak('星星不夠喔，先自己試試看！'); return false; }
@@ -989,7 +1223,7 @@ function endFocus(stars, good, bad, rec) {
   c.stars += stars; U(c).stars += stars; c.stone += 3; U(c).g = (U(c).g || 0) + 1;
   c.log.push({ t: Date.now(), s: 'focus', g: id, L: g.L, q: rec, ok: good });
   if (c.log.length > 500) c.log.shift();
-  showResult({ stars, mat: 'cobble', back: 'tocave', up: up ? `⬆ ${FGAMES[id].name} 升級到 Lv${c.focus[id]}` : '', say: `完成了！你得到 ${stars} 顆星星，還有 3 個石頭！` });
+  showResult({ stars, mat: 'cobble', back: 'tocave', quest: questRecord('focus'), up: up ? `⬆ ${FGAMES[id].name} 升級到 Lv${c.focus[id]}` : '', say: `完成了！你得到 ${stars} 顆星星，還有 3 個石頭！` });
 }
 
 /* 記憶翻牌 */
@@ -1103,8 +1337,8 @@ const REACT = [null, [10, 1700, 700, .2, 3], [12, 1450, 600, .25, 3], [14, 1250,
 function startReact() {
   const L = flv('react'), [N, show, gap, ratio, holes] = REACT[L];
   S.fg = { game: 'react', L, N, show, gap, ratio, holes, k: 0, pigs: 0, hits: 0, errors: 0, cur: null, last: -1 };
-  focusShell('看到小豬就點！', false, `<div class="demo"><div><img class="px" src="${SPR.pig}"><span class="okc">✔ 點牠</span></div>
-    <div><img class="px" src="${SPR.mon}"><span class="ngc">✘ 不要點</span></div><button class="btn green big" data-act="rstart">準備好了 ▶</button></div>`);
+  focusShell('看到小豬就點！', false, `<div class="demo"><div><img class="px" src="${SPR.pig}"><span class="okc">✔ ${zy('點牠')}</span></div>
+    <div><img class="px" src="${SPR.mon}"><span class="ngc">✘ ${zy('不要點')}</span></div><button class="btn green big" data-act="rstart">${zy('準備好了')} ▶</button></div>`);
   speak(FGAMES.react.say);
 }
 function runReact() {
@@ -1266,6 +1500,7 @@ function pCard(c) {
     <div class="psec">遊戲時間</div>
     <div class="prow"><span>每日上限</span><span>${pb('p-limit', c.id, -5, '−5')} <b>${c.limit} 分鐘</b> ${pb('p-limit', c.id, 5, '+5')}</span></div>
     <div class="prow"><span>今天</span><b>已玩 ${Math.floor(u.sec / 60)} 分，剩 ${Math.ceil(rem / 60)} 分${u.extra ? `（含加時 ${u.extra} 分）` : ''}</b></div>
+    <div class="prow"><span>今日任務</span><b>${BIOMES.map(b => `${b.name.slice(0, 2)} ${qDone(c)[b.id] ? '✓' : '—'}`).join('　')}${questComplete(c) ? '　🎁 已完成' : ''}</b></div>
     <div class="prow">${pb('p-extra', c.id, 10, '今天多 10 分鐘', '')}${pb('p-resettoday', c.id, 0, '重設今天時間')}${pb('p-endtoday', c.id, 0, '今天到此為止', 'red')}</div>
     <div class="psec">學習紀錄</div>
     <div class="prow"><span>收集</span><b>⭐${c.stars}　木頭 ${c.wood}　石頭 ${c.stone}　沙岩 ${c.sand}　玻璃 ${c.glass}</b></div>
@@ -1286,11 +1521,12 @@ function pCard(c) {
 function recCard() {
   const sel = S.recSel || 'ㄅ', all = [...ZY_INIT + ZY_FIN];
   return `<div class="pcard" style="grid-column:1/-1"><h3>🎙 注音錄音</h3>
-    <div class="pnote">電腦語音念單一個注音不太準。點一個符號，按「錄音」後清楚念一次（約 2 秒），孩子玩的時候就會聽到你的聲音。綠色是已經錄好的。錄音只存在這台 iPad，兩台要各錄一次。</div>
-    <div class="recgrid">${all.map(s => `<button class="pbtn light ${REC.has(s) ? 'has' : ''} ${s === sel ? 'sel' : ''}" data-act="p-recsel" data-v="${s}">${s}</button>`).join('')}</div>
+    <div class="pnote">電腦語音念單一個注音不太準。點一個符號，按「錄音」後清楚念一次（約 2 秒），孩子玩的時候就會聽到你的聲音。綠色是已經有錄音的。</div>
+    <div class="recgrid">${all.map(s => `<button class="pbtn light ${REC.has(s) || SITEREC.has(s) ? 'has' : ''} ${s === sel ? 'sel' : ''}" data-act="p-recsel" data-v="${s}">${s}</button>`).join('')}</div>
     <div class="prow"><span>目前：<b style="font-size:26px">${sel}</b>（${ZY[sel][1]}的 ${sel}）${S.recBusy ? '　<b style="color:#b84a3a">🔴 錄音中…請念出來</b>' : ''}</span>
       <span>${pb('p-rec', '', 0, '🎙 錄音', '', sel)} ${pb('p-recplay', '', 0, '▶ 試聽', 'light', sel)} ${REC.has(sel) ? pb('p-recdel', '', 0, '刪除', 'red', sel) : ''}</span></div>
-    <div class="pnote">已錄 ${all.filter(s => REC.has(s)).length} / 37。沒錄的符號會用電腦語音代替。</div></div>`;
+    <div class="prow"><span>這台 iPad 錄的：${REC.size} / 37　網站上共用的：${SITEREC.size} / 37</span>${REC.size ? pb('p-recexport', '', 0, '📤 匯出錄音，放到網站', '') : ''}</div>
+    <div class="pnote">沒錄的符號會用電腦語音代替。錄音只存在錄的那台 iPad；想讓每台 iPad 都用同一份，錄完按「匯出錄音」，把檔案 zhuyin-audio.json 存到「檔案」或傳到電腦，再上傳到網站（GitHub），所有 iPad 下次打開就會自動使用。</div></div>`;
 }
 function renderParent() {
   const prev = document.querySelector('.parent'), top = prev ? prev.scrollTop : 0;
@@ -1298,6 +1534,10 @@ function renderParent() {
   app.innerHTML = `<div class="screen parent"><div class="ptop"><span>⚙ 家長後台</span><button class="pbtn light" data-act="logout">回到遊戲 ▶</button></div>
     <div class="pcards">${S.data.children.map(pCard).join('')}${recCard()}
       <div class="pcard"><h3>其他設定</h3>
+        <div class="prow"><span>語音速度</span><span>${[['慢', .7], ['標準', .85], ['快', 1]].map(([n, r]) => pb('p-voice', '', r, n, ((S.data.voiceRate || .85) === r ? '' : 'light'))).join(' ')} ${pb('p-voicetest', '', 0, '▶ 試聽', 'light')}</span></div>
+        <div class="prow"><span>遊戲中的中文字旁加注音</span><span>${pb('p-zy', '', 1, '開', S.data.zyOn !== false ? '' : 'light')} ${pb('p-zy', '', 0, '關', S.data.zyOn === false ? '' : 'light')}</span></div>
+        <div class="prow"><span>英文說說看（每關最後一題用說的）</span><span>${pb('p-speak', '', 1, '開', S.data.speakOn !== false ? '' : 'light')} ${pb('p-speak', '', 0, '關', S.data.speakOn === false ? '' : 'light')}</span></div>
+        <div class="pnote">${SRC ? '說說看需要網路，孩子的聲音會交給 Apple 的語音辨識處理。第一次使用時 iPad 會詢問是否允許麥克風和語音辨識。' : '這個瀏覽器不支援語音辨識，英文會照常出點選題。'}</div>
         <div class="prow"><span>家長密碼</span>${pb('p-pin', '', 0, '變更密碼')}</div>
         <div class="prow"><span>清除所有進度與紀錄</span>${pb('p-reset', '', 0, '全部重設', 'red')}</div>
         <div class="pnote">資料存在這台 iPad 上。之後的正式版會加上雲端同步，讓兩台 iPad 的進度和家族村莊能互通。</div></div>
@@ -1307,10 +1547,15 @@ function renderParent() {
 function parentAct(a, c, d, v) {
   const u = c ? U(c) : null, p = c ? P(c, v) : null, top = SUBJ[v] ? SUBJ[v].levels.length - 1 : 9;
   switch (a) {
+    case 'p-voice': S.data.voiceRate = d; save(); renderParent(); sayParts([{ text: '聽聽看，這是哪一個字母？' }, { text: lname('B'), en: true }]); return;
+    case 'p-voicetest': sayParts([{ text: '聽聽看，這是哪一個字母？' }, { text: lname('B'), en: true }, { text: 'apple', en: true }]); return;
+    case 'p-speak': S.data.speakOn = d === 1; S.speakBroken = false; break;
+    case 'p-zy': S.data.zyOn = d === 1; break;
     case 'p-recsel': S.recSel = v; break;
     case 'p-rec': if (!S.recBusy) recordSym(v); return;
     case 'p-recplay': sayParts([{ sym: v }]); return;
     case 'p-recdel': deleteRec(v).then(renderParent); return;
+    case 'p-recexport': exportRecs(); return;
     case 'p-flv': c.focus[v] = Math.max(1, Math.min(5, c.focus[v] + d)); break;
     case 'p-age': c.age = Math.max(3, Math.min(12, c.age + d)); break;
     case 'p-avatar': c.avatar = d; break;
@@ -1345,21 +1590,33 @@ app.addEventListener('click', e => {
       SFX.tap();
       if (remaining(ch) <= 0) { speak(`${ch.name}，今天的時間用完囉，明天再一起玩吧！`); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); return; }
       S.child = ch; S.warned = false; S.sunset = false; S.endPending = false;
-      renderMap(); speak(`${ch.name}，歡迎回來！今天要去哪裡冒險呢？`);
+      renderMap(); speak(`${ch.name}，歡迎回來！` + (questComplete(ch) ? '今天要去哪裡冒險呢？' : '今天的任務是：四個地方都去冒險一次，就能打開寶箱喔！'));
       if (remaining(ch) <= 180) warnSunset();
       break;
     case 'logout': save(); renderLogin(); break;
-    case 'tomap': SFX.tap(); if (remaining(S.child) <= 0) return goodbye(); renderMap(); break;
+    case 'tomap': {
+      SFX.tap(); if (remaining(S.child) <= 0) return goodbye();
+      const fromRound = S.screen === 'result' || S.screen === 'cave';
+      renderMap();
+      // 過完一關回到地圖時，提醒今天還沒去的地方
+      const left = BIOMES.filter(b => !qDone(S.child)[b.id]).map(b => b.name);
+      if (fromRound && left.length) speak(`今日任務還有：${left.join('、')}，閃閃發亮的地方還沒去喔！`);
+      break;
+    }
     case 'biome': {
       const b = BIOMES.find(x => x.id === v);
       if (!b.open) { speak(`${b.name}還在建造中，快要開放囉！`); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); return; }
+      if (blocked(S.child, b.id)) return restHere(el);
       SFX.tap();
       if (SUBJ[b.id]) startGame(b.id, b.say); else { speak(b.say); renderCave(); }
       break;
     }
-    case 'again': if (remaining(S.child) <= 0) return goodbye(); S.again(); break;
+    case 'again':
+      if (remaining(S.child) <= 0) return goodbye();
+      if (blocked(S.child, S.lastBiome)) { renderMap(); return restHere(); }
+      S.again(); break;
     case 'tocave': SFX.tap(); if (remaining(S.child) <= 0) return goodbye(); renderCave(); break;
-    case 'fgame': SFX.tap(); startFocus(v); break;
+    case 'fgame': if (blocked(S.child, 'focus')) { renderMap(); return restHere(); } SFX.tap(); startFocus(v); break;
     case 'fhint': focusHint(); break;
     case 'mcard': memTap(+v); break;
     case 'tile': seqTap(+v); break;
@@ -1370,6 +1627,7 @@ app.addEventListener('click', e => {
     case 'village': speak('家族村莊還在建造中，之後大家蓋的房子都會住在一起喔！'); break;
     case 'say': sayParts(S.game.q.replay || qParts(S.game.q)); break;
     case 'ans': onAnswer(+v, el); break;
+    case 'mic': onMic(el); break;
     case 'buyhint': buyHint(); break;
     case 'parent': renderGate(); break;
     case 'gateclose': document.getElementById('gate').remove(); break;
@@ -1392,6 +1650,10 @@ app.addEventListener('change', e => {
 });
 document.addEventListener('gesturestart', e => e.preventDefault());
 
+function restHere(el) {
+  speak('這裡已經連續玩兩關囉，先去別的地方冒險，等一下再回來！');
+  if (el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+}
 function warnSunset() {
   S.warned = true; S.sunset = true;
   showBanner();
@@ -1420,6 +1682,7 @@ S.data = load();
 initArt();
 renderLogin();
 loadRecs();
+loadSiteRecs();
 
 // 放到網址上才會啟用離線快取；直接開檔案時略過
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
