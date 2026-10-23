@@ -1,11 +1,12 @@
 // 離線快取：第一次開啟時把整個遊戲存到 iPad，之後沒有網路也能玩。
 // 更新 index.html 後，iPad 連網開啟時會在背景下載新版，再下一次開啟就是新版。
 // 新增或刪除檔案時，記得更新 FILES 並把 VERSION 改掉（例如 v3）。
-const VERSION = 'v5';
+const VERSION = 'v6';
 const CACHE = 'block-island-' + VERSION;
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png',
   ...['dog', 'cat', 'rabbit', 'bear', 'tiger', 'giraffe'].map(p => `./img/pet-${p}.webp`),
-  ...[1, 2, 3, 4, 5, 6].flatMap(n => [`./img/char-${n}.webp`, `./img/char-${n}-face.webp`])];
+  ...[1, 2, 3, 4, 5, 6].flatMap(n => [`./img/char-${n}.webp`, `./img/char-${n}-face.webp`]),
+  ...[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => `./img/frame-${n}.webp`)];
 // 家長錄音和小汪的聲音檔，沒有也不影響安裝
 const OPTIONAL = ['./zhuyin-audio.json', './voice-pack.json'];
 
