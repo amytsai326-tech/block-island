@@ -12,7 +12,7 @@
 <link rel="icon" href="icon-192.png">
 <title>方塊學習島</title>
 <style>
-:root{--b:clamp(30px,4.6vw,58px)}
+:root{--b:clamp(30px,calc(4.6 * var(--vw, 1vw)),58px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 html,body{margin:0;height:100%;overflow:hidden;touch-action:manipulation;background:#7ec8ff;
   font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:#fff}
@@ -31,27 +31,27 @@ input{user-select:text;-webkit-user-select:text}
 .s{width:calc(var(--b)*.42);height:calc(var(--b)*.42)}
 
 .btn{font:inherit;font-weight:900;color:#fff;border:0;cursor:pointer;background:#8b8b8b;padding:.45em .9em;
-  text-shadow:2px 2px 0 rgba(0,0,0,.5);font-size:clamp(16px,2.2vw,24px);
+  text-shadow:2px 2px 0 rgba(0,0,0,.5);font-size:clamp(16px,calc(2.2 * var(--vw, 1vw)),24px);
   box-shadow:inset -4px -4px 0 rgba(0,0,0,.3),inset 4px 4px 0 rgba(255,255,255,.3),0 0 0 3px #1e1e1e}
 .btn:active{transform:translateY(2px);filter:brightness(.9)}
 .btn.green{background:#4caf50}.btn.blue{background:#3d7bd9}.btn.orange{background:#e8892b}
-.btn.small{padding:.2em .6em}.btn.big{font-size:clamp(22px,3.2vw,34px)}
+.btn.small{padding:.2em .6em}.btn.big{font-size:clamp(22px,calc(3.2 * var(--vw, 1vw)),34px)}
 
 /* 登入 */
-.login{align-items:center;justify-content:center;gap:2vh}
-.title{font-size:clamp(36px,7vw,80px);font-weight:900;text-shadow:5px 5px 0 #2f4f2f;letter-spacing:.06em;z-index:1}
-.title.sm{font-size:clamp(32px,5vw,56px)}
-.sub{font-size:clamp(18px,2.6vw,28px);font-weight:900;text-shadow:2px 2px 0 #335;z-index:1}
-.kids{display:flex;flex-wrap:wrap;justify-content:center;gap:4vw;z-index:1;margin-bottom:14vh;max-width:94vw}
+.login{align-items:center;justify-content:center;gap:calc(2 * var(--vh, 1vh))}
+.title{font-size:clamp(36px,calc(7 * var(--vw, 1vw)),80px);font-weight:900;text-shadow:5px 5px 0 #2f4f2f;letter-spacing:.06em;z-index:1}
+.title.sm{font-size:clamp(32px,calc(5 * var(--vw, 1vw)),56px)}
+.sub{font-size:clamp(18px,calc(2.6 * var(--vw, 1vw)),28px);font-weight:900;text-shadow:2px 2px 0 #335;z-index:1}
+.kids{display:flex;flex-wrap:wrap;justify-content:center;gap:calc(4 * var(--vw, 1vw));z-index:1;margin-bottom:calc(14 * var(--vh, 1vh));max-width:calc(94 * var(--vw, 1vw))}
 .kid{background:rgba(0,0,0,.28);border:0;padding:18px 22px 14px;color:#fff;font:inherit;font-weight:900;position:relative;cursor:pointer;
   box-shadow:0 0 0 4px #1e1e1e,inset -5px -5px 0 rgba(0,0,0,.3),inset 5px 5px 0 rgba(255,255,255,.2);animation:bob 3s ease-in-out infinite}
 .kid:nth-child(2){animation-delay:-1.5s}
-.kid .face{width:clamp(110px,16vw,180px);height:clamp(110px,16vw,180px);display:block;box-shadow:0 0 0 4px #1e1e1e}
-.kname{font-size:clamp(20px,3vw,32px);margin-top:10px;text-shadow:2px 2px 0 #000}
+.kid .face{width:clamp(110px,calc(16 * var(--vw, 1vw)),180px);height:clamp(110px,calc(16 * var(--vw, 1vw)),180px);display:block;box-shadow:0 0 0 4px #1e1e1e}
+.kname{font-size:clamp(20px,calc(3 * var(--vw, 1vw)),32px);margin-top:10px;text-shadow:2px 2px 0 #000}
 .kmeta{font-size:18px;opacity:.9}
 .kid.sleep .face{filter:grayscale(.6) brightness(.6)}
 .zzz{position:absolute;top:8px;right:12px;font-size:34px;font-weight:900;color:#cfe3ff;text-shadow:2px 2px 0 #000;animation:float 2s ease-in-out infinite}
-.ground{position:absolute;left:0;right:0;bottom:0;height:16vh;--tile:64px}
+.ground{position:absolute;left:0;right:0;bottom:0;height:calc(16 * var(--vh, 1vh));--tile:64px}
 .grassrow{height:64px}.dirtrow{position:absolute;top:64px;bottom:0;left:0;right:0}
 .gear{position:absolute;right:16px;bottom:16px;z-index:2;font-size:18px}
 .appver{position:absolute;left:16px;bottom:22px;z-index:2;display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:calc(100% - 150px);font-size:15px;font-weight:900;color:#fff;text-shadow:2px 2px 0 #000}
@@ -60,7 +60,7 @@ input{user-select:text;-webkit-user-select:text}
 .cloud::after{content:"";position:absolute;left:36px;top:-26px;width:90px;height:26px;background:#fff}
 
 /* HUD */
-.hud{display:flex;align-items:center;gap:12px;padding:10px 16px;background:rgba(0,0,0,.35);font-weight:900;font-size:clamp(16px,2.2vw,24px);flex:none}
+.hud{display:flex;align-items:center;gap:12px;padding:10px 16px;background:rgba(0,0,0,.35);font-weight:900;font-size:clamp(16px,calc(2.2 * var(--vw, 1vw)),24px);flex:none}
 .hface{width:44px;height:44px;box-shadow:0 0 0 3px #1e1e1e}
 .hname{text-shadow:2px 2px 0 #000;white-space:nowrap}
 @media (orientation:portrait){.phone .hud{gap:6px;padding:8px}.phone .pill{padding:3px 5px;gap:3px}}
@@ -74,22 +74,22 @@ input{user-select:text;-webkit-user-select:text}
 .ico{width:24px;height:24px}
 .pulse{animation:pop .4s}
 .banner{position:absolute;top:78px;left:50%;transform:translateX(-50%);background:#e8692b;padding:8px 22px;font-weight:900;
-  font-size:clamp(18px,2.4vw,26px);box-shadow:0 0 0 3px #1e1e1e;z-index:6;white-space:nowrap;text-shadow:2px 2px 0 #000;animation:pop .4s}
+  font-size:clamp(18px,calc(2.4 * var(--vw, 1vw)),26px);box-shadow:0 0 0 3px #1e1e1e;z-index:6;white-space:nowrap;text-shadow:2px 2px 0 #000;animation:pop .4s}
 
 /* 地圖 */
 .mapgrid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr .62fr;gap:14px 18px;padding:14px 24px 8px;min-height:0}
 /* 釣魚池、金礦山：不算每日任務，格子小一點 */
-.biome.extra .sym{font-size:clamp(30px,5vw,56px)}
+.biome.extra .sym{font-size:clamp(30px,calc(5 * var(--vw, 1vw)),56px)}
 .biome.water{background:repeating-linear-gradient(170deg,rgba(255,255,255,.14) 0 6px,transparent 6px 26px),linear-gradient(#5ec3ff,#2a78c8)}
 .biome.extra.locked::after{content:none}
-.mapbar.small .btn{font-size:clamp(16px,2.2vw,22px);padding:.35em .9em}
+.mapbar.small .btn{font-size:clamp(16px,calc(2.2 * var(--vw, 1vw)),22px);padding:.35em .9em}
 @media (orientation:landscape){.mapgrid{grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr}}
 .biome{position:relative;border:0;font:inherit;color:#fff;cursor:pointer;--tile:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;overflow:hidden;
   box-shadow:0 0 0 4px #1e1e1e,inset 0 -10px 0 rgba(0,0,0,.25)}
 .biome:active{transform:translateY(3px)}
-.biome .sym{font-size:clamp(40px,7vw,84px);font-weight:900;text-shadow:5px 5px 0 rgba(0,0,0,.55);line-height:1}
-.bname{font-size:clamp(20px,3vw,32px);font-weight:900;background:rgba(0,0,0,.45);padding:2px 14px;text-shadow:2px 2px 0 #000}
-.lv{font-size:clamp(14px,1.8vw,18px);font-weight:900;background:rgba(0,0,0,.4);padding:2px 10px}
+.biome .sym{font-size:clamp(40px,calc(7 * var(--vw, 1vw)),84px);font-weight:900;text-shadow:5px 5px 0 rgba(0,0,0,.55);line-height:1}
+.bname{font-size:clamp(20px,calc(3 * var(--vw, 1vw)),32px);font-weight:900;background:rgba(0,0,0,.45);padding:2px 14px;text-shadow:2px 2px 0 #000}
+.lv{font-size:clamp(14px,calc(1.8 * var(--vw, 1vw)),18px);font-weight:900;background:rgba(0,0,0,.4);padding:2px 10px}
 .biome.locked .sym{opacity:.55}
 .biome.locked::after{content:"🔒 即將開放";position:absolute;top:10px;right:10px;background:rgba(0,0,0,.6);padding:4px 10px;font-size:16px;font-weight:900}
 .mapbar{display:flex;gap:16px;justify-content:center;padding:8px 0 16px;flex:none}
@@ -101,16 +101,19 @@ input{user-select:text;-webkit-user-select:text}
 .pip.cur{outline:3px solid #ffd83a;outline-offset:3px}
 .hintbtn{display:flex;align-items:center;gap:6px;background:#e8a72b}
 .qcard{margin:4px auto 0;display:flex;align-items:center;gap:18px;background:rgba(0,0,0,.35);padding:8px 28px;box-shadow:0 0 0 4px #1e1e1e;flex:none}
-.qtext{font-size:clamp(34px,6vw,72px);font-weight:900;text-shadow:4px 4px 0 #000;letter-spacing:.04em}
+.qtext{font-size:clamp(34px,calc(6 * var(--vw, 1vw)),72px);font-weight:900;text-shadow:4px 4px 0 #000;letter-spacing:.04em}
+/* 手機橫拿：高度很少，題目字小一點，數數的方塊大一點 */
+@media (orientation:landscape){.phone .qtext{font-size:46px}.phone .qcard{padding:4px 20px}
+  .phone .visual [style*="--b"]{--b:min(calc(5.5 * var(--vw, 1vw)),calc(9 * var(--vh, 1vh)),70px) !important}}
 .visual{flex:1;display:flex;align-items:center;justify-content:center;padding:10px;min-height:0;overflow:hidden}
-.answers{display:flex;justify-content:center;gap:clamp(12px,3vw,36px);padding:0 16px 3vh;flex:none}
-.ans{min-width:clamp(90px,15vw,170px);font-size:clamp(34px,5.5vw,64px);padding:.2em .4em;background:#3d7bd9}
+.answers{display:flex;justify-content:center;gap:clamp(12px,calc(3 * var(--vw, 1vw)),36px);padding:0 16px calc(3 * var(--vh, 1vh));flex:none}
+.ans{min-width:clamp(90px,calc(15 * var(--vw, 1vw)),170px);font-size:clamp(34px,calc(5.5 * var(--vw, 1vw)),64px);padding:.2em .4em;background:#3d7bd9}
 .ans.off{opacity:.3;filter:grayscale(1);pointer-events:none}
 .ans.good{background:#4caf50;animation:pop .4s}
 .ans.reveal{background:#4caf50;animation:pulse 1s infinite}
 .bubble{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) scale(.6);opacity:0;background:#fff;color:#2b2b2b;
-  font-size:clamp(28px,4.5vw,52px);font-weight:900;padding:14px 30px;box-shadow:0 0 0 4px #1e1e1e,8px 8px 0 rgba(0,0,0,.3);
-  transition:.25s;pointer-events:none;z-index:5;white-space:nowrap;text-align:center;max-width:94vw}
+  font-size:clamp(28px,calc(4.5 * var(--vw, 1vw)),52px);font-weight:900;padding:14px 30px;box-shadow:0 0 0 4px #1e1e1e,8px 8px 0 rgba(0,0,0,.3);
+  transition:.25s;pointer-events:none;z-index:5;white-space:nowrap;text-align:center;max-width:calc(94 * var(--vw, 1vw))}
 .bubble.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
 .bgrid{display:grid;gap:4px}
 .addv{display:flex;align-items:center;gap:20px}
@@ -118,26 +121,26 @@ input{user-select:text;-webkit-user-select:text}
 .rods{display:flex;gap:6px;align-items:flex-end}
 .rod{display:flex;flex-direction:column;gap:1px}
 .ones{display:grid;grid-template-columns:repeat(5,calc(var(--b)*.42));gap:1px}
-.cmp{display:flex;gap:clamp(16px,4vw,48px);align-items:flex-end}
+.cmp{display:flex;gap:clamp(16px,calc(4 * var(--vw, 1vw)),48px);align-items:flex-end}
 .cmpc{display:flex;flex-direction:column;align-items:center;gap:8px}
-.cmpn{font-size:clamp(26px,4vw,44px);font-weight:900;text-shadow:3px 3px 0 #000}
+.cmpn{font-size:clamp(26px,calc(4 * var(--vw, 1vw)),44px);font-weight:900;text-shadow:3px 3px 0 #000}
 .nline{display:flex;gap:10px}
 .nb{width:calc(var(--b)*1.5);height:calc(var(--b)*1.2);box-shadow:inset 0 0 0 3px rgba(0,0,0,.3)}
 .nb>b{font-size:calc(var(--b)*.55)}
-.steps{background:rgba(0,0,0,.45);padding:14px 26px;font-size:clamp(22px,3.4vw,38px);font-weight:900;line-height:1.6;box-shadow:0 0 0 4px #1e1e1e;text-shadow:2px 2px 0 #000}
+.steps{background:rgba(0,0,0,.45);padding:14px 26px;font-size:clamp(22px,calc(3.4 * var(--vw, 1vw)),38px);font-weight:900;line-height:1.6;box-shadow:0 0 0 4px #1e1e1e;text-shadow:2px 2px 0 #000}
 .mrows{display:flex;flex-direction:column;gap:4px}
 .mrow{display:flex;align-items:center;gap:3px}
-.mrow span{margin-left:12px;font-size:clamp(18px,2.6vw,28px);font-weight:900;text-shadow:2px 2px 0 #000;min-width:2.2em}
+.mrow span{margin-left:12px;font-size:clamp(18px,calc(2.6 * var(--vw, 1vw)),28px);font-weight:900;text-shadow:2px 2px 0 #000;min-width:2.2em}
 
 /* 結果 / 家 / 晚安 */
 .panel{margin:auto;background:rgba(0,0,0,.45);padding:26px 40px;box-shadow:0 0 0 4px #1e1e1e;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;position:relative;z-index:1}
-.rewards{display:flex;gap:40px;font-size:clamp(30px,4.5vw,48px);font-weight:900;text-shadow:3px 3px 0 #000}
+.rewards{display:flex;gap:40px;font-size:clamp(30px,calc(4.5 * var(--vw, 1vw)),48px);font-weight:900;text-shadow:3px 3px 0 #000}
 .rw{display:flex;align-items:center;gap:10px}
 .rw img,.rw .blk{width:60px;height:60px}
 .row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
 .badge{background:#c9932a;padding:6px 16px;font-weight:900;font-size:22px;box-shadow:0 0 0 3px #1e1e1e;animation:pop .5s}
 .lvup{font-size:24px;font-weight:900;color:#ffe14d;text-shadow:2px 2px 0 #000}
-.house{display:grid;grid-template-columns:repeat(12,var(--hb));--hb:min(12.8vw,11.2vh);margin:0 auto}
+.house{display:grid;grid-template-columns:repeat(12,var(--hb));--hb:min(calc(12.8 * var(--vw, 1vw)),calc(11.2 * var(--vh, 1vh)));margin:0 auto}
 .hrow{flex:1;min-height:0;display:flex;flex-wrap:wrap;align-content:center;gap:12px 28px;align-items:center;justify-content:center;overflow:hidden;padding:0 10px}
 .hrow .hpal{flex-basis:100%}
 /* 橫向：材料改放在房子右邊直排，房子大小由 fitHouse() 依剩下的空間決定 */
@@ -148,12 +151,12 @@ input{user-select:text;-webkit-user-select:text}
   .hrow .hsrc .blk{width:40px;height:40px}
 }
 @media (orientation:landscape) and (max-height:600px){.hrow .hpal{display:grid;grid-template-columns:auto auto}}
-.hcheer{text-align:center;margin:2px auto 0;font-size:clamp(16px,2.2vw,22px)}
-.town{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:4px 10px;flex:none;max-width:42vw}
+.hcheer{text-align:center;margin:2px auto 0;font-size:clamp(16px,calc(2.2 * var(--vw, 1vw)),22px)}
+.town{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:4px 10px;flex:none;max-width:calc(42 * var(--vw, 1vw))}
 .tb{display:flex;flex-direction:column;align-items:center;background:rgba(0,0,0,.25);padding:6px 8px;box-shadow:0 0 0 3px #1e1e1e}
 .house.mini{--hb:9px}
 .town.big{flex:1;align-content:center;gap:18px;max-width:none;min-height:0}
-.town.big .house.mini{--hb:min(1.5vw,2.1vh)}
+.town.big .house.mini{--hb:min(calc(1.5 * var(--vw, 1vw)),calc(2.1 * var(--vh, 1vh)))}
 .tname{font-weight:900;font-size:16px;text-shadow:2px 2px 0 #000;margin-top:4px}
 .pet{display:inline-block;animation:bob 1.6s ease-in-out infinite;font-size:1.3em}
 .hc{width:var(--hb);height:var(--hb)}
@@ -168,7 +171,7 @@ input{user-select:text;-webkit-user-select:text}
 .hsrc.empty{opacity:.35}
 .hsrc.empty .blk{animation:none}
 .hc.new{animation:pop .5s}
-.hmsg{font-size:clamp(20px,3vw,32px);font-weight:900;text-shadow:2px 2px 0 #000;text-align:center;margin:10px 0}
+.hmsg{font-size:clamp(20px,calc(3 * var(--vw, 1vw)),32px);font-weight:900;text-shadow:2px 2px 0 #000;text-align:center;margin:10px 0}
 .badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:6px 0}
 .badges .bd{background:#c9932a;padding:4px 12px;font-weight:900;box-shadow:0 0 0 3px #1e1e1e}
 .badges .bd.no{background:#555;opacity:.6}
@@ -206,7 +209,7 @@ input{user-select:text;-webkit-user-select:text}
 .ptable td,.ptable th{border-bottom:1px solid #eee;padding:4px;text-align:left}
 .mist{font-size:15px;padding:4px 2px;border-bottom:1px dashed #ddd}
 .gate{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:10}
-.gate.lockgate{position:fixed;z-index:999;background:#2b3a55}
+.gate.lockgate{position:fixed;inset:0;z-index:999;background:#2b3a55;font-weight:900}
 .gbox{background:#ece6d9;color:#2b2b2b;padding:20px 26px;box-shadow:0 0 0 4px #3b2f22;text-align:center}
 .dots{font-size:36px;letter-spacing:12px;margin:8px 0 12px;min-height:44px}
 .keys{display:grid;grid-template-columns:repeat(3,72px);gap:10px}
@@ -225,26 +228,28 @@ input{user-select:text;-webkit-user-select:text}
 @keyframes mouthA{0%{opacity:1}50%{opacity:0}}
 @keyframes mouthB{0%{opacity:0}50%{opacity:1}}
 @keyframes tilt{25%{transform:rotate(-10deg)}75%{transform:rotate(10deg)}}
-.dogsay{position:relative;background:#fff;color:#2b2b2b;font-weight:900;font-size:clamp(17px,2.2vw,24px);padding:8px 16px;box-shadow:0 0 0 3px #1e1e1e,5px 5px 0 rgba(0,0,0,.25);max-width:min(60vw,560px);text-shadow:none}
-.mapdog{display:flex;align-items:center;gap:14px;justify-content:center;padding:6px 16px 0;flex:none;--dw:clamp(70px,9vw,96px)}
-.qrow{display:flex;align-items:center;justify-content:center;gap:16px;flex:none;--dw:clamp(64px,8vw,92px);padding:0 12px}
+.dogsay{position:relative;background:#fff;color:#2b2b2b;font-weight:900;font-size:clamp(17px,calc(2.2 * var(--vw, 1vw)),24px);padding:8px 16px;box-shadow:0 0 0 3px #1e1e1e,5px 5px 0 rgba(0,0,0,.25);max-width:min(calc(60 * var(--vw, 1vw)),560px);text-shadow:none}
+.mapdog{display:flex;align-items:center;gap:14px;justify-content:center;padding:6px 16px 0;flex:none;--dw:clamp(70px,calc(9 * var(--vw, 1vw)),96px)}
+.qrow{display:flex;align-items:center;justify-content:center;gap:16px;flex:none;--dw:clamp(64px,calc(8 * var(--vw, 1vw)),92px);padding:0 12px}
 .qrow .qcard{margin:0}
 .answers.wait{opacity:.3;pointer-events:none;filter:grayscale(.6)}
 .hifive{position:absolute;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;z-index:8;cursor:pointer}
 .hfbox{background:#fff;color:#2b2b2b;padding:20px 34px;box-shadow:0 0 0 5px #1e1e1e,8px 8px 0 rgba(0,0,0,.3);display:flex;flex-direction:column;align-items:center;gap:8px;animation:pop .35s}
-.hfbox img{width:clamp(110px,16vw,170px);height:clamp(110px,16vw,170px)}
-.paw{width:clamp(64px,9vw,96px);height:clamp(64px,9vw,96px);animation:pulse .8s ease-in-out infinite}
-.hft{font-size:clamp(24px,3.4vw,38px);font-weight:900}
+.hfbox img{width:clamp(110px,calc(16 * var(--vw, 1vw)),170px);height:clamp(110px,calc(16 * var(--vw, 1vw)),170px)}
+.paw{width:clamp(64px,calc(9 * var(--vw, 1vw)),96px);height:clamp(64px,calc(9 * var(--vw, 1vw)),96px);animation:pulse .8s ease-in-out infinite}
+.hft{font-size:clamp(24px,calc(3.4 * var(--vw, 1vw)),38px);font-weight:900}
 .hifive.clap .paw{animation:pop .3s;transform:scale(1.3)}
 
 /* 星星商店 */
 .shop{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:6px 18px 24px}
-.shead{font-weight:900;font-size:clamp(20px,2.8vw,28px);text-shadow:2px 2px 0 #000;margin:14px 0 8px}
+.shead{font-weight:900;font-size:clamp(20px,calc(2.8 * var(--vw, 1vw)),28px);text-shadow:2px 2px 0 #000;margin:14px 0 8px}
 .sgrid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
 .shopi{border:0;font:inherit;color:#fff;cursor:pointer;background:rgba(0,0,0,.35);padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;
   box-shadow:0 0 0 3px #1e1e1e,inset 0 -6px 0 rgba(0,0,0,.3);font-weight:900}
 .shopi.sel{box-shadow:0 0 0 4px #ffe14d,inset 0 -6px 0 rgba(0,0,0,.3);animation:pulse 1s ease-in-out infinite}
 .shopi.use{background:rgba(76,175,80,.55)}
+.shopi.off{filter:grayscale(1);opacity:.5;cursor:default}
+.shead small{font-size:.7em}
 .sicon{width:72px;height:72px;display:flex;align-items:center;justify-content:center}
 .sicon>.blk,.sicon>img{width:64px;height:64px;box-shadow:0 0 0 2px #1e1e1e}
 .pv{position:relative;width:64px;height:64px;display:block}
@@ -254,12 +259,12 @@ input{user-select:text;-webkit-user-select:text}
 /* 秘密圖案 */
 .lockbox{background:#2f3a52;padding:22px 28px;box-shadow:0 0 0 4px #1e1e1e;display:flex;flex-direction:column;align-items:center;gap:14px;animation:pop .3s}
 .lockgrid{display:grid;grid-template-columns:repeat(3,auto);gap:14px}
-.lockbtn{font-size:clamp(48px,7vw,70px);width:clamp(84px,11vw,110px);height:clamp(84px,11vw,110px);border:0;background:#f3ead7;cursor:pointer;box-shadow:0 0 0 3px #1e1e1e}
+.lockbtn{font-size:clamp(48px,calc(7 * var(--vw, 1vw)),70px);width:clamp(84px,calc(11 * var(--vw, 1vw)),110px);height:clamp(84px,calc(11 * var(--vw, 1vw)),110px);border:0;background:#f3ead7;cursor:pointer;box-shadow:0 0 0 3px #1e1e1e}
 .kid .klock{position:absolute;top:8px;left:10px;font-size:22px}
 .pbtn.sel{outline:3px solid #e8892b}
 
 /* 拖曳加法 */
-.build{display:flex;align-items:center;gap:clamp(10px,2.5vw,30px);--b:min(8vw,6.5vh,70px)}
+.build{display:flex;align-items:center;gap:clamp(10px,calc(2.5 * var(--vw, 1vw)),30px);--b:min(calc(8 * var(--vw, 1vw)),calc(6.5 * var(--vh, 1vh)),70px)}
 .bzone{display:flex;flex-direction:column;align-items:center;gap:10px;background:rgba(0,0,0,.25);padding:10px 14px;box-shadow:0 0 0 3px #1e1e1e}
 .bzone.over{outline:5px solid #ffe14d}
 .bzn{font-size:calc(var(--b)*.8);font-weight:900;text-shadow:3px 3px 0 #000;line-height:1}
@@ -272,10 +277,10 @@ input{user-select:text;-webkit-user-select:text}
   box-shadow:0 0 0 3px #1e1e1e,0 10px 20px rgba(0,0,0,.4);background-size:100% 100%;image-rendering:pixelated}
 
 /* 每日任務 */
-.questbar{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 16px 0;font-weight:900;font-size:clamp(16px,2.2vw,24px);text-shadow:2px 2px 0 #000;flex:none}
+.questbar{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 16px 0;font-weight:900;font-size:clamp(16px,calc(2.2 * var(--vw, 1vw)),24px);text-shadow:2px 2px 0 #000;flex:none}
 .qi{background:rgba(0,0,0,.35);padding:3px 12px;box-shadow:0 0 0 2px #1e1e1e}
 .qi.done{background:#4caf50}
-.flag{position:absolute;top:10px;padding:4px 12px;font-size:clamp(14px,1.8vw,18px);font-weight:900;box-shadow:0 0 0 3px #1e1e1e;text-shadow:1px 1px 0 #000;z-index:1}
+.flag{position:absolute;top:10px;padding:4px 12px;font-size:clamp(14px,calc(1.8 * var(--vw, 1vw)),18px);font-weight:900;box-shadow:0 0 0 3px #1e1e1e;text-shadow:1px 1px 0 #000;z-index:1}
 .flag.todo{left:10px;background:#e8692b;animation:pulse 1.2s ease-in-out infinite}
 .flag.did{left:10px;background:#4caf50}
 .flag.rest{right:10px;background:rgba(0,0,0,.7)}
@@ -292,35 +297,35 @@ input{user-select:text;-webkit-user-select:text}
 .bubble .zp,.dogsay .zp,.dollwrap .zp,.card2 .zp,.dopt .zp,.pcard .zp,.lock .zp,.dside .zp{text-shadow:none}
 .dtabs .btn .zp{text-shadow:1px 1px 0 rgba(0,0,0,.4)}
 /* 說說看 */
-.mic{font-size:clamp(28px,4vw,44px);padding:.3em 1.2em;background:#e8692b}
+.mic{font-size:clamp(28px,calc(4 * var(--vw, 1vw)),44px);padding:.3em 1.2em;background:#e8692b}
 .mic.on{background:#c62828;animation:pulse 1s infinite}
-.heard{font-size:clamp(18px,2.4vw,26px);font-weight:900;text-shadow:2px 2px 0 #000;min-height:1.4em;text-align:center}
-.fqbox.learncard{min-width:min(80vw,360px);background:#fffaf0;color:#3b2f22}
-.lletter{font-size:clamp(40px,7vw,64px);font-weight:900;color:#3d7bd9}
-.lemo{font-size:clamp(80px,14vw,140px);line-height:1.1}
-.lword{font-size:clamp(44px,8vw,72px);font-weight:900;letter-spacing:2px}
+.heard{font-size:clamp(18px,calc(2.4 * var(--vw, 1vw)),26px);font-weight:900;text-shadow:2px 2px 0 #000;min-height:1.4em;text-align:center}
+.fqbox.learncard{min-width:min(calc(80 * var(--vw, 1vw)),360px);background:#fffaf0;color:#3b2f22}
+.lletter{font-size:clamp(40px,calc(7 * var(--vw, 1vw)),64px);font-weight:900;color:#3d7bd9}
+.lemo{font-size:clamp(80px,calc(14 * var(--vw, 1vw)),140px);line-height:1.1}
+.lword{font-size:clamp(44px,calc(8 * var(--vw, 1vw)),72px);font-weight:900;letter-spacing:2px}
 .lword b{color:#e74c3c}
-.lzh{font-size:clamp(26px,4vw,40px);font-weight:900}
+.lzh{font-size:clamp(26px,calc(4 * var(--vw, 1vw)),40px);font-weight:900}
 .btn.review{animation:pulse 1.4s infinite}
 .btn.review.off{animation:none;filter:grayscale(1);opacity:.55;cursor:default}
-.micnote{font-size:clamp(15px,2vw,20px);font-weight:900;text-shadow:2px 2px 0 #000;text-align:center;margin-top:6px}
+.micnote{font-size:clamp(15px,calc(2 * var(--vw, 1vw)),20px);font-weight:900;text-shadow:2px 2px 0 #000;text-align:center;margin-top:6px}
 .askline{font-family:"Avenir Next","Trebuchet MS",sans-serif}
 
 /* 注音、英文 */
-.ans.emo{font-size:clamp(44px,7vw,80px);background:#f3ead7;text-shadow:none}
-.ans.zy{font-size:clamp(40px,6vw,70px);letter-spacing:.05em}
+.ans.emo{font-size:clamp(44px,calc(7 * var(--vw, 1vw)),80px);background:#f3ead7;text-shadow:none}
+.ans.zy{font-size:clamp(40px,calc(6 * var(--vw, 1vw)),70px);letter-spacing:.05em}
 /* 拼音選項照課本直寫，聲調放在最後一個符號的右邊 */
 .ans.zy .zv{display:inline-flex;flex-direction:column;align-items:center;line-height:1.02;position:relative;font-size:.72em;letter-spacing:0;vertical-align:middle}
 .ans.zy .zv i{font-style:normal}
 .ans.zy .zv .tn{position:absolute;right:-.6em;bottom:.15em;font-size:.8em;font-weight:inherit}
-.ans.word{font-size:clamp(30px,4.6vw,54px);text-transform:none}
-.listen{font-size:clamp(70px,12vw,140px);animation:bob 2s ease-in-out infinite}
-.bigemo{font-size:clamp(90px,15vw,170px);line-height:1;filter:drop-shadow(4px 4px 0 rgba(0,0,0,.35))}
+.ans.word{font-size:clamp(30px,calc(4.6 * var(--vw, 1vw)),54px);text-transform:none}
+.listen{font-size:clamp(70px,calc(12 * var(--vw, 1vw)),140px);animation:bob 2s ease-in-out infinite}
+.bigemo{font-size:clamp(90px,calc(15 * var(--vw, 1vw)),170px);line-height:1;filter:drop-shadow(4px 4px 0 rgba(0,0,0,.35))}
 .qtext.en{font-family:"Avenir Next","Trebuchet MS",sans-serif;letter-spacing:.12em}
-.tip{display:flex;align-items:center;gap:24px;background:rgba(0,0,0,.45);padding:12px 30px;box-shadow:0 0 0 4px #1e1e1e;font-weight:900;font-size:clamp(28px,4.4vw,52px);text-shadow:3px 3px 0 #000}
+.tip{display:flex;align-items:center;gap:24px;background:rgba(0,0,0,.45);padding:12px 30px;box-shadow:0 0 0 4px #1e1e1e;font-weight:900;font-size:clamp(28px,calc(4.4 * var(--vw, 1vw)),52px);text-shadow:3px 3px 0 #000}
 .tip .emo{font-size:1.6em;text-shadow:none}
 .tip .zyb{color:#ffe14d;font-size:1.3em}
-.tones{display:grid;grid-template-columns:repeat(4,auto);gap:10px 26px;background:rgba(0,0,0,.45);padding:14px 26px;box-shadow:0 0 0 4px #1e1e1e;font-weight:900;font-size:clamp(20px,3vw,34px);text-shadow:2px 2px 0 #000;text-align:center}
+.tones{display:grid;grid-template-columns:repeat(4,auto);gap:10px 26px;background:rgba(0,0,0,.45);padding:14px 26px;box-shadow:0 0 0 4px #1e1e1e;font-weight:900;font-size:clamp(20px,calc(3 * var(--vw, 1vw)),34px);text-shadow:2px 2px 0 #000;text-align:center}
 .tones b{font-size:1.5em;color:#ffe14d}
 .recgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px;margin:8px 0}
 .recgrid .pbtn{font-size:22px;padding:6px 0}
@@ -332,7 +337,7 @@ input{user-select:text;-webkit-user-select:text}
 .fgame.duelbtn{grid-column:1/-1;flex-direction:row;gap:18px;padding:10px;background:rgba(232,137,43,.35)}
 .fgame.duelbtn .ficon{font-size:44px}
 /* 寵物、釣魚池 */
-.petbuddy{position:absolute;right:10px;bottom:96px;width:min(30vw,195px);background:none;border:0;padding:0;z-index:5;cursor:pointer;animation:bob 2.2s ease-in-out infinite}
+.petbuddy{position:absolute;right:10px;bottom:96px;width:min(calc(30 * var(--vw, 1vw)),195px);background:none;border:0;padding:0;z-index:5;cursor:pointer;animation:bob 2.2s ease-in-out infinite}
 .petbuddy img,.petbig,.petpick img{width:100%;filter:drop-shadow(3px 5px 0 rgba(0,0,0,.25));-webkit-user-drag:none}
 .petbuddy.jump{animation:petjump .6s}
 .petbuddy.spin{animation:petspin .8s}
@@ -342,14 +347,14 @@ input{user-select:text;-webkit-user-select:text}
 @keyframes heartup{to{transform:translateY(-60px);opacity:0}}
 .pondwrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:0;padding:8px 16px}
 .petcard{display:flex;align-items:center;gap:16px;background:rgba(0,0,0,.3);padding:8px 16px;box-shadow:0 0 0 3px #1e1e1e}
-.petbig{width:min(28vw,150px)}
+.petbig{width:min(calc(28 * var(--vw, 1vw)),150px)}
 .petbig.eat{animation:petjump .5s 2}
 .petinfo{display:flex;flex-direction:column;gap:8px;font-weight:900;text-shadow:2px 2px 0 #000}
 .pname2{font-size:24px}.pname2 b{color:#ffe14d}
-.lovebar{position:relative;width:min(40vw,220px);height:26px;background:#3b2f22;box-shadow:0 0 0 3px #1e1e1e}
+.lovebar{position:relative;width:min(calc(40 * var(--vw, 1vw)),220px);height:26px;background:#3b2f22;box-shadow:0 0 0 3px #1e1e1e}
 .lovebar div{height:100%;background:linear-gradient(#ff8fb1,#e84a7a)}
 .lovebar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px}
-.fscene{position:relative;width:min(94vw,700px);aspect-ratio:16/10;max-height:46vh;flex:none;overflow:hidden;box-shadow:0 0 0 4px #1e1e1e;background:linear-gradient(#8fd3ff,#c9ecff 55%)}
+.fscene{position:relative;width:min(calc(94 * var(--vw, 1vw)),700px);aspect-ratio:16/10;max-height:calc(46 * var(--vh, 1vh));flex:none;overflow:hidden;box-shadow:0 0 0 4px #1e1e1e;background:linear-gradient(#8fd3ff,#c9ecff 55%)}
 .fwater{position:absolute;left:0;right:0;top:52%;bottom:0;background:repeating-linear-gradient(172deg,rgba(255,255,255,.16) 0 5px,transparent 5px 22px),linear-gradient(#4ab0f0,#1f6fbf);animation:wave 3s linear infinite;background-size:auto,100% 100%}
 @keyframes wave{to{background-position:60px 0,0 0}}
 .dock{position:absolute;left:0;width:40%;top:62%;height:10%;box-shadow:0 4px 0 rgba(0,0,0,.3);background-size:32px 32px;image-rendering:pixelated}
@@ -364,7 +369,7 @@ input{user-select:text;-webkit-user-select:text}
 .fbob.float{animation:bob 1.4s ease-in-out infinite}
 .fbob.bite{animation:dip .35s infinite}
 @keyframes dip{50%{transform:translateY(40%)}}
-.fbub{position:absolute;left:8%;top:12%;background:#fff;color:#1e1e1e;font-weight:900;font-size:clamp(22px,4vw,36px);padding:0 .4em;border-radius:12px;box-shadow:0 0 0 3px #1e1e1e;display:none}
+.fbub{position:absolute;left:8%;top:12%;background:#fff;color:#1e1e1e;font-weight:900;font-size:clamp(22px,calc(4 * var(--vw, 1vw)),36px);padding:0 .4em;border-radius:12px;box-shadow:0 0 0 3px #1e1e1e;display:none}
 .fsplash{position:absolute;width:12%;aspect-ratio:2;margin:-3% 0 0 -6%;border-radius:50%;border:3px solid rgba(255,255,255,.9);opacity:0;pointer-events:none}
 .fsplash.on{animation:ring .7s ease-out}
 .fsplash.small{width:7%;margin:-1.75% 0 0 -3.5%}
@@ -374,18 +379,18 @@ input{user-select:text;-webkit-user-select:text}
 .ffish.feedme{cursor:grab;animation:wiggle .8s ease-in-out infinite}
 .ffish.drag{animation:none;transform:scale(1.15)}
 @keyframes wiggle{25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
-.fhearts{position:absolute;left:24%;top:30%;font-size:clamp(24px,4vw,40px);animation:heartup 1.4s forwards;pointer-events:none}
+.fhearts{position:absolute;left:24%;top:30%;font-size:clamp(24px,calc(4 * var(--vw, 1vw)),40px);animation:heartup 1.4s forwards;pointer-events:none}
 .fctl{min-height:76px;display:flex;align-items:center;justify-content:center}
 .pondwrap{touch-action:none;-webkit-user-select:none;user-select:none}
 .holdbtn{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;display:flex;flex-direction:column;align-items:center;gap:6px}
 .reel{width:200px;height:14px;background:#3b2f22;box-shadow:0 0 0 2px #1e1e1e}
 .reel div{height:100%;width:0;background:linear-gradient(#8ee86a,#3fa82a)}
-.card2{background:#fff6dc;color:#3b2f22;text-shadow:none;min-width:min(80vw,320px)}
+.card2{background:#fff6dc;color:#3b2f22;text-shadow:none;min-width:min(calc(80 * var(--vw, 1vw)),320px)}
 .card2 .title{color:#3b2f22;text-shadow:none}
-.adoptimg{width:min(50vw,220px)}
-.tryon{width:min(40vw,180px)}
-.tryon.doll{width:auto;height:min(40vh,300px)}
-.pv.tryon{position:relative;display:block;height:min(30vw,160px);aspect-ratio:1}
+.adoptimg{width:min(calc(50 * var(--vw, 1vw)),220px)}
+.tryon{width:min(calc(40 * var(--vw, 1vw)),180px)}
+.tryon.doll{width:auto;height:min(calc(40 * var(--vh, 1vh)),300px)}
+.pv.tryon{position:relative;display:block;height:min(calc(30 * var(--vw, 1vw)),160px);aspect-ratio:1}
 .pv.tryon img{position:absolute;inset:0;width:100%;height:100%}
 i.blk.tryon{width:120px;height:120px;display:block}
 /* 頭像框：框的圖是 320×464，頭像放在中間的洞裡 */
@@ -397,9 +402,9 @@ i.blk.tryon{width:120px;height:120px;display:block}
 .favatar.big{width:110px}
 .favatar.small{width:56px}
 .favatar.hud{width:46px;margin:-10px 0}
-.kid .favatar.face{width:clamp(110px,16vw,180px);height:auto;box-shadow:none}
+.kid .favatar.face{width:clamp(110px,calc(16 * var(--vw, 1vw)),180px);height:auto;box-shadow:none}
 .mapme{border:0;background:none;padding:0;cursor:pointer;flex:none}
-.mapme .favatar{width:clamp(56px,8vw,80px)}
+.mapme .favatar{width:clamp(56px,calc(8 * var(--vw, 1vw)),80px)}
 .bagbody{flex:1;overflow:auto;padding:8px 16px 20px;min-height:0}
 .bagtop{display:flex;align-items:center;gap:16px;justify-content:center}
 .shead .sm{font-size:15px}
@@ -419,7 +424,7 @@ i.blk.tryon{width:120px;height:120px;display:block}
 .btn.pink{background:#e0669a}
 .doll-bg{background:linear-gradient(#ffd6e7,#ffeef5 60%,#f7d9b5 60%)}
 .dollwrap{flex:1;display:flex;gap:16px;padding:10px 16px;min-height:0;align-items:stretch}
-.dstage{position:relative;flex:none;width:min(36vw,260px);display:flex;align-items:flex-end;justify-content:center;padding-bottom:6%}
+.dstage{position:relative;flex:none;width:min(calc(36 * var(--vw, 1vw)),260px);display:flex;align-items:flex-end;justify-content:center;padding-bottom:6%}
 .dollbig{width:100%;aspect-ratio:14/25;filter:drop-shadow(4px 6px 0 rgba(0,0,0,.2))}
 .dollbig.pop{animation:pop .35s}
 .dpic{position:absolute;left:0;top:0;display:flex;flex-direction:column;align-items:center;font-weight:900;color:#7a3a55;font-size:14px}
@@ -436,11 +441,11 @@ i.blk.tryon{width:120px;height:120px;display:block}
 .sw.big{width:44px;height:44px}
 .dlist .pnote2{color:#7a3a55;text-shadow:none}
 .shopi .doll{height:64px;width:auto;aspect-ratio:14/25}
-@media (orientation:portrait){.dollwrap{flex-direction:column}.dstage{width:auto;height:min(34vh,330px);padding-bottom:0}.dollbig{width:auto;height:100%}}
+@media (orientation:portrait){.dollwrap{flex-direction:column}.dstage{width:auto;height:min(calc(34 * var(--vh, 1vh)),330px);padding-bottom:0}.dollbig{width:auto;height:100%}}
 /* 金礦山 */
 .minetop{display:flex;gap:16px;justify-content:center;padding-top:8px}
 .pill.big{font-size:24px;padding:4px 14px}
-.minegrid{--mc:min(calc((100vw - 60px) / 7), calc((100vh - 330px) / 6), 96px);display:grid;gap:4px;margin:auto;padding:8px}
+.minegrid{--mc:min(calc((calc(100 * var(--vw, 1vw)) - 60px) / 7), calc((calc(100 * var(--vh, 1vh)) - 330px) / 6), 96px);display:grid;gap:4px;margin:auto;padding:8px}
 .minegrid.boom{animation:shake .25s 2}
 .mc{width:var(--mc);height:var(--mc);border:0;padding:0;cursor:pointer;position:relative;box-shadow:inset 0 0 0 2px rgba(0,0,0,.35);font-size:calc(var(--mc) * .55);display:flex;align-items:center;justify-content:center;background-size:100% 100%;image-rendering:pixelated}
 .mc.empty{background:#2b2b33;box-shadow:inset 0 0 0 2px #1a1a20;cursor:default}
@@ -455,7 +460,7 @@ i.blk.tryon{width:120px;height:120px;display:block}
 .biome .lv .ico,.sprice .ico,.shopcur .ico,.petpick .ico{width:1.1em;height:1.1em;vertical-align:-.15em}
 /* 家長給的插畫（寵物、特別造型）不要用像素的縮放方式 */
 img[src^="img/"]{image-rendering:auto}
-.ans.kn{font-size:clamp(22px,3.4vw,34px);min-width:clamp(110px,18vw,200px)}
+.ans.kn{font-size:clamp(22px,calc(3.4 * var(--vw, 1vw)),34px);min-width:clamp(110px,calc(18 * var(--vw, 1vw)),200px)}
 .bagrow{display:flex;gap:14px;justify-content:center}
 .hmsg.sm{font-size:16px}
 .garden .hmsg.sm{margin:4px 0}
@@ -472,7 +477,7 @@ img[src^="img/"]{image-rendering:auto}
 .gground{display:grid;grid-template-columns:repeat(var(--gw),var(--gc));grid-auto-rows:var(--gc)}
 .gground .blk{width:var(--gc);height:var(--gc)}
 .gside{display:flex;flex-direction:column;gap:8px;min-height:0;max-width:min(100%,560px);flex:none}
-@media (orientation:landscape){.gside{width:min(34vw,360px);align-self:stretch}}
+@media (orientation:landscape){.gside{width:min(calc(34 * var(--vw, 1vw)),360px);align-self:stretch}}
 .gtabs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 .gtabs .btn{font-size:16px;padding:.3em .7em}
 .gpal{flex:none;display:flex;gap:12px;align-items:flex-start;overflow-x:auto;overflow-y:hidden;background:rgba(0,0,0,.25);padding:10px;box-shadow:0 0 0 3px #1e1e1e;-webkit-overflow-scrolling:touch}
@@ -480,6 +485,9 @@ img[src^="img/"]{image-rendering:auto}
 .gpal>:last-child{margin-right:auto}
 .gitem{flex:none;width:140px;display:flex;flex-direction:column;align-items:center;gap:4px;background:rgba(255,255,255,.85);color:#3b2f22;font-weight:900;font-size:18px;padding:6px;box-shadow:0 0 0 2px #1e1e1e;touch-action:pan-x;cursor:grab;position:relative}
 .gitem>.blk,.gitem>img{width:96px;height:96px;object-fit:contain}
+.gitem.sel{background:#ffe14d;box-shadow:0 0 0 4px #1e1e1e,0 0 0 8px #ffe14d;transform:translateY(-4px)}
+.gfield.picking .gc{outline:1px dashed rgba(255,255,255,.7);outline-offset:-1px}
+@media (orientation:portrait){.gside{flex-direction:row;align-items:center;justify-content:center;flex-wrap:wrap}.gside .row{flex-direction:column}}
 .gitem.lock>.blk,.gitem.lock>img{filter:grayscale(.9) brightness(.8)}
 .gitem b{position:absolute;top:2px;right:2px;font-size:16px;background:#3b2f22;color:#ffe14d;padding:0 4px;display:flex;align-items:center}
 .gitem b .ico{width:16px;height:16px}
@@ -502,12 +510,12 @@ img[src^="img/"]{image-rendering:auto}
 .glv.lock .gwrap{filter:grayscale(.85) brightness(.7)}
 .glv.ok{background:rgba(46,204,113,.35)}
 .gc.hint{animation:pulse 1s 3;outline:3px solid #ffe14d;outline-offset:-3px}
-.ggift{max-height:min(50vh,420px)}
+.ggift{max-height:min(calc(50 * var(--vh, 1vh)),420px)}
 .ggift .gitem{cursor:pointer}
 .gghost>*{width:100%;height:100%;object-fit:contain;display:block}
 .gprev{display:inline-block;width:64px;height:64px}
 .gprev>*{width:100%;height:100%;object-fit:contain}
-.tryon.gprev{width:min(36vw,160px);height:min(36vw,160px)}
+.tryon.gprev{width:min(calc(36 * var(--vw, 1vw)),160px);height:min(calc(36 * var(--vw, 1vw)),160px)}
 .petpick.no img{filter:grayscale(.6) brightness(.85)}
 .petbuddy{touch-action:none}
 .petbuddy.drag{animation:none;opacity:.85;transform:scale(1.1)}
@@ -515,7 +523,7 @@ img[src^="img/"]{image-rendering:auto}
 .petbuddy.menu .pethide{display:block}
 .petshow{position:absolute;right:10px;bottom:96px;font-size:28px;background:rgba(0,0,0,.35);border:0;box-shadow:0 0 0 3px #1e1e1e;padding:4px 8px;cursor:pointer;z-index:5}
 .fishq{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:20;padding:12px}
-.fqbox{background:#4a8fd8;box-shadow:0 0 0 4px #1e1e1e;padding:14px;display:flex;flex-direction:column;align-items:center;gap:12px;max-width:96vw;max-height:94vh;overflow:auto}
+.fqbox{background:#4a8fd8;box-shadow:0 0 0 4px #1e1e1e;padding:14px;display:flex;flex-direction:column;align-items:center;gap:12px;max-width:calc(96 * var(--vw, 1vw));max-height:calc(94 * var(--vh, 1vh));overflow:auto}
 .fqtop{display:flex;align-items:center;gap:12px}
 .fqfish{font-size:56px}
 .fishq .answers{padding:0;flex-wrap:wrap}
@@ -525,9 +533,9 @@ img[src^="img/"]{image-rendering:auto}
 .onum{display:inline-flex;align-items:center;justify-content:center;min-width:1.4em;height:1.4em;margin-right:.35em;background:#3d7bd9;color:#fff;border-radius:50%;font-size:.85em;text-shadow:none;flex:none}
 .petgrid{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:12px 18px;align-content:center;min-height:0}
 .petpick{border:0;font:inherit;color:#fff;font-weight:900;background:rgba(0,0,0,.25);box-shadow:0 0 0 3px #1e1e1e;padding:8px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;text-shadow:2px 2px 0 #000}
-.petpick img{width:min(24vw,140px)}
-.pemo{display:inline-flex;align-items:center;justify-content:center;font-size:min(16vw,96px);line-height:1.2}
-.petbuddy .pemo,.fpet.pemo{font-size:min(14vw,90px)}
+.petpick img{width:min(calc(24 * var(--vw, 1vw)),140px)}
+.pemo{display:inline-flex;align-items:center;justify-content:center;font-size:min(calc(16 * var(--vw, 1vw)),96px);line-height:1.2}
+.petbuddy .pemo,.fpet.pemo{font-size:min(calc(14 * var(--vw, 1vw)),90px)}
 .petpick.sel{box-shadow:0 0 0 5px #ffe14d;background:rgba(255,225,77,.25)}
 .petpick b{color:#ffe14d}
 .pnote2{text-align:center;font-weight:900;padding:6px 0 14px;text-shadow:2px 2px 0 #000}
@@ -548,12 +556,12 @@ img[src^="img/"]{image-rendering:auto}
 .fgame{border:0;font:inherit;color:#fff;cursor:pointer;background:rgba(255,255,255,.08);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
   box-shadow:0 0 0 4px #1e1e1e,inset 0 -8px 0 rgba(0,0,0,.35)}
 .fgame:active{transform:translateY(3px)}
-.ficon{display:flex;gap:10px;align-items:center;height:clamp(60px,12vh,110px)}
+.ficon{display:flex;gap:10px;align-items:center;height:clamp(60px,calc(12 * var(--vh, 1vh)),110px)}
 .ficon>img,.ficon>.blk{height:100%;width:auto;aspect-ratio:1;box-shadow:0 0 0 3px #1e1e1e}
 .mini{display:grid;gap:2px;height:100%;aspect-ratio:1}
 .mini i{width:100%;height:100%}
 .mini .lit{filter:brightness(1.8)}
-.cap{font-size:clamp(22px,3.4vw,38px);font-weight:900;text-shadow:3px 3px 0 #000;background:rgba(0,0,0,.4);padding:6px 20px;box-shadow:0 0 0 3px #1e1e1e}
+.cap{font-size:clamp(22px,calc(3.4 * var(--vw, 1vw)),38px);font-weight:900;text-shadow:3px 3px 0 #000;background:rgba(0,0,0,.4);padding:6px 20px;box-shadow:0 0 0 3px #1e1e1e}
 .farea{flex:1;display:flex;align-items:center;justify-content:center;gap:28px;min-height:0;padding:8px 16px 20px}
 .mgrid{display:grid;gap:12px}
 .card{width:var(--cw);height:var(--cw);border:0;padding:0;position:relative;cursor:pointer;background:none;box-shadow:0 0 0 3px #1e1e1e}
@@ -569,10 +577,10 @@ img[src^="img/"]{image-rendering:auto}
 .tile.lit{filter:brightness(1.8) saturate(1.4);transform:scale(1.08);box-shadow:0 0 0 5px #fff,0 0 36px 8px rgba(255,255,255,.8)}
 .tile.guide{outline:6px dashed #ffe14d;outline-offset:5px}
 .demo{display:flex;gap:40px;align-items:center;flex-wrap:wrap;justify-content:center}
-.demo>div{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:clamp(22px,3vw,34px);font-weight:900;text-shadow:2px 2px 0 #000}
-.demo img{width:clamp(90px,14vw,150px);height:clamp(90px,14vw,150px);box-shadow:0 0 0 4px #1e1e1e}
+.demo>div{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:clamp(22px,calc(3 * var(--vw, 1vw)),34px);font-weight:900;text-shadow:2px 2px 0 #000}
+.demo img{width:clamp(90px,calc(14 * var(--vw, 1vw)),150px);height:clamp(90px,calc(14 * var(--vw, 1vw)),150px);box-shadow:0 0 0 4px #1e1e1e}
 .okc{color:#7dff8a}.ngc{color:#ff8a8a}
-.holes{display:grid;gap:clamp(14px,3vw,36px)}
+.holes{display:grid;gap:clamp(14px,calc(3 * var(--vw, 1vw)),36px)}
 .hole{width:var(--hw);height:var(--hw);position:relative;box-shadow:0 0 0 4px #1e1e1e;cursor:pointer}
 .pit{position:absolute;left:12%;right:12%;top:20%;bottom:8%;background:#1a120a;overflow:hidden;box-shadow:inset 0 8px 0 rgba(0,0,0,.6)}
 .crt{position:absolute;left:5%;width:90%;height:90%;bottom:0;transform:translateY(110%);transition:transform .15s}
@@ -582,8 +590,8 @@ img[src^="img/"]{image-rendering:auto}
 .mc.seen::after{content:"";position:absolute;inset:32%;background:rgba(255,236,150,.8)}
 .mc.hp::after{content:"";position:absolute;inset:22%;background:#ffe14d;box-shadow:0 0 10px #fff;animation:pulse .8s infinite}
 .mc>img{position:absolute;inset:4%;width:92%;height:92%;z-index:1}
-.pad{display:grid;grid-template-columns:repeat(3,clamp(56px,7vw,80px));grid-template-rows:repeat(3,clamp(56px,7vw,80px));gap:6px}
-.pad .btn{padding:0;font-size:clamp(26px,3.6vw,40px);display:flex;align-items:center;justify-content:center}
+.pad{display:grid;grid-template-columns:repeat(3,clamp(56px,calc(7 * var(--vw, 1vw)),80px));grid-template-rows:repeat(3,clamp(56px,calc(7 * var(--vw, 1vw)),80px));gap:6px}
+.pad .btn{padding:0;font-size:clamp(26px,calc(3.6 * var(--vw, 1vw)),40px);display:flex;align-items:center;justify-content:center}
 @media (orientation:portrait){.farea:has(.maze){flex-direction:column}}
 
 .shake{animation:shake .4s}
@@ -592,7 +600,7 @@ img[src^="img/"]{image-rendering:auto}
 @keyframes pulse{50%{transform:scale(1.08)}}
 @keyframes bob{50%{transform:translateY(-10px)}}
 @keyframes float{50%{transform:translateY(-8px)}}
-@keyframes drift{to{transform:translateX(calc(100vw + 440px))}}
+@keyframes drift{to{transform:translateX(calc(calc(100 * var(--vw, 1vw)) + 440px))}}
 @keyframes tw{50%{opacity:.2}}
 @keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 </style>
@@ -612,7 +620,7 @@ const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.f
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 /* ---------- 中文字旁加注音 ---------- */
 // 字典由 tools/make-zhuyin.js 依照本檔用到的字自動產生（常用讀音，台灣讀法另外修正）
-/* ZYDICT-START */const ZYDICT = {"方":"ㄈㄤ","塊":"ㄎㄨㄞˋ","學":"ㄒㄩㄝˊ","習":"ㄒㄧˊ","島":"ㄉㄠˇ","登":"ㄉㄥ","入":"ㄖㄨˋ","地":"ㄉㄧˋ","圖":"ㄊㄨˊ","釣":"ㄉㄧㄠˋ","魚":"ㄩˊ","池":"ㄔˊ","金":"ㄐㄧㄣ","礦":"ㄎㄨㄤˋ","山":"ㄕㄢ","不":"ㄅㄨˋ","算":"ㄙㄨㄢˋ","每":"ㄇㄟˇ","日":"ㄖˋ","任":"ㄖㄣˋ","務":"ㄨˋ","格":"ㄍㄜˊ","子":"ㄗˇ","小":"ㄒㄧㄠˇ","一":"ㄧ","點":"ㄉㄧㄢˇ","即":"ㄐㄧˊ","將":"ㄐㄧㄤ","開":"ㄎㄞ","放":"ㄈㄤˋ","遊":"ㄧㄡˊ","戲":"ㄒㄧˋ","結":"ㄐㄧㄝˊ","果":"ㄍㄨㄛˇ","家":"ㄐㄧㄚ","晚":"ㄨㄢˇ","安":"ㄢ","橫":"ㄏㄥˊ","向":"ㄒㄧㄤˋ","材":"ㄘㄞˊ","料":"ㄌㄧㄠˋ","改":"ㄍㄞˇ","在":"ㄗㄞˋ","房":"ㄈㄤˊ","右":"ㄧㄡˋ","邊":"ㄅㄧㄢ","直":"ㄓˊ","排":"ㄆㄞˊ","大":"ㄉㄚˋ","由":"ㄧㄡˊ","依":"ㄧ","剩":"ㄕㄥˋ","下":"ㄒㄧㄚˋ","的":"˙ㄉㄜ","空":"ㄎㄨㄥ","間":"ㄐㄧㄢ","決":"ㄐㄩㄝˊ","定":"ㄉㄧㄥˋ","長":"ㄔㄤˊ","汪":"ㄨㄤ","星":"ㄒㄧㄥ","商":"ㄕㄤ","店":"ㄉㄧㄢˋ","秘":"ㄇㄧˋ","密":"ㄇㄧˋ","案":"ㄢˋ","拖":"ㄊㄨㄛ","曳":"ㄧㄝˋ","加":"ㄐㄧㄚ","法":"ㄈㄚˇ","注":"ㄓㄨˋ","音":"ㄧㄣ","照":"ㄓㄠˋ","課":"ㄎㄜˋ","本":"ㄅㄣˇ","符":"ㄈㄨˊ","號":"ㄏㄠˋ","字":"ㄗˋ","二":"ㄦˋ","三":"ㄙㄢ","四":"ㄙˋ","聲":"ㄕㄥ","最":"ㄗㄨㄟˋ","後":"ㄏㄡˋ","個":"ㄍㄜˋ","上":"ㄕㄤˋ","輕":"ㄑㄧㄥ","面":"ㄇㄧㄢˋ","淺":"ㄑㄧㄢˇ","色":"ㄙㄜˋ","底":"ㄉㄧˇ","深":"ㄕㄣ","要":"ㄧㄠˋ","陰":"ㄧㄣ","影":"ㄧㄥˇ","然":"ㄖㄢˊ","會":"ㄏㄨㄟˋ","有":"ㄧㄡˇ","重":"ㄓㄨㄥˋ","說":"ㄕㄨㄛ","看":"ㄎㄢˋ","英":"ㄧㄥ","文":"ㄨㄣˊ","拼":"ㄆㄧㄣ","選":"ㄒㄩㄢˇ","項":"ㄒㄧㄤˋ","寫":"ㄒㄧㄝˇ","調":"ㄉㄧㄠˋ","專":"ㄓㄨㄢ","力":"ㄌㄧˋ","洞":"ㄉㄨㄥˋ","寵":"ㄔㄨㄥˇ","物":"ㄨˋ","頭":"ㄊㄡˊ","像":"ㄒㄧㄤˋ","框":"ㄎㄨㄤˋ","是":"ㄕˋ","中":"ㄓㄨㄥ","裡":"ㄌㄧˇ","娃":"ㄨㄚˊ","屋":"ㄨ","給":"ㄍㄟˇ","插":"ㄔㄚ","畫":"ㄏㄨㄚˋ","特":"ㄊㄜˋ","別":"ㄅㄧㄝˊ","造":"ㄗㄠˋ","型":"ㄒㄧㄥˊ","用":"ㄩㄥˋ","素":"ㄙㄨˋ","縮":"ㄙㄨㄛ","式":"ㄕˋ","翻":"ㄈㄢ","牌":"ㄆㄞˊ","對":"ㄉㄨㄟˋ","戰":"ㄓㄢˋ","工":"ㄍㄨㄥ","具":"ㄐㄩˋ","旁":"ㄆㄤˊ","典":"ㄉㄧㄢˇ","檔":"ㄉㄤˇ","到":"ㄉㄠˋ","自":"ㄗˋ","動":"ㄉㄨㄥˋ","產":"ㄔㄢˇ","生":"ㄕㄥ","常":"ㄔㄤˊ","讀":"ㄉㄨˊ","台":"ㄊㄞˊ","灣":"ㄨㄢ","另":"ㄌㄧㄥˋ","外":"ㄨㄞˋ","修":"ㄒㄧㄡ","正":"ㄓㄥˋ","破":"ㄆㄛˋ","詞":"ㄘˊ","語":"ㄩˇ","比":"ㄅㄧˇ","單":"ㄉㄢ","優":"ㄧㄡ","先":"ㄒㄧㄢ","數":"ㄕㄨˋ","得":"ㄉㄜˊ","玩":"ㄨㄢˊ","記":"ㄐㄧˋ","覺":"ㄐㄩㄝˊ","少":"ㄕㄠˇ","了":"˙ㄌㄜ","解":"ㄐㄧㄝˇ","什":"ㄕㄣˊ","麼":"˙ㄇㄜ","怎":"ㄗㄣˇ","這":"ㄓㄜˋ","還":"ㄏㄞˊ","沒":"ㄇㄟˊ","東":"ㄉㄨㄥ","西":"ㄒㄧ","朋":"ㄆㄥˊ","友":"ㄧㄡˇ","休":"ㄒㄧㄡ","息":"ㄒㄧ","時":"ㄕˊ","候":"ㄏㄡˋ","轉":"ㄓㄨㄢˇ","鮭":"ㄍㄨㄟ","新":"ㄒㄧㄣ","答":"ㄉㄚˊ","回":"ㄏㄨㄟˊ","把":"ㄅㄚˇ","成":"ㄔㄥˊ","帶":"ㄉㄞˋ","可":"ㄎㄜˇ","關":"ㄍㄨㄢ","掉":"ㄉㄧㄠˋ","非":"ㄈㄟ","原":"ㄩㄢˊ","樣":"ㄧㄤˋ","資":"ㄗ","裝":"ㄓㄨㄤ","置":"ㄓˋ","孩":"ㄏㄞˊ","進":"ㄐㄧㄣˋ","註":"ㄓㄨˋ","冊":"ㄘㄜˋ","補":"ㄅㄨˇ","齊":"ㄑㄧˊ","舊":"ㄐㄧㄡˋ","或":"ㄏㄨㄛˋ","備":"ㄅㄟˋ","份":"ㄈㄣˋ","缺":"ㄑㄩㄝ","欄":"ㄌㄢˊ","位":"ㄨㄟˋ","版":"ㄅㄢˇ","度":"ㄉㄨˋ","也":"ㄧㄝˇ","經":"ㄐㄧㄥ","過":"ㄍㄨㄛˋ","增":"ㄗㄥ","年":"ㄋㄧㄢˊ","級":"ㄐㄧˊ","高":"ㄍㄠ","設":"ㄕㄜˋ","當":"ㄉㄤ","次":"ㄘˋ","寬":"ㄎㄨㄢ","配":"ㄆㄟˋ","件":"ㄐㄧㄢˋ","飾":"ㄕˋ","品":"ㄆㄧㄣˇ","交":"ㄐㄧㄠ","分":"ㄈㄣ","享":"ㄒㄧㄤˇ","存":"ㄘㄨㄣˊ","支":"ㄓ","援":"ㄩㄢˊ","接":"ㄐㄧㄝ","載":"ㄗㄞˋ","所":"ㄙㄨㄛˇ","換":"ㄏㄨㄢˋ","來":"ㄌㄞˊ","請":"ㄑㄧㄥˇ","再":"ㄗㄞˋ","取":"ㄑㄩˇ","代":"ㄉㄞˋ","目":"ㄇㄨˋ","前":"ㄑㄧㄢˊ","嗎":"˙ㄇㄚ","完":"ㄨㄢˊ","更":"ㄍㄥˋ","雲":"ㄩㄣˊ","端":"ㄉㄨㄢ","合":"ㄏㄜˊ","併":"ㄅㄧㄥˋ","並":"ㄅㄧㄥˋ","程":"ㄔㄥˊ","免":"ㄇㄧㄢˇ","費":"ㄈㄟˋ","匿":"ㄋㄧˋ","名":"ㄇㄧㄥˊ","兩":"ㄌㄧㄤˇ","網":"ㄨㄤˇ","頁":"ㄧㄝˋ","公":"ㄍㄨㄥ","識":"ㄕˋ","碼":"ㄇㄚˇ","靠":"ㄎㄠˋ","庭":"ㄊㄧㄥˊ","和":"ㄏㄜˊ","規":"ㄍㄨㄟ","則":"ㄗㄜˊ","保":"ㄅㄠˇ","護":"ㄏㄨˋ","同":"ㄊㄨㄥˊ","組":"ㄗㄨˇ","留":"ㄌㄧㄡˊ","較":"ㄐㄧㄠˋ","那":"ㄋㄚˋ","今":"ㄐㄧㄣ","天":"ㄊㄧㄢ","多":"ㄉㄨㄛ","刪":"ㄕㄢ","跑":"ㄆㄠˇ","傳":"ㄔㄨㄢˊ","路":"ㄌㄨˋ","就":"ㄐㄧㄡˋ","等":"ㄉㄥˇ","連":"ㄌㄧㄢˊ","啟":"ㄑㄧˇ","例":"ㄌㄧˋ","如":"ㄖㄨˊ","截":"ㄐㄧㄝˊ","找":"ㄓㄠˇ","起":"ㄑㄧˇ","步":"ㄅㄨˋ","母":"ㄇㄨˇ","確":"ㄑㄩㄝˋ","認":"ㄖㄣˋ","試":"ㄕˋ","之":"ㄓ","區":"ㄑㄩ","域":"ㄩˋ","各":"ㄍㄜˋ","錄":"ㄌㄨˋ","剛":"ㄍㄤ","好":"ㄏㄠˇ","發":"ㄈㄚ","寶":"ㄅㄠˇ","箱":"ㄒㄧㄤ","顯":"ㄒㄧㄢˇ","示":"ㄕˋ","種":"ㄓㄨㄥˇ","炸":"ㄓㄚˋ","彈":"ㄊㄢˊ","挑":"ㄊㄧㄠ","稱":"ㄔㄥ","強":"ㄑㄧㄤˊ","質":"ㄓˊ","聽":"ㄊㄧㄥ","機":"ㄐㄧ","器":"ㄑㄧˋ","化":"ㄏㄨㄚˋ","念":"ㄋㄧㄢˋ","錯":"ㄘㄨㄛˋ","跟":"ㄍㄣ","掌":"ㄓㄤˇ","出":"ㄔㄨ","整":"ㄓㄥˇ","體":"ㄊㄧˇ","速":"ㄙㄨˋ","電":"ㄉㄧㄢˋ","腦":"ㄋㄠˇ","快":"ㄎㄨㄞˋ","預":"ㄩˋ","慢":"ㄇㄢˋ","些":"ㄒㄧㄝ","題":"ㄊㄧˊ","指":"ㄓˇ","話":"ㄏㄨㄚˋ","事":"ㄕˋ","片":"ㄆㄧㄢˋ","段":"ㄉㄨㄢˋ","才":"ㄘㄞˊ","切":"ㄑㄧㄝˋ","標":"ㄅㄧㄠ","短":"ㄉㄨㄢˇ","白":"ㄅㄞˊ","拿":"ㄋㄚˊ","紅":"ㄏㄨㄥˊ","部":"ㄅㄨˋ","只":"ㄓˇ","避":"ㄅㄧˋ","拆":"ㄔㄞ","序":"ㄒㄩˋ","播":"ㄅㄛ","共":"ㄍㄨㄥˋ","越":"ㄩㄝˋ","卡":"ㄎㄚˇ","套":"ㄊㄠˋ","偶":"ㄡˇ","爾":"ㄦˇ","觸":"ㄔㄨˋ","準":"ㄓㄨㄣˇ","己":"ㄐㄧˇ","站":"ㄓㄢˋ","者":"ㄓㄜˇ","都":"ㄉㄡ","打":"ㄉㄚˇ","包":"ㄅㄠ","無":"ㄨˊ","使":"ㄕˇ","麥":"ㄇㄞˋ","克":"ㄎㄜˋ","風":"ㄈㄥ","允":"ㄩㄣˇ","許":"ㄒㄩ","儲":"ㄔㄨˇ","失":"ㄕ","敗":"ㄅㄞˋ","人":"ㄖㄣˊ","紙":"ㄓˇ","髮":"ㄈㄚˇ","膚":"ㄈㄨ","眼":"ㄧㄢˇ","睛":"ㄐㄧㄥ","身":"ㄕㄣ","服":"ㄈㄨˊ","衣":"ㄧ","顏":"ㄧㄢˊ","應":"ㄧㄥ","刺":"ㄘˋ","妹":"ㄇㄟˋ","雙":"ㄕㄨㄤ","馬":"ㄇㄚˇ","尾":"ㄨㄟˇ","皮":"ㄆㄧˊ","穿":"ㄔㄨㄢ","哪":"ㄋㄚˇ","主":"ㄓㄨˇ","綴":"ㄓㄨㄟˋ","始":"ㄕˇ","褲":"ㄎㄨˋ","裙":"ㄑㄩㄣˊ","鞋":"ㄒㄧㄝˊ","臉":"ㄌㄧㄢˇ","手":"ㄕㄡˇ","藍":"ㄌㄢˊ","綠":"ㄌㄩˋ","黃":"ㄏㄨㄤˊ","紫":"ㄗˇ","粉":"ㄈㄣˇ","湖":"ㄏㄨˊ","水":"ㄕㄨㄟˇ","灰":"ㄏㄨㄟ","條":"ㄊㄧㄠˊ","紋":"ㄨㄣˊ","衫":"ㄕㄢ","帽":"ㄇㄠˋ","黑":"ㄏㄟ","牛":"ㄋㄧㄡˊ","仔":"ㄗˇ","洋":"ㄧㄤˊ","禮":"ㄌㄧˇ","其":"ㄑㄧˊ","百":"ㄅㄞˇ","褶":"ㄓㄜˇ","球":"ㄑㄧㄡˊ","咖":"ㄎㄚ","啡":"ㄈㄟ","靴":"ㄒㄩㄝ","雨":"ㄩˇ","蝴":"ㄏㄨˊ","蝶":"ㄉㄧㄝˊ","花":"ㄏㄨㄚ","夾":"ㄐㄧㄚˊ","貓":"ㄇㄠ","耳":"ㄦˇ","朵":"ㄉㄨㄛˇ","皇":"ㄏㄨㄤˊ","冠":"ㄍㄨㄢ","鏡":"ㄐㄧㄥˋ","酷":"ㄎㄨˋ","墨":"ㄇㄛˋ","棒":"ㄅㄤˋ","糖":"ㄊㄤˊ","氣":"ㄑㄧˋ","魔":"ㄇㄛˊ","行":"ㄒㄧㄥˊ","肩":"ㄐㄧㄢ","膀":"ㄅㄤˇ","腳":"ㄐㄧㄠˇ","處":"ㄔㄨˋ","脖":"ㄅㄛˊ","臂":"ㄅㄧˋ","腿":"ㄊㄨㄟˇ","內":"ㄋㄟˋ","蓋":"ㄍㄞˋ","住":"ㄓㄨˋ","以":"ㄧˇ","第":"ㄉㄧˋ","提":"ㄊㄧˊ","供":"ㄍㄨㄥ","張":"ㄓㄤ","買":"ㄇㄞˇ","編":"ㄅㄧㄢ","全":"ㄑㄩㄢˊ","甜":"ㄊㄧㄢˊ","美":"ㄇㄟˇ","冒":"ㄇㄠˋ","險":"ㄒㄧㄢˇ","夢":"ㄇㄥˋ","幻":"ㄏㄨㄢˋ","帥":"ㄕㄨㄞˋ","愛":"ㄞˋ","半":"ㄅㄢˋ","握":"ㄨㄛˋ","竿":"ㄍㄢ","左":"ㄗㄨㄛˇ","輯":"ㄐㄧˊ","讓":"ㄖㄤˋ","引":"ㄧㄣˇ","信":"ㄒㄧㄣˋ","火":"ㄏㄨㄛˇ","他":"ㄊㄚ","般":"ㄅㄢ","嘴":"ㄗㄨㄟˇ","心":"ㄒㄧㄣ","瞇":"ㄇㄧ","吐":"ㄊㄨˇ","舌":"ㄕㄜˊ","表":"ㄅㄧㄠˇ","情":"ㄑㄧㄥˊ","印":"ㄧㄣˋ","減":"ㄐㄧㄢˇ","九":"ㄐㄧㄡˇ","乘":"ㄔㄥˊ","按":"ㄢˋ","木":"ㄇㄨˋ","喔":"ㄛ","草":"ㄘㄠˇ","已":"ㄧˇ","夠":"ㄍㄡˋ","現":"ㄒㄧㄢˋ","幾":"ㄐㄧˇ","十":"ㄕˊ","能":"ㄋㄥˊ","於":"ㄩˊ","玻":"ㄅㄛ","爸":"ㄅㄚˋ","坡":"ㄆㄛ","葡":"ㄆㄨˊ","萄":"ㄊㄠˊ","摸":"ㄇㄛ","咪":"ㄇㄧ","佛":"ㄈㄛˊ","飛":"ㄈㄟ","象":"ㄒㄧㄤˋ","兔":"ㄊㄨˋ","訥":"ㄋㄜˋ","勒":"ㄌㄜˋ","老":"ㄌㄠˇ","虎":"ㄏㄨˇ","哥":"ㄍㄜ","狗":"ㄍㄡˇ","科":"ㄎㄜ","恐":"ㄎㄨㄥˇ","龍":"ㄌㄨㄥˊ","喝":"ㄏㄜ","基":"ㄐㄧ","雞":"ㄐㄧ","七":"ㄑㄧ","汽":"ㄑㄧˋ","車":"ㄔㄜ","瓜":"ㄍㄨㄚ","知":"ㄓ","豬":"ㄓㄨ","吃":"ㄔ","帆":"ㄈㄢ","船":"ㄔㄨㄢˊ","師":"ㄕ","獅":"ㄕ","巴":"ㄅㄚ","疵":"ㄘ","莓":"ㄇㄟˊ","思":"ㄙ","傘":"ㄙㄢˇ","烏":"ㄨ","龜":"ㄍㄨㄟ","迂":"ㄩ","啊":"˙ㄚ","鴨":"ㄧㄚ","叫":"ㄐㄧㄠˋ","鵝":"ㄜˊ","欸":"ㄞˇ","椰":"ㄧㄝ","哀":"ㄞ","誒":"ㄟ","杯":"ㄅㄟ","凹":"ㄠ","書":"ㄕㄨ","歐":"ㄡ","猴":"ㄏㄡˊ","飯":"ㄈㄢˋ","恩":"ㄣ","門":"ㄇㄣˊ","骯":"ㄤ","綿":"ㄇㄧㄢˊ","羊":"ㄧㄤˊ","鞥":"ㄥ","蜜":"ㄇㄧˋ","蜂":"ㄈㄥ","兒":"ㄦˊ","容":"ㄖㄨㄥˊ","易":"ㄧˋ","搞":"ㄍㄠˇ","混":"ㄏㄨㄣˋ","必":"ㄅㄧˋ","媽":"ㄇㄚ","八":"ㄅㄚ","拉":"ㄌㄚ","哈":"ㄏㄚ","哭":"ㄎㄨ","姑":"ㄍㄨ","粗":"ㄘㄨ","蘇":"ㄙㄨ","刀":"ㄉㄠ","拍":"ㄆㄞ","偷":"ㄊㄡ","收":"ㄕㄡ","溝":"ㄍㄡ","森":"ㄙㄣ","湯":"ㄊㄤ","幫":"ㄅㄤ","燈":"ㄉㄥ","抓":"ㄓㄨㄚ","刷":"ㄕㄨㄚ","偏":"ㄆㄧㄢ","冬":"ㄉㄨㄥ","光":"ㄍㄨㄤ","窗":"ㄔㄨㄤ","香":"ㄒㄧㄤ","江":"ㄐㄧㄤ","春":"ㄔㄨㄣ","秋":"ㄑㄧㄡ","推":"ㄊㄨㄟ","吹":"ㄔㄨㄟ","飄":"ㄆㄧㄠ","歡":"ㄏㄨㄢ","官":"ㄍㄨㄢ","軍":"ㄐㄩㄣ","麻":"ㄇㄚˊ","罵":"ㄇㄚˋ","煩":"ㄈㄢˊ","拔":"ㄅㄚˊ","熟":"ㄕㄨˊ","鼠":"ㄕㄨˇ","樹":"ㄕㄨˋ","躺":"ㄊㄤˇ","燙":"ㄊㄤˋ","很":"ㄏㄣˇ","急":"ㄐㄧˊ","著":"˙ㄓㄜ","玉":"ㄩˋ","迴":"ㄏㄨㄟˊ","石":"ㄕˊ","五":"ㄨˇ","霧":"ㄨˋ","聊":"ㄌㄧㄠˊ","妻":"ㄑㄧ","騎":"ㄑㄧˊ","蛙":"ㄨㄚ","瓦":"ㄨㄚˇ","襪":"ㄨㄚˋ","青":"ㄑㄧㄥ","鍋":"ㄍㄨㄛ","國":"ㄍㄨㄛˊ","去":"ㄑㄩˋ","通":"ㄊㄨㄥ","桶":"ㄊㄨㄥˇ","痛":"ㄊㄨㄥˋ","毀":"ㄏㄨㄟˇ","訪":"ㄈㄤˇ","問":"ㄨㄣˋ","假":"ㄐㄧㄚˇ","韻":"ㄩㄣˋ","首":"ㄕㄡˇ","量":"ㄌㄧㄤˋ","相":"ㄒㄧㄤ","反":"ㄈㄢˇ","填":"ㄊㄧㄢˊ","似":"ㄙˋ","介":"ㄐㄧㄝˋ","隨":"ㄙㄨㄟˊ","南":"ㄋㄢˊ","康":"ㄎㄤ","軒":"ㄒㄩㄢ","教":"ㄐㄧㄠ","女":"ㄋㄩˇ","姐":"ㄐㄧㄝˇ","河":"ㄏㄜˊ","氵":"ㄕㄨㄟˇ","海":"ㄏㄞˇ","洗":"ㄒㄧˇ","林":"ㄌㄧㄣˊ","桌":"ㄓㄨㄛ","校":"ㄒㄧㄠˋ","口":"ㄎㄡˇ","唱":"ㄔㄤˋ","想":"ㄒㄧㄤˇ","忘":"ㄨㄤˋ","明":"ㄇㄧㄥˊ","晴":"ㄑㄧㄥˊ","艹":"ㄠˇ","茶":"ㄔㄚˊ","你":"ㄋㄧˇ","亻":"ㄖㄣˊ","們":"ㄇㄣˊ","足":"ㄗㄨˊ","跳":"ㄊㄧㄠˋ","言":"ㄧㄢˊ","扌":"ㄕㄡˇ","犭":"ㄑㄩㄢˇ","熱":"ㄖㄜˋ","灬":"ㄏㄨㄛˇ","燒":"ㄕㄠ","土":"ㄊㄨˇ","坐":"ㄗㄨㄛˋ","城":"ㄔㄥˊ","雪":"ㄒㄩㄝˇ","睡":"ㄕㄨㄟˋ","糸":"ㄇㄧˋ","線":"ㄒㄧㄢˋ","鐵":"ㄊㄧㄝˇ","錢":"ㄑㄧㄢˊ","鉛":"ㄑㄧㄢ","竹":"ㄓㄨˊ","筆":"ㄅㄧˇ","笑":"ㄒㄧㄠˋ","隻":"ㄓ","輛":"ㄌㄧㄤˋ","棵":"ㄎㄜ","枝":"ㄓ","床":"ㄔㄨㄤˊ","頂":"ㄉㄧㄥˇ","封":"ㄈㄥ","匹":"ㄆㄧˇ","橋":"ㄑㄧㄠˊ","座":"ㄗㄨㄛˋ","顆":"ㄎㄜ","筷":"ㄎㄨㄞˋ","鳥":"ㄋㄧㄠˇ","冷":"ㄌㄥˇ","早":"ㄗㄠˇ","胖":"ㄆㄤˋ","瘦":"ㄕㄡˋ","遠":"ㄩㄢˇ","近":"ㄐㄧㄣˋ","賣":"ㄇㄞˋ","真":"ㄓㄣ","細":"ㄒㄧˋ","樂":"ㄌㄜˋ","難":"ㄋㄢˊ","傷":"ㄕㄤ","靜":"ㄐㄧㄥˋ","吵":"ㄔㄠˇ","鬧":"ㄋㄠˋ","喜":"ㄒㄧˇ","討":"ㄊㄠˇ","厭":"ㄧㄢˋ","乾":"ㄑㄧㄢˊ","淨":"ㄐㄧㄥˋ","髒":"ㄗㄤ","勇":"ㄩㄥˇ","敢":"ㄍㄢˇ","膽":"ㄉㄢˇ","清":"ㄑㄧㄥ","簡":"ㄐㄧㄢˇ","困":"ㄎㄨㄣˋ","功":"ㄍㄨㄥ","麗":"ㄌㄧˊ","漂":"ㄆㄧㄠ","亮":"ㄌㄧㄤˋ","立":"ㄌㄧˋ","刻":"ㄎㄜˋ","興":"ㄒㄧㄥ","愉":"ㄩˊ","忙":"ㄇㄤˊ","協":"ㄒㄧㄝˊ","助":"ㄓㄨˋ","父":"ㄈㄨˋ","親":"ㄑㄧㄣ","寧":"ㄋㄧㄥˊ","溫":"ㄨㄣ","暖":"ㄋㄨㄢˇ","努":"ㄋㄨˇ","憤":"ㄈㄣˋ","怒":"ㄋㄨˋ","迅":"ㄒㄩㄣˋ","突":"ㄊㄨ","忽":"ㄏㄨ","寒":"ㄏㄢˊ","冰":"ㄅㄧㄥ","句":"ㄐㄩˋ","我":"ㄨㄛˇ","園":"ㄩㄢˊ","室":"ㄕˋ","見":"ㄐㄧㄢˋ","她":"ㄊㄚ","它":"ㄊㄚ","市":"ㄕˋ","場":"ㄔㄤˇ","麵":"ㄇㄧㄢˋ","廟":"ㄇㄧㄠˋ","控":"ㄎㄨㄥˋ","弟":"ㄉㄧˋ","垂":"ㄔㄨㄟˊ","犬":"ㄑㄩㄢˇ","意":"ㄧˋ","蘋":"ㄆㄧㄣˊ","蛋":"ㄉㄢˋ","昆":"ㄎㄨㄣ","蟲":"ㄔㄨㄥˊ","汁":"ㄓ","箏":"ㄓㄥ","月":"ㄩㄝˋ","鼻":"ㄅㄧˊ","章":"ㄓㄤ","王":"ㄨㄤˊ","太":"ㄊㄞˋ","陽":"ㄧㄤˊ","廂":"ㄒㄧㄤ","錶":"ㄅㄧㄠˇ","狐":"ㄏㄨˊ","狸":"ㄌㄧˊ","溜":"ㄌㄧㄡ","斑":"ㄅㄢ","熊":"ㄒㄩㄥˊ","蕉":"ㄐㄧㄠ","糕":"ㄍㄠ","奶":"ㄋㄞˇ","盒":"ㄏㄜˊ","鑰":"ㄩㄝˋ","匙":"ㄔˊ","踏":"ㄊㄚˋ","蝙":"ㄅㄧㄢ","蝠":"ㄈㄨˊ","蜘":"ㄓ","蛛":"ㄓㄨ","噴":"ㄆㄣ","射":"ㄕㄜˋ","練":"ㄌㄧㄢˋ","辨":"ㄅㄧㄢˋ","需":"ㄒㄩ","固":"ㄍㄨˋ","角":"ㄐㄧㄠˇ","含":"ㄏㄢˊ","何":"ㄏㄜˊ","差":"ㄔㄚ","複":"ㄈㄨˋ","停":"ㄊㄧㄥˊ","止":"ㄓˇ","作":"ㄗㄨㄛˋ","鈕":"ㄋㄧㄡˇ","權":"ㄑㄩㄢˊ","限":"ㄒㄧㄢˋ","辦":"ㄅㄢˋ","續":"ㄒㄩˋ","往":"ㄨㄤˇ","布":"ㄅㄨˋ","沙":"ㄕㄚ","岩":"ㄧㄢˊ","璃":"ㄌㄧˊ","與":"ㄩˇ","獎":"ㄐㄧㄤˇ","勵":"ㄌㄧˋ","漠":"ㄇㄛˋ","建":"ㄐㄧㄢˋ","築":"ㄓㄨˋ","搬":"ㄅㄢ","瞭":"ㄌㄧㄠˋ","望":"ㄨㄤˋ","塔":"ㄊㄚˇ","堡":"ㄅㄠˇ","從":"ㄘㄨㄥˊ","及":"ㄐㄧˊ","集":"ㄐㄧˊ","但":"ㄉㄢˋ","達":"ㄉㄚˊ","探":"ㄊㄢˋ","挖":"ㄨㄚ","頒":"ㄅㄢ","泡":"ㄆㄠˋ","告":"ㄍㄠˋ","訴":"ㄙㄨˋ","背":"ㄅㄟˋ","透":"ㄊㄡˋ","稍":"ㄕㄠ","微":"ㄨㄟˊ","藏":"ㄘㄤˊ","走":"ㄗㄡˇ","計":"ㄐㄧˋ","離":"ㄌㄧˊ","鎖":"ㄙㄨㄛˇ","囉":"˙ㄌㄨㄛ","慰":"ㄨㄟˋ","醒":"ㄒㄧㄥˇ","毛":"ㄇㄠˊ","柴":"ㄔㄞˊ","獵":"ㄌㄧㄝˋ","士":"ㄕˋ","奇":"ㄑㄧˊ","戴":"ㄉㄞˋ","呼":"ㄏㄨ","購":"ㄍㄡˋ","模":"ㄇㄛˊ","擺":"ㄅㄞˇ","吧":"˙ㄅㄚ","返":"ㄈㄢˇ","牠":"ㄊㄚ","陪":"ㄆㄟˊ","平":"ㄆㄧㄥˊ","板":"ㄅㄢˇ","尺":"ㄔˇ","寸":"ㄘㄨㄣˋ","螢":"ㄧㄥˊ","幕":"ㄇㄨˋ","判":"ㄆㄢˋ","斷":"ㄉㄨㄢˋ","至":"ㄓˋ","範":"ㄈㄢˋ","圍":"ㄨㄟˊ","理":"ㄌㄧˇ","檢":"ㄐㄧㄢˇ","查":"ㄔㄚˊ","署":"ㄕㄨˇ","鐘":"ㄓㄨㄥ","餵":"ㄨㄟˋ","週":"ㄓㄡ","顧":"ㄍㄨˋ","流":"ㄌㄧㄡˊ","輪":"ㄌㄨㄣˊ","抽":"ㄔㄡ","講":"ㄐㄧㄤˇ","亂":"ㄌㄨㄢˋ","秒":"ㄇㄧㄠˇ","繼":"ㄐㄧˋ","耶":"ㄧㄝ","送":"ㄙㄨㄥˋ","升":"ㄕㄥ","懂":"ㄉㄨㄥˇ","變":"ㄅㄧㄢˋ","厲":"ㄌㄧˋ","害":"ㄏㄞˋ","降":"ㄐㄧㄤˋ","挫":"ㄘㄨㄛˋ","折":"ㄓㄜˊ","感":"ㄍㄢˇ","讚":"ㄗㄢˋ","鼓":"ㄍㄨˇ","附":"ㄈㄨˋ","嘗":"ㄔㄤˊ","謝":"ㄒㄧㄝˋ","願":"ㄩㄢˋ","棄":"ㄑㄧˋ","係":"ㄒㄧˋ","擔":"ㄉㄢ","做":"ㄗㄨㄛˋ","期":"ㄑㄧˊ","午":"ㄨˇ","函":"ㄏㄢˊ","乎":"ㄏㄨ","額":"ㄜˊ","徽":"ㄏㄨㄟ","為":"ㄨㄟˋ","否":"ㄈㄡˇ","虛":"ㄒㄩ","淡":"ㄉㄢˋ","疊":"ㄉㄧㄝˊ","適":"ㄕˋ","約":"ㄩㄝ","吸":"ㄒㄧ","形":"ㄒㄧㄥˊ","狀":"ㄓㄨㄤˋ","斜":"ㄒㄧㄝˊ","植":"ㄓˊ","泥":"ㄋㄧˊ","卵":"ㄌㄨㄢˇ","磚":"ㄓㄨㄢ","戶":"ㄏㄨˋ","葉":"ㄧㄝˋ","櫻":"ㄧㄥ","松":"ㄙㄨㄥ","鬱":"ㄩˋ","叢":"ㄘㄨㄥˊ","蘑":"ㄇㄛˊ","菇":"ㄍㄨ","藤":"ㄊㄥˊ","蔓":"ㄇㄢˋ","籠":"ㄌㄨㄥˊ","梯":"ㄊㄧ","籬":"ㄌㄧˊ","笆":"ㄅㄚ","椅":"ㄧˇ","葵":"ㄎㄨㄟˊ","盪":"ㄉㄤˋ","鞦":"ㄑㄧㄡ","韆":"ㄑㄧㄢ","彩":"ㄘㄞˇ","虹":"ㄏㄨㄥˊ","田":"ㄊㄧㄢˊ","農":"ㄋㄨㄥˊ","舍":"ㄕㄜˋ","墅":"ㄕㄨˋ","摩":"ㄇㄛˊ","豪":"ㄏㄠˊ","宅":"ㄓㄞˊ","迎":"ㄧㄥˊ","列":"ㄌㄧㄝˋ","捲":"ㄐㄩㄢˇ","該":"ㄍㄞ","被":"ㄅㄟˋ","擋":"ㄉㄤˇ","滑":"ㄏㄨㄚˊ","恭":"ㄍㄨㄥ","局":"ㄐㄩˊ","憶":"ㄧˋ","擊":"ㄐㄧˊ","楚":"ㄔㄨˇ","順":"ㄕㄨㄣˋ","趕":"ㄍㄢˇ","怪":"ㄍㄨㄞˋ","迷":"ㄇㄧˊ","宮":"ㄍㄨㄥ","鍵":"ㄐㄧㄢˋ","悄":"ㄑㄧㄠ","低":"ㄉㄧ","餓":"ㄜˋ","病":"ㄅㄧㄥˋ","頸":"ㄐㄧㄥˇ","鹿":"ㄌㄨˋ","累":"ㄌㄟˋ","積":"ㄐㄧ","替":"ㄊㄧˋ","伴":"ㄅㄢˋ","稀":"ㄒㄧ","鱒":"ㄗㄨㄣ","鯉":"ㄌㄧˇ","豚":"ㄊㄨㄣˊ","丑":"ㄔㄡˇ","紀":"ㄐㄧˋ","歲":"ㄙㄨㄟˋ","繫":"ㄒㄧˋ","陌":"ㄇㄛˋ","牙":"ㄧㄚˊ","根":"ㄍㄣ","北":"ㄅㄟˇ","融":"ㄖㄨㄥˊ","硬":"ㄧㄥˋ","扇":"ㄕㄢˋ","喵":"ㄇㄧㄠ","咩":"ㄇㄧㄝ","蘿":"ㄌㄨㄛˊ","蔔":"˙ㄅㄛ","蝌":"ㄎㄜ","蚪":"ㄉㄡˇ","災":"ㄗㄞ","搭":"ㄉㄚ","震":"ㄓㄣˋ","遇":"ㄩˋ","壞":"ㄏㄨㄞˋ","警":"ㄐㄧㄥˇ","察":"ㄔㄚˊ","鰓":"ㄙㄞ","阿":"ㄚ","里":"ㄌㄧˇ","煮":"ㄓㄨˇ","滾":"ㄍㄨㄣˇ","蒸":"ㄓㄥ","颱":"ㄊㄞˊ","浪":"ㄌㄤˋ","址":"ㄓˇ","類":"ㄌㄟˋ","活":"ㄏㄨㄛˊ","雷":"ㄌㄟˊ","閃":"ㄕㄢˇ","滴":"ㄉㄧ","染":"ㄖㄢˇ","繞":"ㄖㄠˋ","圈":"ㄑㄩㄢ","久":"ㄐㄧㄡˇ","遮":"ㄓㄜ","沸":"ㄈㄟˋ","騰":"ㄊㄥˊ","磁":"ㄘˊ","釘":"ㄉㄧㄥ","塑":"ㄙㄨˋ","膠":"ㄐㄧㄠ","氧":"ㄧㄤˇ","碳":"ㄊㄢˋ","企":"ㄑㄧˋ","極":"ㄐㄧˊ","臟":"ㄗㄤˋ","血":"ㄒㄧㄝˇ","液":"ㄧˋ","消":"ㄒㄧㄠ","食":"ㄕˊ","拋":"ㄆㄠ","待":"ㄉㄞˋ","浮":"ㄈㄨˊ","元":"ㄩㄢˊ","餌":"ㄦˇ","飽":"ㄅㄠˇ","甩":"ㄕㄨㄞˇ","弧":"ㄏㄨˊ","落":"ㄌㄨㄛˋ","碰":"ㄆㄥˋ","鉤":"ㄍㄡ","滿":"ㄇㄢˇ","游":"ㄧㄡˊ","幸":"ㄒㄧㄥˋ","福":"ㄈㄨˊ","領":"ㄌㄧㄥˇ","養":"ㄧㄤˇ","油":"ㄧㄡˊ","觀":"ㄍㄨㄢ","爆":"ㄅㄠˋ","哇":"ㄨㄚ","又":"ㄧㄡˋ","副":"ㄈㄨˋ","競":"ㄐㄧㄥˋ","賽":"ㄙㄞˋ","誰":"ㄕㄨㄟˊ","邀":"ㄧㄠ","呢":"˙ㄋㄜ","態":"ㄊㄞˋ","贏":"ㄧㄥˊ","毫":"ㄏㄠˊ","隔":"ㄍㄜˊ","誤":"ㄨˋ","悉":"ㄒㄧ","噢":"ㄛ","旋":"ㄒㄩㄢˊ","求":"ㄑㄧㄡˊ","牆":"ㄑㄧㄤˊ","鄰":"ㄌㄧㄣˊ","超":"ㄔㄠ","況":"ㄎㄨㄤˋ","議":"ㄧˋ","齡":"ㄌㄧㄥˊ","此":"ㄘˇ","除":"ㄔㄨˊ","帳":"ㄓㄤˋ","匯":"ㄏㄨㄟˋ","輔":"ㄈㄨˇ","朗":"ㄌㄤˇ","佳":"ㄐㄧㄚ","詢":"ㄒㄩㄣˊ","瀏":"ㄌㄧㄡˊ","覽":"ㄌㄢˇ","輸":"ㄕㄨ","擇":"ㄗㄜˊ","製":"ㄓˋ","復":"ㄈㄨˋ","脫":"ㄊㄨㄛ","族":"ㄗㄨˊ","村":"ㄘㄨㄣ","莊":"ㄓㄨㄤ","道":"ㄉㄠˋ","仍":"ㄖㄥˊ","未":"ㄨㄟˋ","束":"ㄕㄨˋ","略":"ㄌㄩㄝˋ"};/* ZYDICT-END */
+/* ZYDICT-START */const ZYDICT = {"方":"ㄈㄤ","塊":"ㄎㄨㄞˋ","學":"ㄒㄩㄝˊ","習":"ㄒㄧˊ","島":"ㄉㄠˇ","登":"ㄉㄥ","入":"ㄖㄨˋ","地":"ㄉㄧˋ","圖":"ㄊㄨˊ","釣":"ㄉㄧㄠˋ","魚":"ㄩˊ","池":"ㄔˊ","金":"ㄐㄧㄣ","礦":"ㄎㄨㄤˋ","山":"ㄕㄢ","不":"ㄅㄨˋ","算":"ㄙㄨㄢˋ","每":"ㄇㄟˇ","日":"ㄖˋ","任":"ㄖㄣˋ","務":"ㄨˋ","格":"ㄍㄜˊ","子":"ㄗˇ","小":"ㄒㄧㄠˇ","一":"ㄧ","點":"ㄉㄧㄢˇ","即":"ㄐㄧˊ","將":"ㄐㄧㄤ","開":"ㄎㄞ","放":"ㄈㄤˋ","遊":"ㄧㄡˊ","戲":"ㄒㄧˋ","手":"ㄕㄡˇ","機":"ㄐㄧ","橫":"ㄏㄥˊ","拿":"ㄋㄚˊ","高":"ㄍㄠ","度":"ㄉㄨˋ","很":"ㄏㄣˇ","少":"ㄕㄠˇ","題":"ㄊㄧˊ","目":"ㄇㄨˋ","字":"ㄗˋ","數":"ㄕㄨˋ","的":"˙ㄉㄜ","大":"ㄉㄚˋ","結":"ㄐㄧㄝˊ","果":"ㄍㄨㄛˇ","家":"ㄐㄧㄚ","晚":"ㄨㄢˇ","安":"ㄢ","向":"ㄒㄧㄤˋ","材":"ㄘㄞˊ","料":"ㄌㄧㄠˋ","改":"ㄍㄞˇ","在":"ㄗㄞˋ","房":"ㄈㄤˊ","右":"ㄧㄡˋ","邊":"ㄅㄧㄢ","直":"ㄓˊ","排":"ㄆㄞˊ","由":"ㄧㄡˊ","依":"ㄧ","剩":"ㄕㄥˋ","下":"ㄒㄧㄚˋ","空":"ㄎㄨㄥ","間":"ㄐㄧㄢ","決":"ㄐㄩㄝˊ","定":"ㄉㄧㄥˋ","長":"ㄔㄤˊ","汪":"ㄨㄤ","星":"ㄒㄧㄥ","商":"ㄕㄤ","店":"ㄉㄧㄢˋ","秘":"ㄇㄧˋ","密":"ㄇㄧˋ","案":"ㄢˋ","拖":"ㄊㄨㄛ","曳":"ㄧㄝˋ","加":"ㄐㄧㄚ","法":"ㄈㄚˇ","注":"ㄓㄨˋ","音":"ㄧㄣ","照":"ㄓㄠˋ","課":"ㄎㄜˋ","本":"ㄅㄣˇ","符":"ㄈㄨˊ","號":"ㄏㄠˋ","二":"ㄦˋ","三":"ㄙㄢ","四":"ㄙˋ","聲":"ㄕㄥ","最":"ㄗㄨㄟˋ","後":"ㄏㄡˋ","個":"ㄍㄜˋ","上":"ㄕㄤˋ","輕":"ㄑㄧㄥ","面":"ㄇㄧㄢˋ","淺":"ㄑㄧㄢˇ","色":"ㄙㄜˋ","底":"ㄉㄧˇ","深":"ㄕㄣ","要":"ㄧㄠˋ","陰":"ㄧㄣ","影":"ㄧㄥˇ","然":"ㄖㄢˊ","會":"ㄏㄨㄟˋ","有":"ㄧㄡˇ","重":"ㄓㄨㄥˋ","說":"ㄕㄨㄛ","看":"ㄎㄢˋ","英":"ㄧㄥ","文":"ㄨㄣˊ","拼":"ㄆㄧㄣ","選":"ㄒㄩㄢˇ","項":"ㄒㄧㄤˋ","寫":"ㄒㄧㄝˇ","調":"ㄉㄧㄠˋ","專":"ㄓㄨㄢ","力":"ㄌㄧˋ","洞":"ㄉㄨㄥˋ","寵":"ㄔㄨㄥˇ","物":"ㄨˋ","頭":"ㄊㄡˊ","像":"ㄒㄧㄤˋ","框":"ㄎㄨㄤˋ","是":"ㄕˋ","中":"ㄓㄨㄥ","裡":"ㄌㄧˇ","娃":"ㄨㄚˊ","屋":"ㄨ","給":"ㄍㄟˇ","插":"ㄔㄚ","畫":"ㄏㄨㄚˋ","特":"ㄊㄜˋ","別":"ㄅㄧㄝˊ","造":"ㄗㄠˋ","型":"ㄒㄧㄥˊ","用":"ㄩㄥˋ","素":"ㄙㄨˋ","縮":"ㄙㄨㄛ","式":"ㄕˋ","翻":"ㄈㄢ","牌":"ㄆㄞˊ","對":"ㄉㄨㄟˋ","戰":"ㄓㄢˋ","工":"ㄍㄨㄥ","具":"ㄐㄩˋ","旁":"ㄆㄤˊ","典":"ㄉㄧㄢˇ","檔":"ㄉㄤˇ","到":"ㄉㄠˋ","自":"ㄗˋ","動":"ㄉㄨㄥˋ","產":"ㄔㄢˇ","生":"ㄕㄥ","常":"ㄔㄤˊ","讀":"ㄉㄨˊ","台":"ㄊㄞˊ","灣":"ㄨㄢ","另":"ㄌㄧㄥˋ","外":"ㄨㄞˋ","修":"ㄒㄧㄡ","正":"ㄓㄥˋ","破":"ㄆㄛˋ","詞":"ㄘˊ","語":"ㄩˇ","比":"ㄅㄧˇ","單":"ㄉㄢ","優":"ㄧㄡ","先":"ㄒㄧㄢ","睡":"ㄕㄨㄟˋ","覺":"ㄐㄩㄝˊ","跑":"ㄆㄠˇ","得":"ㄉㄜˊ","心":"ㄒㄧㄣ","暖":"ㄋㄨㄢˇ","和":"ㄏㄜˊ","乾":"ㄑㄧㄢˊ","淨":"ㄐㄧㄥˋ","帽":"ㄇㄠˋ","玩":"ㄨㄢˊ","記":"ㄐㄧˋ","了":"˙ㄌㄜ","解":"ㄐㄧㄝˇ","什":"ㄕㄣˊ","麼":"˙ㄇㄜ","怎":"ㄗㄣˇ","這":"ㄓㄜˋ","還":"ㄏㄞˊ","沒":"ㄇㄟˊ","東":"ㄉㄨㄥ","西":"ㄒㄧ","朋":"ㄆㄥˊ","友":"ㄧㄡˇ","休":"ㄒㄧㄡ","息":"ㄒㄧ","時":"ㄕˊ","候":"ㄏㄡˋ","轉":"ㄓㄨㄢˇ","鮭":"ㄍㄨㄟ","新":"ㄒㄧㄣ","答":"ㄉㄚˊ","回":"ㄏㄨㄟˊ","把":"ㄅㄚˇ","成":"ㄔㄥˊ","帶":"ㄉㄞˋ","可":"ㄎㄜˇ","關":"ㄍㄨㄢ","掉":"ㄉㄧㄠˋ","非":"ㄈㄟ","原":"ㄩㄢˊ","樣":"ㄧㄤˋ","資":"ㄗ","裝":"ㄓㄨㄤ","置":"ㄓˋ","孩":"ㄏㄞˊ","進":"ㄐㄧㄣˋ","註":"ㄓㄨˋ","冊":"ㄘㄜˋ","補":"ㄅㄨˇ","齊":"ㄑㄧˊ","舊":"ㄐㄧㄡˋ","或":"ㄏㄨㄛˋ","備":"ㄅㄟˋ","份":"ㄈㄣˋ","缺":"ㄑㄩㄝ","欄":"ㄌㄢˊ","位":"ㄨㄟˋ","版":"ㄅㄢˇ","也":"ㄧㄝˇ","經":"ㄐㄧㄥ","過":"ㄍㄨㄛˋ","增":"ㄗㄥ","年":"ㄋㄧㄢˊ","級":"ㄐㄧˊ","設":"ㄕㄜˋ","當":"ㄉㄤ","次":"ㄘˋ","寬":"ㄎㄨㄢ","配":"ㄆㄟˋ","件":"ㄐㄧㄢˋ","飾":"ㄕˋ","品":"ㄆㄧㄣˇ","交":"ㄐㄧㄠ","分":"ㄈㄣ","享":"ㄒㄧㄤˇ","存":"ㄘㄨㄣˊ","支":"ㄓ","援":"ㄩㄢˊ","接":"ㄐㄧㄝ","載":"ㄗㄞˋ","所":"ㄙㄨㄛˇ","換":"ㄏㄨㄢˋ","來":"ㄌㄞˊ","請":"ㄑㄧㄥˇ","再":"ㄗㄞˋ","取":"ㄑㄩˇ","代":"ㄉㄞˋ","前":"ㄑㄧㄢˊ","嗎":"˙ㄇㄚ","完":"ㄨㄢˊ","更":"ㄍㄥˋ","雲":"ㄩㄣˊ","端":"ㄉㄨㄢ","合":"ㄏㄜˊ","併":"ㄅㄧㄥˋ","並":"ㄅㄧㄥˋ","程":"ㄔㄥˊ","免":"ㄇㄧㄢˇ","費":"ㄈㄟˋ","匿":"ㄋㄧˋ","名":"ㄇㄧㄥˊ","兩":"ㄌㄧㄤˇ","網":"ㄨㄤˇ","頁":"ㄧㄝˋ","公":"ㄍㄨㄥ","識":"ㄕˋ","碼":"ㄇㄚˇ","靠":"ㄎㄠˋ","庭":"ㄊㄧㄥˊ","規":"ㄍㄨㄟ","則":"ㄗㄜˊ","保":"ㄅㄠˇ","護":"ㄏㄨˋ","同":"ㄊㄨㄥˊ","組":"ㄗㄨˇ","留":"ㄌㄧㄡˊ","較":"ㄐㄧㄠˋ","那":"ㄋㄚˋ","今":"ㄐㄧㄣ","天":"ㄊㄧㄢ","多":"ㄉㄨㄛ","刪":"ㄕㄢ","傳":"ㄔㄨㄢˊ","路":"ㄌㄨˋ","就":"ㄐㄧㄡˋ","等":"ㄉㄥˇ","連":"ㄌㄧㄢˊ","啟":"ㄑㄧˇ","例":"ㄌㄧˋ","如":"ㄖㄨˊ","截":"ㄐㄧㄝˊ","找":"ㄓㄠˇ","起":"ㄑㄧˇ","步":"ㄅㄨˋ","母":"ㄇㄨˇ","確":"ㄑㄩㄝˋ","認":"ㄖㄣˋ","試":"ㄕˋ","之":"ㄓ","區":"ㄑㄩ","域":"ㄩˋ","各":"ㄍㄜˋ","錄":"ㄌㄨˋ","剛":"ㄍㄤ","好":"ㄏㄠˇ","發":"ㄈㄚ","寶":"ㄅㄠˇ","箱":"ㄒㄧㄤ","顯":"ㄒㄧㄢˇ","示":"ㄕˋ","種":"ㄓㄨㄥˇ","炸":"ㄓㄚˋ","彈":"ㄊㄢˊ","挑":"ㄊㄧㄠ","稱":"ㄔㄥ","強":"ㄑㄧㄤˊ","質":"ㄓˊ","聽":"ㄊㄧㄥ","器":"ㄑㄧˋ","化":"ㄏㄨㄚˋ","念":"ㄋㄧㄢˋ","錯":"ㄘㄨㄛˋ","跟":"ㄍㄣ","掌":"ㄓㄤˇ","出":"ㄔㄨ","整":"ㄓㄥˇ","體":"ㄊㄧˇ","速":"ㄙㄨˋ","電":"ㄉㄧㄢˋ","腦":"ㄋㄠˇ","快":"ㄎㄨㄞˋ","預":"ㄩˋ","慢":"ㄇㄢˋ","些":"ㄒㄧㄝ","指":"ㄓˇ","才":"ㄘㄞˊ","能":"ㄋㄥˊ","第":"ㄉㄧˋ","已":"ㄧˇ","擊":"ㄐㄧˊ","以":"ㄧˇ","螢":"ㄧㄥˊ","幕":"ㄇㄨˋ","無":"ㄨˊ","話":"ㄏㄨㄚˋ","事":"ㄕˋ","片":"ㄆㄧㄢˋ","段":"ㄉㄨㄢˋ","切":"ㄑㄧㄝˋ","標":"ㄅㄧㄠ","短":"ㄉㄨㄢˇ","白":"ㄅㄞˊ","紅":"ㄏㄨㄥˊ","部":"ㄅㄨˋ","只":"ㄓˇ","避":"ㄅㄧˋ","拆":"ㄔㄞ","序":"ㄒㄩˋ","播":"ㄅㄛ","共":"ㄍㄨㄥˋ","越":"ㄩㄝˋ","卡":"ㄎㄚˇ","套":"ㄊㄠˋ","從":"ㄘㄨㄥˊ","背":"ㄅㄟˋ","景":"ㄐㄧㄥˇ","停":"ㄊㄧㄥˊ","暫":"ㄓㄢˋ","狀":"ㄓㄨㄤˋ","態":"ㄊㄞˋ","偶":"ㄡˇ","爾":"ㄦˇ","觸":"ㄔㄨˋ","準":"ㄓㄨㄣˇ","己":"ㄐㄧˇ","站":"ㄓㄢˋ","者":"ㄓㄜˇ","都":"ㄉㄡ","打":"ㄉㄚˇ","包":"ㄅㄠ","使":"ㄕˇ","麥":"ㄇㄞˋ","克":"ㄎㄜˋ","風":"ㄈㄥ","允":"ㄩㄣˇ","許":"ㄒㄩ","儲":"ㄔㄨˇ","失":"ㄕ","敗":"ㄅㄞˋ","人":"ㄖㄣˊ","紙":"ㄓˇ","髮":"ㄈㄚˇ","膚":"ㄈㄨ","眼":"ㄧㄢˇ","睛":"ㄐㄧㄥ","身":"ㄕㄣ","服":"ㄈㄨˊ","衣":"ㄧ","顏":"ㄧㄢˊ","應":"ㄧㄥ","刺":"ㄘˋ","妹":"ㄇㄟˋ","雙":"ㄕㄨㄤ","馬":"ㄇㄚˇ","尾":"ㄨㄟˇ","皮":"ㄆㄧˊ","穿":"ㄔㄨㄢ","哪":"ㄋㄚˇ","主":"ㄓㄨˇ","綴":"ㄓㄨㄟˋ","始":"ㄕˇ","褲":"ㄎㄨˋ","裙":"ㄑㄩㄣˊ","鞋":"ㄒㄧㄝˊ","臉":"ㄌㄧㄢˇ","藍":"ㄌㄢˊ","綠":"ㄌㄩˋ","黃":"ㄏㄨㄤˊ","紫":"ㄗˇ","粉":"ㄈㄣˇ","湖":"ㄏㄨˊ","水":"ㄕㄨㄟˇ","灰":"ㄏㄨㄟ","條":"ㄊㄧㄠˊ","紋":"ㄨㄣˊ","衫":"ㄕㄢ","黑":"ㄏㄟ","牛":"ㄋㄧㄡˊ","仔":"ㄗˇ","洋":"ㄧㄤˊ","禮":"ㄌㄧˇ","其":"ㄑㄧˊ","百":"ㄅㄞˇ","褶":"ㄓㄜˇ","球":"ㄑㄧㄡˊ","咖":"ㄎㄚ","啡":"ㄈㄟ","靴":"ㄒㄩㄝ","雨":"ㄩˇ","蝴":"ㄏㄨˊ","蝶":"ㄉㄧㄝˊ","花":"ㄏㄨㄚ","夾":"ㄐㄧㄚˊ","貓":"ㄇㄠ","耳":"ㄦˇ","朵":"ㄉㄨㄛˇ","皇":"ㄏㄨㄤˊ","冠":"ㄍㄨㄢ","鏡":"ㄐㄧㄥˋ","酷":"ㄎㄨˋ","墨":"ㄇㄛˋ","棒":"ㄅㄤˋ","糖":"ㄊㄤˊ","氣":"ㄑㄧˋ","魔":"ㄇㄛˊ","行":"ㄒㄧㄥˊ","肩":"ㄐㄧㄢ","膀":"ㄅㄤˇ","腳":"ㄐㄧㄠˇ","處":"ㄔㄨˋ","脖":"ㄅㄛˊ","臂":"ㄅㄧˋ","腿":"ㄊㄨㄟˇ","內":"ㄋㄟˋ","蓋":"ㄍㄞˋ","住":"ㄓㄨˋ","提":"ㄊㄧˊ","供":"ㄍㄨㄥ","張":"ㄓㄤ","買":"ㄇㄞˇ","編":"ㄅㄧㄢ","全":"ㄑㄩㄢˊ","甜":"ㄊㄧㄢˊ","美":"ㄇㄟˇ","冒":"ㄇㄠˋ","險":"ㄒㄧㄢˇ","夢":"ㄇㄥˋ","幻":"ㄏㄨㄢˋ","帥":"ㄕㄨㄞˋ","愛":"ㄞˋ","半":"ㄅㄢˋ","握":"ㄨㄛˋ","竿":"ㄍㄢ","左":"ㄗㄨㄛˇ","輯":"ㄐㄧˊ","讓":"ㄖㄤˋ","引":"ㄧㄣˇ","信":"ㄒㄧㄣˋ","火":"ㄏㄨㄛˇ","他":"ㄊㄚ","般":"ㄅㄢ","嘴":"ㄗㄨㄟˇ","瞇":"ㄇㄧ","吐":"ㄊㄨˇ","舌":"ㄕㄜˊ","表":"ㄅㄧㄠˇ","情":"ㄑㄧㄥˊ","印":"ㄧㄣˋ","減":"ㄐㄧㄢˇ","九":"ㄐㄧㄡˇ","乘":"ㄔㄥˊ","按":"ㄢˋ","木":"ㄇㄨˋ","喔":"ㄛ","草":"ㄘㄠˇ","夠":"ㄍㄡˋ","現":"ㄒㄧㄢˋ","幾":"ㄐㄧˇ","十":"ㄕˊ","於":"ㄩˊ","玻":"ㄅㄛ","爸":"ㄅㄚˋ","坡":"ㄆㄛ","葡":"ㄆㄨˊ","萄":"ㄊㄠˊ","摸":"ㄇㄛ","咪":"ㄇㄧ","佛":"ㄈㄛˊ","飛":"ㄈㄟ","象":"ㄒㄧㄤˋ","兔":"ㄊㄨˋ","訥":"ㄋㄜˋ","勒":"ㄌㄜˋ","老":"ㄌㄠˇ","虎":"ㄏㄨˇ","哥":"ㄍㄜ","狗":"ㄍㄡˇ","科":"ㄎㄜ","恐":"ㄎㄨㄥˇ","龍":"ㄌㄨㄥˊ","喝":"ㄏㄜ","基":"ㄐㄧ","雞":"ㄐㄧ","七":"ㄑㄧ","汽":"ㄑㄧˋ","車":"ㄔㄜ","瓜":"ㄍㄨㄚ","知":"ㄓ","豬":"ㄓㄨ","吃":"ㄔ","帆":"ㄈㄢ","船":"ㄔㄨㄢˊ","師":"ㄕ","獅":"ㄕ","巴":"ㄅㄚ","疵":"ㄘ","莓":"ㄇㄟˊ","思":"ㄙ","傘":"ㄙㄢˇ","烏":"ㄨ","龜":"ㄍㄨㄟ","迂":"ㄩ","啊":"˙ㄚ","鴨":"ㄧㄚ","叫":"ㄐㄧㄠˋ","鵝":"ㄜˊ","欸":"ㄞˇ","椰":"ㄧㄝ","哀":"ㄞ","誒":"ㄟ","杯":"ㄅㄟ","凹":"ㄠ","書":"ㄕㄨ","歐":"ㄡ","猴":"ㄏㄡˊ","飯":"ㄈㄢˋ","恩":"ㄣ","門":"ㄇㄣˊ","骯":"ㄤ","綿":"ㄇㄧㄢˊ","羊":"ㄧㄤˊ","鞥":"ㄥ","蜜":"ㄇㄧˋ","蜂":"ㄈㄥ","兒":"ㄦˊ","容":"ㄖㄨㄥˊ","易":"ㄧˋ","搞":"ㄍㄠˇ","混":"ㄏㄨㄣˋ","必":"ㄅㄧˋ","媽":"ㄇㄚ","八":"ㄅㄚ","拉":"ㄌㄚ","哈":"ㄏㄚ","哭":"ㄎㄨ","姑":"ㄍㄨ","粗":"ㄘㄨ","蘇":"ㄙㄨ","刀":"ㄉㄠ","拍":"ㄆㄞ","偷":"ㄊㄡ","收":"ㄕㄡ","溝":"ㄍㄡ","森":"ㄙㄣ","湯":"ㄊㄤ","幫":"ㄅㄤ","燈":"ㄉㄥ","抓":"ㄓㄨㄚ","刷":"ㄕㄨㄚ","偏":"ㄆㄧㄢ","冬":"ㄉㄨㄥ","光":"ㄍㄨㄤ","窗":"ㄔㄨㄤ","香":"ㄒㄧㄤ","江":"ㄐㄧㄤ","春":"ㄔㄨㄣ","秋":"ㄑㄧㄡ","推":"ㄊㄨㄟ","吹":"ㄔㄨㄟ","飄":"ㄆㄧㄠ","歡":"ㄏㄨㄢ","官":"ㄍㄨㄢ","軍":"ㄐㄩㄣ","麻":"ㄇㄚˊ","罵":"ㄇㄚˋ","煩":"ㄈㄢˊ","拔":"ㄅㄚˊ","熟":"ㄕㄨˊ","鼠":"ㄕㄨˇ","樹":"ㄕㄨˋ","躺":"ㄊㄤˇ","燙":"ㄊㄤˋ","急":"ㄐㄧˊ","著":"˙ㄓㄜ","玉":"ㄩˋ","迴":"ㄏㄨㄟˊ","石":"ㄕˊ","五":"ㄨˇ","霧":"ㄨˋ","聊":"ㄌㄧㄠˊ","妻":"ㄑㄧ","騎":"ㄑㄧˊ","蛙":"ㄨㄚ","瓦":"ㄨㄚˇ","襪":"ㄨㄚˋ","青":"ㄑㄧㄥ","鍋":"ㄍㄨㄛ","國":"ㄍㄨㄛˊ","去":"ㄑㄩˋ","通":"ㄊㄨㄥ","桶":"ㄊㄨㄥˇ","痛":"ㄊㄨㄥˋ","毀":"ㄏㄨㄟˇ","訪":"ㄈㄤˇ","問":"ㄨㄣˋ","假":"ㄐㄧㄚˇ","韻":"ㄩㄣˋ","首":"ㄕㄡˇ","量":"ㄌㄧㄤˋ","相":"ㄒㄧㄤ","反":"ㄈㄢˇ","填":"ㄊㄧㄢˊ","似":"ㄙˋ","介":"ㄐㄧㄝˋ","隨":"ㄙㄨㄟˊ","南":"ㄋㄢˊ","康":"ㄎㄤ","軒":"ㄒㄩㄢ","教":"ㄐㄧㄠ","女":"ㄋㄩˇ","姐":"ㄐㄧㄝˇ","河":"ㄏㄜˊ","氵":"ㄕㄨㄟˇ","海":"ㄏㄞˇ","洗":"ㄒㄧˇ","林":"ㄌㄧㄣˊ","桌":"ㄓㄨㄛ","校":"ㄒㄧㄠˋ","口":"ㄎㄡˇ","唱":"ㄔㄤˋ","想":"ㄒㄧㄤˇ","忘":"ㄨㄤˋ","明":"ㄇㄧㄥˊ","晴":"ㄑㄧㄥˊ","艹":"ㄠˇ","茶":"ㄔㄚˊ","你":"ㄋㄧˇ","亻":"ㄖㄣˊ","們":"ㄇㄣˊ","足":"ㄗㄨˊ","跳":"ㄊㄧㄠˋ","言":"ㄧㄢˊ","扌":"ㄕㄡˇ","犭":"ㄑㄩㄢˇ","熱":"ㄖㄜˋ","灬":"ㄏㄨㄛˇ","燒":"ㄕㄠ","土":"ㄊㄨˇ","坐":"ㄗㄨㄛˋ","城":"ㄔㄥˊ","雪":"ㄒㄩㄝˇ","糸":"ㄇㄧˋ","線":"ㄒㄧㄢˋ","鐵":"ㄊㄧㄝˇ","錢":"ㄑㄧㄢˊ","鉛":"ㄑㄧㄢ","竹":"ㄓㄨˊ","筆":"ㄅㄧˇ","笑":"ㄒㄧㄠˋ","隻":"ㄓ","輛":"ㄌㄧㄤˋ","棵":"ㄎㄜ","枝":"ㄓ","床":"ㄔㄨㄤˊ","頂":"ㄉㄧㄥˇ","封":"ㄈㄥ","匹":"ㄆㄧˇ","橋":"ㄑㄧㄠˊ","座":"ㄗㄨㄛˋ","顆":"ㄎㄜ","筷":"ㄎㄨㄞˋ","鳥":"ㄋㄧㄠˇ","冷":"ㄌㄥˇ","早":"ㄗㄠˇ","胖":"ㄆㄤˋ","瘦":"ㄕㄡˋ","遠":"ㄩㄢˇ","近":"ㄐㄧㄣˋ","賣":"ㄇㄞˋ","真":"ㄓㄣ","細":"ㄒㄧˋ","樂":"ㄌㄜˋ","難":"ㄋㄢˊ","傷":"ㄕㄤ","靜":"ㄐㄧㄥˋ","吵":"ㄔㄠˇ","鬧":"ㄋㄠˋ","喜":"ㄒㄧˇ","討":"ㄊㄠˇ","厭":"ㄧㄢˋ","髒":"ㄗㄤ","勇":"ㄩㄥˇ","敢":"ㄍㄢˇ","膽":"ㄉㄢˇ","清":"ㄑㄧㄥ","簡":"ㄐㄧㄢˇ","困":"ㄎㄨㄣˋ","功":"ㄍㄨㄥ","麗":"ㄌㄧˊ","漂":"ㄆㄧㄠ","亮":"ㄌㄧㄤˋ","立":"ㄌㄧˋ","刻":"ㄎㄜˋ","興":"ㄒㄧㄥ","愉":"ㄩˊ","忙":"ㄇㄤˊ","協":"ㄒㄧㄝˊ","助":"ㄓㄨˋ","父":"ㄈㄨˋ","親":"ㄑㄧㄣ","寧":"ㄋㄧㄥˊ","溫":"ㄨㄣ","努":"ㄋㄨˇ","憤":"ㄈㄣˋ","怒":"ㄋㄨˋ","迅":"ㄒㄩㄣˋ","突":"ㄊㄨ","忽":"ㄏㄨ","寒":"ㄏㄢˊ","冰":"ㄅㄧㄥ","句":"ㄐㄩˋ","我":"ㄨㄛˇ","園":"ㄩㄢˊ","室":"ㄕˋ","見":"ㄐㄧㄢˋ","她":"ㄊㄚ","它":"ㄊㄚ","市":"ㄕˋ","場":"ㄔㄤˇ","麵":"ㄇㄧㄢˋ","廟":"ㄇㄧㄠˋ","控":"ㄎㄨㄥˋ","弟":"ㄉㄧˋ","垂":"ㄔㄨㄟˊ","犬":"ㄑㄩㄢˇ","意":"ㄧˋ","蘋":"ㄆㄧㄣˊ","蛋":"ㄉㄢˋ","昆":"ㄎㄨㄣ","蟲":"ㄔㄨㄥˊ","汁":"ㄓ","箏":"ㄓㄥ","月":"ㄩㄝˋ","鼻":"ㄅㄧˊ","章":"ㄓㄤ","王":"ㄨㄤˊ","太":"ㄊㄞˋ","陽":"ㄧㄤˊ","廂":"ㄒㄧㄤ","錶":"ㄅㄧㄠˇ","狐":"ㄏㄨˊ","狸":"ㄌㄧˊ","溜":"ㄌㄧㄡ","斑":"ㄅㄢ","熊":"ㄒㄩㄥˊ","蕉":"ㄐㄧㄠ","糕":"ㄍㄠ","奶":"ㄋㄞˇ","盒":"ㄏㄜˊ","鑰":"ㄩㄝˋ","匙":"ㄔˊ","踏":"ㄊㄚˋ","蝙":"ㄅㄧㄢ","蝠":"ㄈㄨˊ","蜘":"ㄓ","蛛":"ㄓㄨ","噴":"ㄆㄣ","射":"ㄕㄜˋ","練":"ㄌㄧㄢˋ","辨":"ㄅㄧㄢˋ","需":"ㄒㄩ","固":"ㄍㄨˋ","角":"ㄐㄧㄠˇ","含":"ㄏㄢˊ","何":"ㄏㄜˊ","差":"ㄔㄚ","複":"ㄈㄨˋ","止":"ㄓˇ","作":"ㄗㄨㄛˋ","鈕":"ㄋㄧㄡˇ","權":"ㄑㄩㄢˊ","限":"ㄒㄧㄢˋ","辦":"ㄅㄢˋ","續":"ㄒㄩˋ","往":"ㄨㄤˇ","布":"ㄅㄨˋ","沙":"ㄕㄚ","岩":"ㄧㄢˊ","璃":"ㄌㄧˊ","與":"ㄩˇ","獎":"ㄐㄧㄤˇ","勵":"ㄌㄧˋ","漠":"ㄇㄛˋ","建":"ㄐㄧㄢˋ","築":"ㄓㄨˋ","搬":"ㄅㄢ","瞭":"ㄌㄧㄠˋ","望":"ㄨㄤˋ","塔":"ㄊㄚˇ","堡":"ㄅㄠˇ","及":"ㄐㄧˊ","集":"ㄐㄧˊ","但":"ㄉㄢˋ","達":"ㄉㄚˊ","探":"ㄊㄢˋ","挖":"ㄨㄚ","頒":"ㄅㄢ","泡":"ㄆㄠˋ","告":"ㄍㄠˋ","訴":"ㄙㄨˋ","透":"ㄊㄡˋ","稍":"ㄕㄠ","微":"ㄨㄟˊ","藏":"ㄘㄤˊ","走":"ㄗㄡˇ","計":"ㄐㄧˋ","離":"ㄌㄧˊ","鎖":"ㄙㄨㄛˇ","囉":"˙ㄌㄨㄛ","慰":"ㄨㄟˋ","醒":"ㄒㄧㄥˇ","毛":"ㄇㄠˊ","柴":"ㄔㄞˊ","獵":"ㄌㄧㄝˋ","士":"ㄕˋ","奇":"ㄑㄧˊ","戴":"ㄉㄞˋ","呼":"ㄏㄨ","購":"ㄍㄡˋ","模":"ㄇㄛˊ","擺":"ㄅㄞˇ","吧":"˙ㄅㄚ","返":"ㄈㄢˇ","牠":"ㄊㄚ","陪":"ㄆㄟˊ","平":"ㄆㄧㄥˊ","板":"ㄅㄢˇ","尺":"ㄔˇ","寸":"ㄘㄨㄣˋ","判":"ㄆㄢˋ","斷":"ㄉㄨㄢˋ","至":"ㄓˋ","範":"ㄈㄢˋ","圍":"ㄨㄟˊ","理":"ㄌㄧˇ","檢":"ㄐㄧㄢˇ","查":"ㄔㄚˊ","署":"ㄕㄨˇ","鐘":"ㄓㄨㄥ","餵":"ㄨㄟˋ","週":"ㄓㄡ","顧":"ㄍㄨˋ","流":"ㄌㄧㄡˊ","輪":"ㄌㄨㄣˊ","抽":"ㄔㄡ","講":"ㄐㄧㄤˇ","亂":"ㄌㄨㄢˋ","秒":"ㄇㄧㄠˇ","繼":"ㄐㄧˋ","耶":"ㄧㄝ","送":"ㄙㄨㄥˋ","升":"ㄕㄥ","懂":"ㄉㄨㄥˇ","變":"ㄅㄧㄢˋ","厲":"ㄌㄧˋ","害":"ㄏㄞˋ","降":"ㄐㄧㄤˋ","挫":"ㄘㄨㄛˋ","折":"ㄓㄜˊ","感":"ㄍㄢˇ","讚":"ㄗㄢˋ","鼓":"ㄍㄨˇ","附":"ㄈㄨˋ","嘗":"ㄔㄤˊ","謝":"ㄒㄧㄝˋ","願":"ㄩㄢˋ","棄":"ㄑㄧˋ","係":"ㄒㄧˋ","擔":"ㄉㄢ","做":"ㄗㄨㄛˋ","期":"ㄑㄧˊ","午":"ㄨˇ","函":"ㄏㄢˊ","乎":"ㄏㄨ","額":"ㄜˊ","徽":"ㄏㄨㄟ","為":"ㄨㄟˋ","否":"ㄈㄡˇ","虛":"ㄒㄩ","淡":"ㄉㄢˋ","疊":"ㄉㄧㄝˊ","適":"ㄕˋ","約":"ㄩㄝ","吸":"ㄒㄧ","形":"ㄒㄧㄥˊ","斜":"ㄒㄧㄝˊ","植":"ㄓˊ","泥":"ㄋㄧˊ","卵":"ㄌㄨㄢˇ","磚":"ㄓㄨㄢ","戶":"ㄏㄨˋ","葉":"ㄧㄝˋ","櫻":"ㄧㄥ","松":"ㄙㄨㄥ","鬱":"ㄩˋ","叢":"ㄘㄨㄥˊ","蘑":"ㄇㄛˊ","菇":"ㄍㄨ","藤":"ㄊㄥˊ","蔓":"ㄇㄢˋ","籠":"ㄌㄨㄥˊ","梯":"ㄊㄧ","籬":"ㄌㄧˊ","笆":"ㄅㄚ","椅":"ㄧˇ","葵":"ㄎㄨㄟˊ","盪":"ㄉㄤˋ","鞦":"ㄑㄧㄡ","韆":"ㄑㄧㄢ","彩":"ㄘㄞˇ","虹":"ㄏㄨㄥˊ","田":"ㄊㄧㄢˊ","農":"ㄋㄨㄥˊ","舍":"ㄕㄜˋ","墅":"ㄕㄨˋ","摩":"ㄇㄛˊ","豪":"ㄏㄠˊ","宅":"ㄓㄞˊ","迎":"ㄧㄥˊ","列":"ㄌㄧㄝˋ","捲":"ㄐㄩㄢˇ","被":"ㄅㄟˋ","擋":"ㄉㄤˇ","滑":"ㄏㄨㄚˊ","恭":"ㄍㄨㄥ","局":"ㄐㄩˊ","憶":"ㄧˋ","楚":"ㄔㄨˇ","順":"ㄕㄨㄣˋ","趕":"ㄍㄢˇ","怪":"ㄍㄨㄞˋ","迷":"ㄇㄧˊ","宮":"ㄍㄨㄥ","鍵":"ㄐㄧㄢˋ","悄":"ㄑㄧㄠ","低":"ㄉㄧ","餓":"ㄜˋ","病":"ㄅㄧㄥˋ","頸":"ㄐㄧㄥˇ","鹿":"ㄌㄨˋ","累":"ㄌㄟˋ","積":"ㄐㄧ","替":"ㄊㄧˋ","伴":"ㄅㄢˋ","稀":"ㄒㄧ","鱒":"ㄗㄨㄣ","鯉":"ㄌㄧˇ","豚":"ㄊㄨㄣˊ","丑":"ㄔㄡˇ","紀":"ㄐㄧˋ","歲":"ㄙㄨㄟˋ","繫":"ㄒㄧˋ","陌":"ㄇㄛˋ","牙":"ㄧㄚˊ","根":"ㄍㄣ","北":"ㄅㄟˇ","融":"ㄖㄨㄥˊ","硬":"ㄧㄥˋ","扇":"ㄕㄢˋ","喵":"ㄇㄧㄠ","咩":"ㄇㄧㄝ","蘿":"ㄌㄨㄛˊ","蔔":"˙ㄅㄛ","蝌":"ㄎㄜ","蚪":"ㄉㄡˇ","災":"ㄗㄞ","搭":"ㄉㄚ","震":"ㄓㄣˋ","遇":"ㄩˋ","壞":"ㄏㄨㄞˋ","警":"ㄐㄧㄥˇ","察":"ㄔㄚˊ","鰓":"ㄙㄞ","阿":"ㄚ","里":"ㄌㄧˇ","煮":"ㄓㄨˇ","滾":"ㄍㄨㄣˇ","蒸":"ㄓㄥ","颱":"ㄊㄞˊ","浪":"ㄌㄤˋ","址":"ㄓˇ","類":"ㄌㄟˋ","活":"ㄏㄨㄛˊ","雷":"ㄌㄟˊ","閃":"ㄕㄢˇ","滴":"ㄉㄧ","染":"ㄖㄢˇ","繞":"ㄖㄠˋ","圈":"ㄑㄩㄢ","久":"ㄐㄧㄡˇ","遮":"ㄓㄜ","沸":"ㄈㄟˋ","騰":"ㄊㄥˊ","磁":"ㄘˊ","釘":"ㄉㄧㄥ","塑":"ㄙㄨˋ","膠":"ㄐㄧㄠ","氧":"ㄧㄤˇ","碳":"ㄊㄢˋ","企":"ㄑㄧˋ","極":"ㄐㄧˊ","臟":"ㄗㄤˋ","血":"ㄒㄧㄝˇ","液":"ㄧˋ","消":"ㄒㄧㄠ","食":"ㄕˊ","拋":"ㄆㄠ","待":"ㄉㄞˋ","浮":"ㄈㄨˊ","元":"ㄩㄢˊ","餌":"ㄦˇ","飽":"ㄅㄠˇ","甩":"ㄕㄨㄞˇ","弧":"ㄏㄨˊ","落":"ㄌㄨㄛˋ","碰":"ㄆㄥˋ","鉤":"ㄍㄡ","滿":"ㄇㄢˇ","游":"ㄧㄡˊ","幸":"ㄒㄧㄥˋ","福":"ㄈㄨˊ","領":"ㄌㄧㄥˇ","養":"ㄧㄤˇ","油":"ㄧㄡˊ","觀":"ㄍㄨㄢ","爆":"ㄅㄠˋ","哇":"ㄨㄚ","又":"ㄧㄡˋ","副":"ㄈㄨˋ","競":"ㄐㄧㄥˋ","賽":"ㄙㄞˋ","誰":"ㄕㄨㄟˊ","邀":"ㄧㄠ","呢":"˙ㄋㄜ","贏":"ㄧㄥˊ","毫":"ㄏㄠˊ","隔":"ㄍㄜˊ","誤":"ㄨˋ","悉":"ㄒㄧ","噢":"ㄛ","旋":"ㄒㄩㄢˊ","求":"ㄑㄧㄡˊ","牆":"ㄑㄧㄤˊ","鄰":"ㄌㄧㄣˊ","超":"ㄔㄠ","況":"ㄎㄨㄤˋ","議":"ㄧˋ","齡":"ㄌㄧㄥˊ","此":"ㄘˇ","除":"ㄔㄨˊ","帳":"ㄓㄤˋ","匯":"ㄏㄨㄟˋ","輔":"ㄈㄨˇ","朗":"ㄌㄤˇ","佳":"ㄐㄧㄚ","詢":"ㄒㄩㄣˊ","瀏":"ㄌㄧㄡˊ","覽":"ㄌㄢˇ","輸":"ㄕㄨ","擇":"ㄗㄜˊ","製":"ㄓˋ","復":"ㄈㄨˋ","脫":"ㄊㄨㄛ","族":"ㄗㄨˊ","村":"ㄘㄨㄣ","莊":"ㄓㄨㄤ","道":"ㄉㄠˋ","仍":"ㄖㄥˊ","未":"ㄨㄟˋ","束":"ㄕㄨˋ","略":"ㄌㄩㄝˋ"};/* ZYDICT-END */
 // 破音字依詞語決定讀音，比單字字典優先
 const ZYWORDS = {
   '睡覺': ['ㄕㄨㄟˋ', 'ㄐㄧㄠˋ'], '跑得': ['ㄆㄠˇ', '˙ㄉㄜ'], '心地': ['ㄒㄧㄣ', '˙ㄉㄜ'], '暖和': ['ㄋㄨㄢˇ', '˙ㄏㄨㄛ'], '乾淨': ['ㄍㄢ', 'ㄐㄧㄥˋ'], '帽子': ['ㄇㄠˋ', '˙ㄗ'],
@@ -876,7 +884,7 @@ function pickVoice() {
   EN = en.find(v => v.voiceURI === d.enVoice) || betterVoice(voiceList(/en[-_]US/i)) || betterVoice(voiceList(/^en/i));
 }
 if (window.speechSynthesis) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
-// 破音字：裝置語音會念錯的詞，換成同音字再念（跟 tools/make-voice.js 的 SUB 一樣）
+// 破音字：語音會念錯的詞，換成同音字再念。tools/make-voice.js 也會讀這份清單產生音檔（要寫在同一行）
 const SAY_SUB = [['長大', '掌大'], ['長高', '掌高'], ['長出', '掌出'], ['長成', '掌成'], ['生長', '生掌'], ['成長', '成掌']];
 function utter(text, en, rate) {
   if (!en) text = SAY_SUB.reduce((s, [a, b]) => s.split(a).join(b), text);
@@ -891,6 +899,17 @@ function utter(text, en, rate) {
 }
 let sayTok = 0, curAudio = null, sayBusy = false, sayAfter = [];
 const VA = new Audio();
+// iPad／iPhone 的裝置語音和音檔，要先在「孩子點一下」的當下啟動過一次，之後才能自動念。
+// 不然第一題常常會沒聲音（題目是在音檔念完後才交給裝置語音，那時已經不算點擊）。所以第一次點螢幕時先無聲地各啟動一次
+let voiceReady = false;
+function unlockVoice() {
+  if (voiceReady) return;
+  voiceReady = true;
+  try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) {}
+  try { if (!curAudio) { VA.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='; VA.play().catch(() => {}); } } catch (e) {}
+  try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); AC.resume(); } catch (e) {}
+}
+['touchend', 'click'].forEach(t => document.addEventListener(t, unlockVoice, { capture: true }));
 function stopVoice() {
   sayTok++; sayBusy = false; sayAfter = [];
   if (curAudio) { curAudio.pause(); curAudio = null; }
@@ -974,6 +993,7 @@ function sayParts(parts, onDone) {
     try {
       const u = utter(text, p.en, p.rate);
       u.onend = done; u.onerror = done;
+      speechSynthesis.resume(); // 從背景回來時 iPad 的語音有時會停在暫停狀態
       speechSynthesis.speak(u);
     } catch (e) { return done(); }
     // iPad 偶爾不觸發 onend，用時間保底
@@ -1402,11 +1422,11 @@ const addVis = (a, b, lab) => `<div class="addv">${grid(a, 'grass', 5, lab, 1)}<
 function genQ(L) {
   switch (L) {
     case 1: {
-      const n = ri(1, 10), big = h => `<div style="--b:min(10vw,8vh,96px)">${h}</div>`;
+      const n = ri(1, 10), big = h => `<div style="--b:min(calc(10 * var(--vw, 1vw)),calc(8 * var(--vh, 1vh)),96px)">${h}</div>`;
       return { say: '數數看，有幾個方塊？', display: '有幾個方塊？', rec: `數 ${n} 個方塊`, visual: big(grid(n, 'grass', 5)), hint: big(grid(n, 'grass', 5, true)), answer: n, options: opts(n, 1, 12) };
     }
     case 2: {
-      const n = ri(11, 30), big = h => `<div style="--b:min(7.5vw,6.5vh,70px)">${h}</div>`;
+      const n = ri(11, 30), big = h => `<div style="--b:min(calc(7.5 * var(--vw, 1vw)),calc(6.5 * var(--vh, 1vh)),70px)">${h}</div>`;
       return { say: '數數看，有幾個方塊？十個排成一排喔！', display: '有幾個方塊？', rec: `數 ${n} 個方塊`, visual: big(grid(n, 'planks', 10)), hint: big(grid(n, 'planks', 10, true)), answer: n, options: opts(n, 10, 32) };
     }
     case 3: {
@@ -1544,14 +1564,17 @@ const ZH_FILL = [['今天是晴天，我們去公園玩。', '晴', '清請情']
 const RAD_NAME = { 女: '女字旁', 氵: '三點水', 木: '木字旁', 口: '口字旁', 心: '心字底', 日: '日字旁', 艹: '草字頭', 亻: '單人旁', 足: '足字旁', 言: '言字旁', 扌: '提手旁', 手: '手字底',
   犭: '犬字旁', 灬: '四點火', 火: '火字旁', 土: '土字旁', 雨: '雨字頭', 目: '目字旁', 糸: '糸字旁', 金: '金字旁', 竹: '竹字頭' };
 const radLabel = r => `<b class="radch">${r}</b><small>${zy(RAD_NAME[r])}</small>`;
+// 選項的樣子：部首題顯示部首和名稱，其他加注音（每週回顧從存檔還原題目時也用這個）
+const zhLabel = q => q.radOpt ? radLabel : zy;
+const ZH_RAD_ALL = [...new Set(ZH_RAD.map(x => x[1]))];
 const zhOpts = (ans, pool, n = 4) => { const o = new Set([ans]); for (const x of shuffle(pool.slice())) if (o.size < n && x !== ans) o.add(x); return shuffle([...o]); };
-const zhQ = (parts, display, answer, options, rec, hint, more) => ({ parts, display, visual: '', answer, options, optClass: 'kn', optLabel: o => zy(o),
+const zhQ = (parts, display, answer, options, rec, hint, more) => ({ zh: 1, parts, display, visual: '', answer, options, optClass: 'kn', optLabel: zy,
   ansParts: [{ text: answer }], rec, ...(hint ? { hint: `<div class="tip">${zy(hint)}</div>`, hintParts: [{ text: hint }] } : {}), ...more });
 function genZH(k) {
   switch (k) {
     case 0: {
       const [ch, r] = pick(ZH_RAD);
-      return zhQ([{ text: ch }, { text: '這個字的部首是哪一個？' }], `「${ch}」的部首是？`, r, zhOpts(r, [...new Set(ZH_RAD.map(x => x[1]))]), `「${ch}」的部首`,
+      return zhQ([{ text: ch }, { text: '這個字的部首是哪一個？' }], `「${ch}」的部首是？`, r, zhOpts(r, ZH_RAD_ALL), `「${ch}」的部首`,
         '部首常常在字的左邊或上面', { optClass: 'kn rad', radOpt: 1, optLabel: radLabel, ansParts: [{ text: RAD_NAME[r] }] });
     }
     case 1: {
@@ -1891,7 +1914,6 @@ function mount(html) {
   clearLater();
   if (S.screen !== mountedScreen) { stopVoice(); mountedScreen = S.screen; }
   app.innerHTML = html;
-  if (S.gateUnlock) renderGate(true); // 換畫面時解鎖畫面要留著
   if (S.child) updateHud();
   if (S.sunset && app.firstElementChild) app.firstElementChild.classList.add('sunset');
 }
@@ -1959,6 +1981,8 @@ function renderShop(line) {
   const c = S.child, sel = S.shopSel;
   const card = (id, icon) => {
     const it = shopItem(id), use = using(c, it);
+    // 家園裝飾：家園八關都過了才開放，之前是灰色不能按
+    if (it.kind === 'g' && !gardenFree(c)) return `<button class="shopi off" disabled><div class="sicon">${icon}</div><div class="sname">${zy(it.name)}</div><div class="sprice">🔒</div></button>`;
     const tag = it.kind === 'm' ? `⭐ ${it.price}` : (it.kind === 'p' || it.kind === 'g') && owns(c, it) ? zy('已經有了') : use ? `✓ ${zy('使用中')}` : owns(c, it) ? zy('點我換上') : `${curIcon(it)} ${it.price}`;
     return `<button class="shopi ${sel === id ? 'sel' : ''} ${use ? 'use' : ''}" data-act="buy" data-v="${id}"><div class="sicon">${icon}</div><div class="sname">${zy(it.name)}</div><div class="sprice">${tag}</div></button>`;
   };
@@ -1974,7 +1998,7 @@ function renderShop(line) {
       <div class="shopcur gold">${ICO.gold()} ${zy('用金礦買')}　<b>${c.gold}</b></div>
       ${sec('✨ ' + zy('特別頭像'), [0, ...OUTFITS.map(x => x[0])].map(n => card('o:' + n, `<img ${n ? '' : 'class="px"'} src="${n ? `img/char-${n}-face.webp` : avatarURL({ ...o, outfit: 0 })}" alt="">`)))}
       ${DOLL_SLOTS.map(([slot, name]) => sec('👗 ' + zy(name), DOLL.filter(d => d.slot === slot && d.price).map(d => card('d:' + d.id, `<img class="px doll" src="${dollURL({ ...o, [slot]: d.id })}">`)))).join('')}
-      ${sec('🌳 ' + zy('家園裝飾'), GITEMS.filter(g => g.price).map(g => card('g:' + g.id, `<span class="gprev">${gHTML(g)}</span>`)))}
+      ${sec('🌳 ' + zy('家園裝飾') + (gardenFree(c) ? '' : `　<small>🔒 ${zy('家園八關都過了才能買')}</small>`), GITEMS.filter(g => g.price).map(g => card('g:' + g.id, `<span class="gprev">${gHTML(g)}</span>`)))}
       ${sec('🐾 ' + zy('寵物'), PETS.map(([id]) => card('p:' + id, `<img src="${petImg(id)}" alt="">`)))}
     </div></div>`);
 }
@@ -2064,26 +2088,39 @@ function fitViewport() {
   document.documentElement.classList.toggle('phone', phone);
   st.width = st.height = st.transform = st.right = st.bottom = '';
   zoomK = 1;
+  let vw = 0, vh = 0;
   if (phone) {
     const r = app.getBoundingClientRect(), W = r.width, H = r.height, land = W > H;
     const k = Math.min(1, W / VP_MIN_W, land ? H / VP_MIN_H : 1);
-    if (k < 1) { zoomK = k; Object.assign(st, { width: W / k + 'px', height: H / k + 'px', right: 'auto', bottom: 'auto', transform: `scale(${k})` }); }
+    if (k < 1) zoomK = k, vw = W / k, vh = H / k;
   }
-  document.documentElement.style.setProperty('--zk', zoomK);
+  // 版面裡的 vw/vh 都寫成 calc(N * var(--vw, 1vw))，縮放時改成放大後的尺寸，比例才會跟平板一樣
+  const rs = document.documentElement.style;
+  rs.setProperty('--zk', zoomK);
+  if (zoomK < 1) {
+    Object.assign(st, { width: vw + 'px', height: vh + 'px', right: 'auto', bottom: 'auto', transform: `scale(${zoomK})` });
+    rs.setProperty('--vw', vw / 100 + 'px'); rs.setProperty('--vh', vh / 100 + 'px');
+  } else { rs.removeProperty('--vw'); rs.removeProperty('--vh'); }
+  // 畫面大小變了，房子和家園的格子也要重算
   if (S.screen === 'garden' && S.gLv != null) fitGarden();
-  if (S.screen === 'house' && typeof fitHouse === 'function') fitHouse();
+  if (S.screen === 'house') fitHouse();
 }
 function switchDevice() {
   const next = devMode() === 'phone' ? 'tablet' : 'phone';
   try { localStorage.setItem('bi-device', next); } catch (e) {}
   fitViewport(); SFX.tap(); renderLogin();
 }
-addEventListener('resize', () => setTimeout(fitViewport, 50));
-matchMedia('(orientation: landscape)').addEventListener('change', () => setTimeout(fitViewport, 300));
+// 轉方向會連續觸發好幾次，等停下來再重算一次就好
+let fitTimer = 0;
+const refit = ms => () => { clearTimeout(fitTimer); fitTimer = setTimeout(fitViewport, ms); };
+addEventListener('resize', refit(80));
+matchMedia('(orientation: landscape)').addEventListener('change', refit(300));
 
 /* ---------- 版本檢查：登入畫面告訴家長現在是不是最新版 ---------- */
-const APP_VER = '2026.10.24-4'; // 每次部署 index.html 都要改
-let latestVer = null, verErr = false, verAt = 0;
+const APP_VER = '2026.10.24-5'; // 每次部署 index.html 都要改
+let latestVer = null, verErr = false, verAt = 0, latestHTML = null;
+// ?fresh 讓 sw.js 不走快取，直接向網路拿
+const fetchFresh = () => fetch('index.html?fresh=' + Date.now(), { cache: 'no-store' }).then(r => { if (!r.ok) throw 0; return r.text(); });
 const verLine = () => verErr ? `版本 ${APP_VER}　⚠ 沒有網路，無法確認是不是最新版`
   : !latestVer ? `版本 ${APP_VER}　檢查中…`
   : latestVer === APP_VER ? `版本 ${APP_VER}　✅ 已經是最新版`
@@ -2093,9 +2130,9 @@ async function checkVersion() {
   if (Date.now() - verAt < 60e3) return;
   verAt = Date.now();
   try {
-    const t = await (await fetch('index.html?fresh=' + Date.now(), { cache: 'no-store' })).text();
-    const m = t.match(/const APP_VER = '([^']+)'/);
+    const t = await fetchFresh(), m = t.match(/const APP_VER = '([^']+)'/);
     latestVer = m ? m[1] : APP_VER; verErr = false;
+    latestHTML = latestVer === APP_VER ? null : t; // 有新版就留著，按更新時不用再下載一次
   } catch (e) { verErr = true; verAt = 0; }
   const el = document.getElementById('appver'); if (el) el.innerHTML = verLine();
 }
@@ -2103,14 +2140,11 @@ async function checkVersion() {
 async function appUpdate() {
   const el = document.getElementById('appver'); if (el) el.textContent = '更新中，請稍等…';
   try {
-    const r = await fetch('index.html?fresh=' + Date.now(), { cache: 'no-store' });
-    if (!r.ok) throw 0;
-    const body = await r.blob();
+    const body = latestHTML || await fetchFresh();
     for (const k of await caches.keys()) {
       if (!k.startsWith('block-island-')) continue;
       const c = await caches.open(k);
-      await c.put('./', new Response(body, { headers: { 'Content-Type': 'text/html' } }));
-      await c.put('./index.html', new Response(body, { headers: { 'Content-Type': 'text/html' } }));
+      for (const u of ['./', './index.html']) await c.put(u, new Response(body, { headers: { 'Content-Type': 'text/html; charset=utf-8' } }));
     }
     const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration();
     if (reg) await reg.update().catch(() => {});
@@ -2317,7 +2351,7 @@ function startReview() {
 function reviewQ(w) {
   const q = JSON.parse(JSON.stringify(w.q));
   if (q.optClass === 'emo') q.optLabel = x => EMO[x];
-  if (/\bkn\b/.test(q.optClass || '')) q.optLabel = q.radOpt ? radLabel : o => zy(o);
+  if (q.zh) q.optLabel = zhLabel(q);
   return q;
 }
 function finishReview() {
@@ -2417,7 +2451,6 @@ function fitHouse() {
   const now = h.offsetWidth / 12, fit = Math.floor(Math.min(now, H / rows, W / 12));
   if (fit < now) h.style.setProperty('--hb', fit + 'px');
 }
-window.addEventListener('resize', () => { if (S.screen === 'house') fitHouse(); });
 // 拖曳手上的材料到虛線格子；要放的格子會亮黃框
 function setupHouseDrag() {
   const c = S.child;
@@ -2539,6 +2572,8 @@ function gItem(id) {
   return GITEMS.find(g => g.id === id);
 }
 const gOwns = (c, g) => !g.price || c.owned.includes('g:' + g.id);
+// 家園八關都過了（可以自由設計）商店才開放買特別裝飾；之前買過的照樣留著
+const gardenFree = c => (c.garden.lv || 0) >= GLEVELS.length;
 function gArt(g) {
   const k = 'g_' + g.id;
   return SPR[k] || (SPR[k] = sprite(GART[g.art], { ...GPAL, ...(g.pal || {}) }));
@@ -2592,13 +2627,13 @@ function renderGardenMenu(hello) {
   mount(`<div class="screen sky garden">${hud('house')}
     <div class="hmsg sm">${zy('照著範例拼出一樣的家園，八關都過了就能自己設計！')}　<span id="gtime">${gTime(c)}</span></div>
     <div class="glvs">${GLEVELS.map((L, k) => card(k, `第 ${k + 1} 關 ${L.name}`, gGrid(L.cells, L.w, L.h), k <= done, k < done)).join('')}
-      ${card('free', '自由設計', gGrid(c.garden.cells, GW, GH), done >= GLEVELS.length, 0)}</div></div>`);
+      ${card('free', '自由設計', gGrid(c.garden.cells, GW, GH), gardenFree(c), 0)}</div></div>`);
   if (c.garden.gift) { gardenGiftAsk(); return; }
-  if (hello) speak(done >= GLEVELS.length ? '歡迎來到家園！可以自己設計，也可以再玩一次關卡喔！' : `歡迎來到家園！照著範例拼出一樣的房子，完成第 ${done + 1} 關吧！`);
+  if (hello) speak(gardenFree(c) ? '歡迎來到家園！可以自己設計，也可以再玩一次關卡喔！' : `歡迎來到家園！照著範例拼出一樣的房子，完成第 ${done + 1} 關吧！`);
 }
 function gardenOpen(k) {
   const c = S.child, done = c.garden.lv || 0;
-  if (k === 'free') { if (done < GLEVELS.length) { SFX.no(); speak('八關都完成，就可以自己設計家園喔！'); return; } S.gLv = 'free'; SFX.tap(); renderGarden(true); return; }
+  if (k === 'free') { if (!gardenFree(c)) { SFX.no(); speak('八關都完成，就可以自己設計家園喔！'); return; } S.gLv = 'free'; SFX.tap(); renderGarden(true); return; }
   if (+k > done) { SFX.no(); speak('要先完成前面的關卡喔！'); return; }
   S.gLv = +k; SFX.tap(); renderGarden(true);
 }
@@ -2610,21 +2645,23 @@ function gCur() {
   return { cells: p[S.gLv] = p[S.gLv] || {}, w: L.w, h: L.h, L };
 }
 const gScore = (cur) => { const L = cur.L; let ok = 0, bad = 0; for (const [i, id] of Object.entries(cur.cells)) { if (L.cells[i] === id) ok++; else bad++; } return { ok, bad }; };
+const pickCls = id => S.gPick && S.gPick.from < 0 && S.gPick.id === id ? 'sel' : '';
 function renderGarden(hello) {
   S.screen = 'garden';
+  if (hello) S.gPick = null;
   const c = S.child, cur = gCur(), L = cur.L;
   let side, msg, pal;
   if (L) {
     const { ok } = gScore(cur);
     msg = `${zy(`第 ${S.gLv + 1} 關：拼出一樣的${L.name}`)}　${zy(`對了 ${ok} / ${L.total} 格`)}`;
     side = `<div class="gtarget"><div class="gtt">${zy('範例')}</div>${gGrid(L.cells, L.w, L.h)}</div>`;
-    pal = L.items.map(id => gItem(id)).map(g => `<div class="gitem" data-g="${g.id}">${gHTML(g)}<span>${zy(g.name)}</span></div>`).join('');
+    pal = L.items.map(id => gItem(id)).map(g => `<div class="gitem ${pickCls(g.id)}" data-g="${g.id}">${gHTML(g)}<span>${zy(g.name)}</span></div>`).join('');
   } else {
     const tab = S.gTab || 'b';
     const list = tab === 'p' ? [gItem('me'), ...c.pets.map(p => gItem('pet-' + p.id))] : GITEMS.filter(g => g.tab === tab);
-    msg = zy('把東西拖到空地上，拖到外面就會拿掉');
+    msg = zy('點一下東西，再點一下空地就放上去');
     side = `<div class="gtabs">${GTABS.map(([t, n]) => `<button class="btn ${t === tab ? 'green' : ''}" data-act="gtab" data-v="${t}">${zy(n)}</button>`).join('')}</div>`;
-    pal = list.map(g => `<div class="gitem ${gOwns(c, g) ? '' : 'lock'}" data-g="${g.id}">${gHTML(g)}<span>${zy(g.name)}</span>${gOwns(c, g) ? '' : `<b>${ICO.gold()}${g.price}</b>`}</div>`).join('');
+    pal = list.map(g => `<div class="gitem ${gOwns(c, g) ? '' : 'lock'} ${pickCls(g.id)}" data-g="${g.id}">${gHTML(g)}<span>${zy(g.name)}</span>${gOwns(c, g) ? '' : `<b>${ICO.gold()}${g.price}</b>`}</div>`).join('');
   }
   // 重畫時保留下方物品列捲到的位置
   const old = document.querySelector('.gpal'), sl = old && !hello && old.dataset.tab === (S.gTab || '') ? old.scrollLeft : 0;
@@ -2634,8 +2671,15 @@ function renderGarden(hello) {
       <div class="gside">${side}<div class="row">${L ? `<button class="btn orange" data-act="ghint">💡 ${zy('提示')} ⭐${GHINT_STARS}</button>` : ''}<button class="btn" data-act="gclear">🧹 ${zy('全部清掉')}</button></div></div></div>
       <div class="gpal" data-tab="${S.gTab || ''}">${pal}</div></div></div>`);
   document.querySelector('.gpal').scrollLeft = sl;
+  // 手上拿著東西：提示點格子放上去；從空地拿起來的那格變淡
+  if (S.gPick) {
+    document.querySelector('.hmsg').innerHTML = `👉 ${zy(S.gPick.from >= 0 ? '點別的格子搬過去，點同一格就拿掉' : '點一下空地的格子，放上去')}`;
+    document.querySelector('.grow .gfield').classList.add('picking');
+    if (S.gPick.from >= 0) document.querySelector(`.grow .gc[data-i="${S.gPick.from}"]`)?.classList.add('lift', 'over');
+  }
+  // 量兩次：範例小圖的大小（--gt）跟著格子大小變，旁邊的寬度變了要再量一次
   fitGarden(); fitGarden(); setupGardenDrag();
-  if (hello) speak(L ? `第 ${S.gLv + 1} 關，${L.name}！看旁邊的範例，把一樣的東西拖到一樣的位置！` : '自由設計！把方塊、屋頂、花草和自己拖到空地上，布置你的家園吧！');
+  if (hello) speak(L ? `第 ${S.gLv + 1} 關，${L.name}！看旁邊的範例，點一下下面的東西，再點一下空地的格子，就可以放上去！` : '自由設計！點一下下面的東西，再點一下空地，布置你的家園吧！');
 }
 // 空地依剩下的空間放大縮小（直向時東西在下面，橫向時在右邊）
 function fitGarden() {
@@ -2645,68 +2689,70 @@ function fitGarden() {
   const gc = Math.max(18, Math.min(72, Math.floor(Math.min(W / w, H / (h + 1)))));
   row.style.setProperty('--gc', gc + 'px'); row.style.setProperty('--gt', Math.floor(Math.min(gc * .6, 300 / w)) + 'px');
 }
-window.addEventListener('resize', () => { if (S.screen === 'garden' && S.gLv != null) fitGarden(); });
-// 從旁邊拿東西，或把空地上的東西拖去別格；放開時不在空地上就拿掉
+// 兩種放法：①點一下東西（會亮起來）再點一下空地的格子；②直接拖過去，放開時不在空地上就拿掉
+// 點一下空地上的東西也會拿起來，再點別格就搬過去、點同一格就拿掉。拿著的東西記在 S.gPick
+function gPlace(cur, id, from, to) {
+  const cells = cur.cells;
+  S.gPick = null;
+  if (to < 0 && from < 0) return renderGarden();
+  if (to >= 0 && to !== from) {
+    // 放到有東西的格子：兩個交換位置（從旁邊拿的就直接蓋過去）
+    if (from >= 0) { if (cells[to]) cells[from] = cells[to]; else delete cells[from]; }
+    cells[to] = id; SFX.tap();
+  } else if (from >= 0) { delete cells[from]; SFX.no(); }
+  save();
+  if (cur.L && gardenCheck(cur)) return;
+  renderGarden();
+}
 function setupGardenDrag() {
   const c = S.child, cur = gCur(), cells = cur.cells;
-  let ghost = null, id = '', from = -1, lift = 0;
+  let ghost = null, id = '', from = -1, lift = 0, start = null, moved = false, over = null;
   const cellAt = (x, y) => { const el = document.elementFromPoint(x, y); return el && el.closest('.grow .gc'); };
-  // 孩子放不準：關卡裡附近一格半內有這個東西該放、還空著的格子，就吸過去
-  const target = (x, y) => {
-    const t = cellAt(x, y);
-    if (!cur.L) return t;
-    if (t && cur.L.cells[t.dataset.i] === id) return t;
-    let best = null, bd = Infinity;
-    document.querySelectorAll('.grow .gc').forEach(el => {
-      const i = +el.dataset.i; if (cur.L.cells[i] !== id || (cells[i] === id && i !== from)) return;
-      const r = el.getBoundingClientRect(), d = Math.hypot(x - (r.left + r.width / 2), y - (r.top + r.height / 2));
-      if (d < r.width * 1.5 && d < bd) { bd = d; best = el; }
-    });
-    return best || t;
-  };
-  // 東西畫在手指上面一點，才不會被手指擋住
+  // 拖的時候東西畫在手指上面一點，才不會被手指擋住
   const pt = e => [e.clientX, e.clientY - lift];
+  const off = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up); };
   const move = e => {
-    if (!ghost) return;
+    if (!moved) {
+      if (Math.hypot(e.clientX - start[0], e.clientY - start[1]) < 10) return;
+      moved = true;
+      const g = gItem(id), gc = parseFloat(getComputedStyle(document.querySelector('.grow')).getPropertyValue('--gc'));
+      ghost = document.createElement('div');
+      ghost.className = 'ghost gghost'; ghost.innerHTML = gHTML(g);
+      ghost.style.setProperty('--gb', Math.round(gc * 1.3) + 'px');
+      lift = e.pointerType === 'mouse' ? 0 : gc * zoomK * 0.9;
+      document.body.appendChild(ghost);
+      if (from >= 0) document.querySelector(`.grow .gc[data-i="${from}"]`).classList.add('lift');
+    }
     const [x, y] = pt(e);
     ghost.style.left = x + 'px'; ghost.style.top = y + 'px';
-    const t = target(x, y);
-    document.querySelectorAll('.gc.over').forEach(el => el !== t && el.classList.remove('over'));
-    if (t) t.classList.add('over');
+    const t = cellAt(x, y);
+    if (t !== over) { over?.classList.remove('over'); t?.classList.add('over'); over = t; }
   };
   const up = e => {
-    if (!ghost) return;
-    ghost.remove(); ghost = null;
-    window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up);
-    if (S.screen !== 'garden') return;
-    const t = e.type === 'pointercancel' ? null : target(...pt(e)), to = t ? +t.dataset.i : -1;
-    if (from >= 0 && to === from) { renderGarden(); return; }
-    if (from < 0 && to < 0) return; // 只是左右滑物品列，沒有放東西
-    if (to >= 0) {
-      // 拖到有東西的格子：兩個交換位置（從旁邊拿的就直接蓋過去）
-      if (from >= 0) { if (cells[to]) cells[from] = cells[to]; else delete cells[from]; }
-      cells[to] = id; SFX.tap();
-    } else if (from >= 0) { delete cells[from]; SFX.no(); }
-    save();
-    if (cur.L && gardenCheck(cur)) return;
-    renderGarden();
+    off();
+    if (ghost) { ghost.remove(); ghost = null; }
+    if (S.screen !== 'garden' || e.type === 'pointercancel') { if (moved && S.screen === 'garden') renderGarden(); return; } // 左右滑物品列
+    if (moved) { const t = cellAt(...pt(e)); return gPlace(cur, id, from, t ? +t.dataset.i : -1); }
+    // 只是點一下：拿起來（再點一次同一個就放下）
+    const p = S.gPick;
+    if (p && p.id === id && p.from === from && from < 0) { S.gPick = null; return renderGarden(); }
+    S.gPick = { id, from }; SFX.tap(); renderGarden();
   };
-  const grab = (e, gid, src) => {
+  const down = (e, gid, src) => {
     const g = gItem(gid);
     if (!cur.L && !gOwns(c, g)) { SFX.no(); speak(`${g.name}要在商店用金礦買喔！`); return; }
-    e.preventDefault(); id = gid; from = src;
+    if (e.pointerType === 'mouse') e.preventDefault();
+    id = gid; from = src; start = [e.clientX, e.clientY]; moved = false;
     if (src < 0 && !c.garden.heard.includes(gid)) { c.garden.heard.push(gid); speak(g.name); }
-    ghost = document.createElement('div');
-    ghost.className = 'ghost gghost'; ghost.innerHTML = gHTML(g);
-    const gc = parseFloat(getComputedStyle(document.querySelector('.grow')).getPropertyValue('--gc'));
-    ghost.style.setProperty('--gb', Math.round(gc * 1.3) + 'px');
-    lift = e.pointerType === 'mouse' ? 0 : gc * zoomK * 0.9;
-    document.body.appendChild(ghost); move(e);
-    if (src >= 0) document.querySelector(`.grow .gc[data-i="${src}"]`).classList.add('lift');
     window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
   };
-  document.querySelectorAll('.gitem').forEach(el => el.addEventListener('pointerdown', e => grab(e, el.dataset.g, -1)));
-  document.querySelectorAll('.grow .gc.has').forEach(el => el.addEventListener('pointerdown', e => grab(e, cells[el.dataset.i], +el.dataset.i)));
+  document.querySelectorAll('.gitem').forEach(el => el.addEventListener('pointerdown', e => down(e, el.dataset.g, -1)));
+  document.querySelectorAll('.grow .gc').forEach(el => el.addEventListener('pointerdown', e => {
+    const i = +el.dataset.i, p = S.gPick;
+    // 手上拿著東西：點的格子就是要放的地方（點拿起來的同一格就是拿掉）
+    if (p) { e.preventDefault(); return gPlace(cur, p.id, p.from, p.from === i ? -1 : i); }
+    if (cells[i]) down(e, cells[i], i);
+  }));
 }
 // 拼得跟範例一模一樣就過關；第一次過關送金礦
 function gardenCheck(cur) {
@@ -2853,7 +2899,7 @@ function startMemory() {
   const faces = shuffle(FACES.slice()).slice(0, pairs);
   const cards = shuffle([...faces, ...faces]).map(f => ({ f, open: false, done: false }));
   S.fg = { game: 'memory', L, pairs, cards, first: null, lock: false, moves: 0, matched: 0, miss: 0, freePeek: false };
-  const cw = `min(calc((100vw - 80px) / ${cols} - 12px), calc((100vh - 200px) / ${rows} - 12px), 150px)`;
+  const cw = `min(calc((calc(100 * var(--vw, 1vw)) - 80px) / ${cols} - 12px), calc((calc(100 * var(--vh, 1vh)) - 200px) / ${rows} - 12px), 150px)`;
   focusShell('找出一樣的兩張！', true, `<div class="mgrid" style="grid-template-columns:repeat(${cols},var(--cw));--cw:${cw}">${cards.map((c, i) =>
     `<button class="card" data-act="mcard" data-v="${i}"><span class="back blk t-dirt">?</span><span class="front">${faceHTML(c.f)}</span></button>`).join('')}</div>`);
   speak(FGAMES.memory.say);
@@ -2900,6 +2946,8 @@ const PETS = [['dog', '小狗'], ['cat', '小貓'], ['rabbit', '小兔子'], ['b
 const PET_PRICE = 30;                  // 第二隻以後用金礦買（金礦從礦山來）
 const PET_LV = [0, 5, 15, 30, 50, 80]; // 愛心累積到這些數字就升一級，最高 Lv6
 const FISH_DAY = 10;                   // 每天最多釣 10 條，避免只玩釣魚
+// 今天還剩幾個魚餌：完成每日任務才拿得到
+const baitLeft = c => questComplete(c) ? FISH_DAY - (U(c).fish || 0) : 0;
 const petImg = id => `img/pet-${id}.webp`;
 // 寵物圖還沒下載到（例如沒網路、檔案還沒上傳）時，先用表情符號代替，不會只剩文字
 const PET_EMO = { dog: '🐶', cat: '🐱', rabbit: '🐰', bear: '🐻', tiger: '🐯', giraffe: '🦒' };
@@ -3051,7 +3099,7 @@ function renderPond() {
   const c = S.child, p = curPet(c);
   if (!p) return renderPetList(true);
   // 完成每日任務才拿得到今天的魚餌
-  const bait = questComplete(c), left = bait ? FISH_DAY - (U(c).fish || 0) : 0;
+  const bait = questComplete(c), left = baitLeft(c);
   mount(`<div class="screen sky">${hud('tomap')}
     <div class="pondwrap">${petCard(p)}
       <div class="fscene" id="fscene">
@@ -3085,7 +3133,7 @@ const fbub = t => { const b = document.getElementById('fbub'); if (b) { b.textCo
 const fctl = h => { const e = document.getElementById('fctl'); if (e) e.innerHTML = h; };
 function cast() {
   const c = S.child;
-  if (S.fish || !questComplete(c) || (U(c).fish || 0) >= FISH_DAY) return;
+  if (S.fish || baitLeft(c) <= 0) return;
   S.fish = { stage: 'cast' };
   fctl(''); SFX.tap();
   // 竿子往後再甩出去，浮標畫一個弧線落到水裡
@@ -3480,7 +3528,7 @@ function duelPoll() {
 }
 function duelBoard() {
   const d = S.duel, n = d.room.deck.length, cols = 4, rows = n / cols;
-  const cw = `min(calc((100vw - 60px) / ${cols} - 12px), calc((100vh - 300px) / ${rows} - 12px), 130px)`;
+  const cw = `min(calc((calc(100 * var(--vw, 1vw)) - 60px) / ${cols} - 12px), calc((calc(100 * var(--vh, 1vh)) - 300px) / ${rows} - 12px), 130px)`;
   duelShell(`<div class="dhead" id="dhead"></div><div class="mgrid" style="grid-template-columns:repeat(${cols},var(--cw));--cw:${cw}">${d.room.deck.map((f, i) =>
     `<button class="card" data-act="duel-card" data-v="${i}"><span class="back blk t-dirt">?</span><span class="front">${faceHTML(f)}</span></button>`).join('')}</div>`);
   d.turnSaid = -1; duelPaint();
@@ -3540,7 +3588,7 @@ const SEQTEX = ['grass', 'sand', 'deep', 'planks', 'gold', 'log', 'snow', 'glass
 function startSeq() {
   const L = flv('seq'), size = L <= 2 ? 2 : 3;
   S.fg = { game: 'seq', L, size, len: L + 1, round: 0, rounds: 3, firstOK: 0, fails: 0, input: false };
-  const tw = `min(calc((100vh - 230px) / ${size} - 14px), 170px)`;
+  const tw = `min(calc((calc(100 * var(--vh, 1vh)) - 230px) / ${size} - 14px), 170px)`;
   focusShell('仔細看…', true, `<div class="sgrid" style="grid-template-columns:repeat(${size},var(--tw));--tw:${tw}">${SEQTEX.slice(0, size * size).map((t, i) =>
     `<button class="tile blk t-${t}" data-act="tile" data-v="${i}"></button>`).join('')}</div>`);
   speak(FGAMES.seq.say);
@@ -3602,7 +3650,7 @@ function startReact() {
 function runReact() {
   const g = S.fg; if (!g || g.started) return;
   g.started = true;
-  const rows = g.holes / 3, hw = `min(${rows === 1 ? 26 : 20}vw, calc((100vh - 250px) / ${rows} - 30px), 200px)`;
+  const rows = g.holes / 3, hw = `min(${rows === 1 ? 26 : 20}vw, calc((calc(100 * var(--vh, 1vh)) - 250px) / ${rows} - 30px), 200px)`;
   document.querySelector('.farea').innerHTML = `<div class="holes" style="grid-template-columns:repeat(3,var(--hw));--hw:${hw}">${Array.from({ length: g.holes }, (_, i) =>
     `<div class="hole blk t-grassside" data-act="hole" data-v="${i}"><div class="pit"><img class="crt px" src="${SPR.pig}"></div></div>`).join('')}</div>`;
   setCap('抓到 0 隻小豬'); speak('開始！');
@@ -3660,7 +3708,7 @@ function startMaze() {
   const g = S.fg = { game: 'maze', L, n, W, m, goal, pos: W + 1, hints: 0, freeHint: false, t0: Date.now(), done: false, drag: false };
   // 直向（手機、直拿的 iPad）時方向鍵放到迷宮下方，迷宮才能放大
   const tall = innerHeight > innerWidth;
-  const mc = tall ? `min(calc((100vw - 40px) / ${W}), calc((100vh - 470px) / ${W}), 60px)` : `min(calc((100vh - 220px) / ${W}), calc((100vw - 330px) / ${W}), 60px)`;
+  const mc = tall ? `min(calc((calc(100 * var(--vw, 1vw)) - 40px) / ${W}), calc((calc(100 * var(--vh, 1vh)) - 470px) / ${W}), 60px)` : `min(calc((calc(100 * var(--vh, 1vh)) - 220px) / ${W}), calc((calc(100 * var(--vw, 1vw)) - 330px) / ${W}), 60px)`;
   const cells = m.map((v, i) => `<div class="mc blk ${i === goal ? 't-gold' : v ? 't-cobble' : 't-grass'}" data-i="${i}">${i === goal ? `<img class="px" src="${SPR.star}">` : ''}</div>`).join('');
   // 方向鍵用同一個白色三角形旋轉，避免 iPad 把 ◀ ▶ ▼ 顯示成藍色表情符號
   const arrow = (d, rot) => `<button class="btn" data-act="mz" data-d="${d}"><svg viewBox="0 0 10 10" width="1em" height="1em" style="transform:rotate(${rot}deg)"><path d="M5 1.5L9 8.5H1Z" fill="#fff" stroke="#1e1e1e" stroke-width=".7"/></svg></button>`;
@@ -3722,7 +3770,8 @@ function showPath(k) {
 function renderGate(unlock) {
   S.pinBuf = ''; S.gateUnlock = !!unlock;
   document.getElementById('gate')?.remove();
-  app.insertAdjacentHTML('beforeend', `<div class="gate ${unlock ? 'lockgate' : ''}" id="gate"><div class="gbox"><b style="font-size:22px">${unlock ? '🔒 請家長解鎖' : '家長專區'}</b>
+  // 解鎖畫面放在 #app 外面：換畫面（mount）不會把它洗掉
+  (unlock ? document.body : app).insertAdjacentHTML('beforeend', `<div class="gate ${unlock ? 'lockgate' : ''}" id="gate"><div class="gbox"><b style="font-size:22px">${unlock ? '🔒 請家長解鎖' : '家長專區'}</b>
     <div class="dots" id="dots"></div>
     <div class="keys">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button class="pbtn" data-act="pin" data-v="${n}">${n}</button>`).join('')}
       ${unlock ? '<span></span>' : '<button class="pbtn light sm" data-act="gateclose">取消</button>'}<button class="pbtn" data-act="pin" data-v="0">0</button><button class="pbtn light" data-act="pin" data-v="del">⌫</button></div>
@@ -3913,7 +3962,8 @@ function parentAct(a, c, d, v) {
 }
 
 /* ---------- 事件 ---------- */
-app.addEventListener('click', e => {
+// 掛在 document：家長解鎖畫面在 #app 外面也要收得到
+document.addEventListener('click', e => {
   const el = e.target.closest('[data-act]'); if (!el || el.tagName === 'INPUT') return;
   const a = el.dataset.act, v = el.dataset.v, d = +el.dataset.d || 0;
   const ch = el.dataset.id ? S.data.children.find(c => c.id === el.dataset.id) : null;
@@ -4125,9 +4175,10 @@ setInterval(() => {
     else if (!(S.screen === 'result' && Date.now() - S.resultAt < 6000)) goodbye();
   }
 }, 1000);
-document.addEventListener('visibilitychange', saveLocal);
+// 離開時：存檔、記下時間；回來時：離開太久就要家長解鎖（語音也要重新啟動）
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) S.hiddenAt = Date.now();
+  saveLocal();
+  if (document.hidden) { S.hiddenAt = Date.now(); voiceReady = false; }
   else if (S.hiddenAt && Date.now() - S.hiddenAt > LOCK_AWAY && !S.gateUnlock) appLock();
 });
 
