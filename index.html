@@ -479,6 +479,7 @@ img[src^="img/"]{image-rendering:auto}
 .gitem.lock>.blk,.gitem.lock>img{filter:grayscale(.9) brightness(.8)}
 .gitem b{position:absolute;top:2px;right:2px;font-size:16px;background:#3b2f22;color:#ffe14d;padding:0 4px;display:flex;align-items:center}
 .gitem b .ico{width:16px;height:16px}
+@media (orientation:landscape) and (max-height:650px){.gitem{width:96px;font-size:14px;padding:4px}.gitem>.blk,.gitem>img{width:60px;height:60px}.gpal{padding:6px}}
 .gnone{font-weight:900;padding:12px}
 .gghost{display:block}
 .sh-sl{clip-path:polygon(0 100%,100% 0,100% 100%)}
@@ -1977,13 +1978,35 @@ function renderLogin() {
         <div class="kmeta"><img class="px" src="${SPR.star}" style="width:18px;vertical-align:-2px"> ${c.stars}</div></button>`;
     }).join('')}</div>
     <div class="ground"><div class="grassrow t-grassside tiled"></div><div class="dirtrow t-dirt tiled"></div></div>
-    <div class="appver" id="appver">${verLine()}</div>
+    <div class="appver"><span id="appver">${verLine()}</span><button class="btn small" data-act="device">${DEV_NAME[devMode()]}</button></div>
     <button class="btn small gear" data-act="parent">⚙ 家長</button></div>`);
   checkVersion();
 }
 
+/* ---------- 手機／平板：手機上把畫面當成大一點的尺寸排版，再整個縮小到螢幕裡 ---------- */
+// 沒選過就看螢幕大小自動判斷；家長可以在登入畫面切換，記在這台裝置
+const DEV_NAME = { tablet: '💻 平板版', phone: '📱 手機版' };
+const devMode = () => { let v; try { v = localStorage.getItem('bi-device'); } catch (e) {} return v || (Math.min(screen.width, screen.height) < 600 ? 'phone' : 'tablet'); };
+const VP_MIN_W = 600, VP_MIN_H = 560; // 手機直向至少當成 600 寬、橫向至少 560 高來排
+function fitViewport() {
+  const m = document.querySelector('meta[name=viewport]'), mode = devMode();
+  const a = screen.width, b = screen.height, short = Math.min(a, b), long = Math.max(a, b);
+  const land = matchMedia('(orientation: landscape)').matches; // 縮放後長寬比例不變，所以一樣準
+  const phone = mode === 'phone';
+  const W = land ? long : short, H = land ? short : long, k = Math.min(1, W / VP_MIN_W, H / VP_MIN_H);
+  m.setAttribute('content', phone && k < 1 ? `width=${Math.round(W / k)},user-scalable=no,viewport-fit=cover`
+    : 'width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover');
+}
+function switchDevice() {
+  const next = devMode() === 'phone' ? 'tablet' : 'phone';
+  try { localStorage.setItem('bi-device', next); } catch (e) {}
+  fitViewport(); SFX.tap(); renderLogin();
+}
+fitViewport();
+matchMedia('(orientation: landscape)').addEventListener('change', () => setTimeout(fitViewport, 100));
+
 /* ---------- 版本檢查：登入畫面告訴家長現在是不是最新版 ---------- */
-const APP_VER = '2026.10.24-2'; // 每次部署 index.html 都要改
+const APP_VER = '2026.10.24-3'; // 每次部署 index.html 都要改
 let latestVer = null, verErr = false, verAt = 0;
 const verLine = () => verErr ? `版本 ${APP_VER}　⚠ 沒有網路，無法確認是不是最新版`
   : !latestVer ? `版本 ${APP_VER}　檢查中…`
@@ -3907,6 +3930,7 @@ app.addEventListener('click', e => {
     case 'buyhint': buyHint(); break;
     case 'parent': renderGate(); break;
     case 'appupdate': appUpdate(); break;
+    case 'device': switchDevice(); break;
     case 'gateclose': document.getElementById('gate').remove(); break;
     case 'pin':
       S.pinBuf = v === 'del' ? S.pinBuf.slice(0, -1) : (S.pinBuf + v).slice(0, 4);
