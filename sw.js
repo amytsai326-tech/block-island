@@ -1,7 +1,7 @@
 // 離線快取：第一次開啟時把整個遊戲存到 iPad，之後沒有網路也能玩。
 // 更新 index.html 後，iPad 連網開啟時會在背景下載新版，再下一次開啟就是新版。
 // 新增或刪除檔案時，記得更新 FILES 並把 VERSION 改掉（例如 v3）。
-const VERSION = 'v8';
+const VERSION = 'v9';
 const CACHE = 'block-island-' + VERSION;
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png',
   ...['dog', 'cat', 'rabbit', 'bear', 'tiger', 'giraffe'].map(p => `./img/pet-${p}.webp`),
@@ -22,7 +22,9 @@ self.addEventListener('activate', e => {
 
 // 先用快取立刻開啟，同時在背景向網路拿新版存起來（下次開啟生效）
 self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET' || new URL(e.request.url).origin !== location.origin) return;
+  const url = new URL(e.request.url);
+  // ?fresh：登入畫面檢查版本用，直接問網路
+  if (e.request.method !== 'GET' || url.origin !== location.origin || url.searchParams.has('fresh')) return;
   e.respondWith(caches.open(CACHE).then(async c => {
     const hit = await c.match(e.request, { ignoreSearch: true });
     const net = fetch(e.request).then(r => { if (r.ok) c.put(e.request, r.clone()); return r; }).catch(() => hit || Response.error());
