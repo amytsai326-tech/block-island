@@ -565,6 +565,8 @@ img[src^="img/"]{image-rendering:auto}
 .duel{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:0;padding:8px}
 .duelav{width:96px;height:96px;box-shadow:0 0 0 3px #1e1e1e}
 .dsub{font-size:.5em;font-weight:700;margin-top:4px}
+.roomno{font-size:64px;font-weight:900;letter-spacing:.15em;background:#fff;color:#1e1e1e;padding:4px 24px;box-shadow:0 0 0 4px #1e1e1e;font-family:monospace}
+.duel .keys{margin:0 auto}
 .dots{font-size:28px;letter-spacing:8px;animation:pulse 1.2s infinite}
 .dhead{display:flex;align-items:center;gap:16px;justify-content:center}
 .dp{display:flex;align-items:center;gap:8px;padding:6px 12px;background:rgba(0,0,0,.35);box-shadow:0 0 0 3px #1e1e1e;font-weight:900;opacity:.55;transition:.2s}
@@ -2206,7 +2208,7 @@ addEventListener('resize', refit(80));
 matchMedia('(orientation: landscape)').addEventListener('change', refit(300));
 
 /* ---------- 版本檢查：登入畫面告訴家長現在是不是最新版 ---------- */
-const APP_VER = '2026.10.25-3'; // 每次部署 index.html 都要改
+const APP_VER = '2026.10.25-4'; // 每次部署 index.html 都要改
 let latestVer = null, verErr = false, verAt = 0, latestHTML = null;
 // ?fresh 讓 sw.js 不走快取，直接向網路拿
 const fetchFresh = () => fetch('index.html?fresh=' + Date.now(), { cache: 'no-store' }).then(r => { if (!r.ok) throw 0; return r.text(); });
@@ -3544,11 +3546,12 @@ function mineBomb(i) {
   }, 1000);
 }
 
-/* 翻牌對戰：兩台 iPad 用同一個家庭代碼，輪流翻同一副牌 */
-// 房間存在 Firestore 的 families/{家庭代碼}/rooms/memory；只有輪到的人會寫入，另一台每秒讀一次
-const roomURL = code => docURL(code) + '/rooms/memory';
-async function roomGet() {
-  const r = await fetch(roomURL(S.data.cloud.code), { headers: { Authorization: 'Bearer ' + await fbToken() } });
+/* 翻牌對戰：兩台 iPad 輪流翻同一副牌，不同家庭也可以一起玩 */
+// 房間存在 Firestore 共用的 duels/{4 位數房間號碼}，不用開雲端備份；裡面只有牌和兩個孩子的名字、頭像
+// 只有輪到的人會寫入，另一台每秒讀一次
+const roomURL = num => `https://firestore.googleapis.com/v1/projects/${FB.projectId}/databases/(default)/documents/duels/${num}`;
+async function roomGet(num) {
+  const r = await fetch(roomURL(num), { headers: { Authorization: 'Bearer ' + await fbToken() } });
   if (r.status === 404) return null;
   if (!r.ok) throw new Error('room ' + r.status);
   return JSON.parse((await r.json()).fields.data.stringValue);
@@ -3556,7 +3559,7 @@ async function roomGet() {
 async function roomPut(room) {
   room.ts = Date.now(); room.v = (room.v || 0) + 1;
   const body = { fields: { data: { stringValue: JSON.stringify(room) } } };
-  const r = await fetch(roomURL(S.data.cloud.code), { method: 'PATCH', headers: { Authorization: 'Bearer ' + await fbToken(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const r = await fetch(roomURL(room.num), { method: 'PATCH', headers: { Authorization: 'Bearer ' + await fbToken(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   if (!r.ok) throw new Error('room put ' + r.status);
 }
 const DUEL_MODES = { race: ['競賽', '看誰找到的比較多！'], coop: ['合作', '兩個人一起把牌全部找完！'] };
@@ -3565,37 +3568,67 @@ function duelShell(inner) {
   S.screen = 'duel';
   mount(`<div class="screen cave">${hud('tocave')}<div class="duel">${inner}</div><div id="bubble" class="bubble"></div></div>`);
 }
-// 從礦洞進來：有別台在等就邀請加入，不然就開新房間
-async function duelOpen() {
+// 從礦洞進來：一台按「開房間」拿到房間號碼，另一台按「加入房間」輸入號碼（兩台同時按也不會互相蓋掉）
+function duelOpen() {
   S.again = duelOpen; S.lastBiome = 'focus'; S.duel = null;
-  if (!cloudOn()) { speak('要先請爸爸媽媽在家長後台開啟雲端備份，才能跟另一台平板對戰喔！'); bubble('要先開啟雲端備份', 2500); return; }
   if (!navigator.onLine) { speak('要連上網路才能對戰喔！'); bubble('沒有網路', 2000); return; }
-  duelShell(`<div class="title sm">${zy('連線中…')}</div>`);
-  let room = null;
-  try { room = await roomGet(); } catch (e) { duelShell(`<div class="title sm">${zy('連不上，請確認網路')}</div>`); return; }
-  if (S.screen !== 'duel') return;
-  const fresh = room && Date.now() - room.ts < 3 * 60000;
-  if (fresh && room.state === 'wait' && room.p[0].id !== S.child.id) {
-    S.duelInvite = room;
-    duelShell(`<div class="panel"><img class="px duelav" src="${avatarURL(room.p[0].av)}">
-      <div class="title sm">${zy(room.p[0].name + ' 邀請你玩翻牌對戰！')}</div><div class="lvup">${zy(DUEL_MODES[room.mode][0] + '：' + DUEL_MODES[room.mode][1])}</div>
-      <div class="row"><button class="btn green big" data-act="duel-join">▶ ${zy('加入')}</button></div></div>`);
-    speak('有人邀請你一起玩翻牌對戰！按加入就可以開始囉！');
-    return;
-  }
-  duelShell(`<div class="panel"><div class="title sm">${zy('翻牌對戰')} ⚔️</div><div>${zy('選一個玩法，再請另一個人在他的平板按「翻牌對戰」')}</div>
+  duelShell(`<div class="panel"><div class="title sm">${zy('翻牌對戰')} ⚔️</div><div>${zy('一個人開房間，另一個人輸入房間號碼加入')}</div>
+    <div class="row"><button class="btn orange big" data-act="duel-host">🏠 ${zy('開房間')}</button><button class="btn green big" data-act="duel-enter">🚪 ${zy('加入房間')}</button></div></div>`);
+  speak('翻牌對戰！一個人按開房間，另一個人按加入房間！');
+}
+function duelHost() {
+  duelShell(`<div class="panel"><div class="title sm">${zy('要怎麼玩？')}</div>
     <div class="row">${Object.entries(DUEL_MODES).map(([k, [n, d]]) => `<button class="btn ${k === 'race' ? 'orange' : 'green'} big" data-act="duel-new" data-v="${k}">${zy(n)}<div class="dsub">${zy(d)}</div></button>`).join('')}</div></div>`);
-  speak('翻牌對戰！要比賽還是合作呢？');
+  speak('要比賽還是合作呢？');
+}
+// 輸入房間號碼（4 個數字，輸入完自動找房間）
+function duelEnter() {
+  S.duelBuf = '';
+  duelShell(`<div class="panel"><div class="title sm">${zy('輸入房間號碼')}</div><div class="roomno" id="roomno"></div>
+    <div class="keys">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button class="pbtn" data-act="duel-key" data-v="${n}">${n}</button>`).join('')}<span></span><button class="pbtn" data-act="duel-key" data-v="0">0</button><button class="pbtn light" data-act="duel-key" data-v="del">⌫</button></div></div>`);
+  duelBufShow();
+  speak('請輸入另一台平板上的房間號碼！');
+}
+const duelBufShow = () => { const el = document.getElementById('roomno'); if (el) el.textContent = (S.duelBuf + '____').slice(0, 4).split('').join(' '); };
+// 房間開了 10 分鐘沒人加入就不能再進（號碼也可以給新房間用）
+const ROOM_WAIT = 10 * 60000;
+async function duelKey(v) {
+  if (S.duelBusy) return;
+  SFX.tap();
+  S.duelBuf = v === 'del' ? S.duelBuf.slice(0, -1) : (S.duelBuf + v).slice(0, 4);
+  duelBufShow();
+  if (S.duelBuf.length < 4) return;
+  S.duelBusy = true;
+  let room = null, err = false;
+  try { room = await roomGet(S.duelBuf); } catch (e) { err = true; }
+  S.duelBusy = false;
+  if (S.screen !== 'duel') return;
+  const fresh = room && Date.now() - room.ts < ROOM_WAIT;
+  if (!err && fresh && room.state === 'wait') { S.duelInvite = room; return duelJoin(); }
+  const msg = err ? '連不上，請確認網路' : fresh ? '這個房間已經開始玩了' : '找不到這個房間，請再確認號碼';
+  bubble(msg, 2500); speak(msg + '！');
+  S.duelBuf = ''; duelBufShow();
+}
+// 挑一個沒有人在用的號碼
+async function freeRoomNum() {
+  for (let k = 0; k < 8; k++) {
+    const num = String(ri(1000, 9999)), r = await roomGet(num);
+    if (!r || Date.now() - r.ts > ROOM_WAIT) return num;
+  }
+  throw new Error('no room');
 }
 async function duelNew(mode) {
   const pairs = S.child.age < 7 ? 6 : 8, faces = shuffle(FACES.slice()).slice(0, pairs);
-  const room = { id: Date.now().toString(36), mode, state: 'wait', p: [meP(), null], deck: shuffle([...faces, ...faces]), done: [], flips: [], turn: 0, score: [0, 0], moves: 0, v: 0 };
+  let num;
+  try { num = await freeRoomNum(); } catch (e) { bubble('連不上，請確認網路', 2000); return; }
+  const room = { id: Date.now().toString(36), num, mode, state: 'wait', p: [meP(), null], deck: shuffle([...faces, ...faces]), done: [], flips: [], turn: 0, score: [0, 0], moves: 0, v: 0 };
   room.done = room.deck.map(() => -1);
   try { await roomPut(room); } catch (e) { bubble('連不上，請確認網路', 2000); return; }
   S.duel = { room, me: 0, busy: false, paid: false };
-  duelShell(`<div class="panel"><div class="title sm">${zy('等另一台平板加入…')}</div><img class="px duelav" src="${avatarURL(S.child.avatar)}">
-    <div>${zy('請另一個人在他的平板打開「專注力礦洞」，按「翻牌對戰」')}</div><div class="dots">● ● ●</div></div>`);
-  speak('等另一台平板加入，請他打開專注力礦洞，按翻牌對戰！');
+  const digits = room.num.split('').join('、');
+  duelShell(`<div class="panel"><div class="title sm">${zy('房間號碼')}</div><div class="roomno">${room.num.split('').join(' ')}</div><img class="px duelav" src="${avatarURL(S.child.avatar)}">
+    <div>${zy('請另一個人在他的平板按「翻牌對戰」→「加入房間」，輸入這個號碼')}</div><div class="dots">● ● ●</div></div>`);
+  speak(`房間號碼是 ${digits}。請另一個人按加入房間，輸入 ${digits}！`);
   duelPoll();
 }
 async function duelJoin() {
@@ -3610,7 +3643,7 @@ function duelPoll() {
   later(async () => {
     const d = S.duel; if (!d || S.screen !== 'duel') return;
     try {
-      const r = await roomGet();
+      const r = await roomGet(d.room.num);
       if (S.duel !== d) return;
       if (!r || r.id !== d.room.id) { duelShell(`<div class="panel"><div class="title sm">${zy('對方開了新的一局')}</div><button class="btn big" data-act="duel">${zy('重新進入')}</button></div>`); return; }
       if (r.v > d.room.v && !d.busy) {
@@ -4134,6 +4167,9 @@ document.addEventListener('click', e => {
     case 'duel': if (blocked(S.child, 'focus')) { renderMap(); return restHere(); } SFX.tap(); duelOpen(); break;
     case 'duel-new': SFX.tap(); duelNew(v); break;
     case 'duel-join': SFX.tap(); duelJoin(); break;
+    case 'duel-host': SFX.tap(); duelHost(); break;
+    case 'duel-enter': SFX.tap(); duelEnter(); break;
+    case 'duel-key': duelKey(v); break;
     case 'duel-card': duelTap(+v); break;
     case 'tile': seqTap(+v); break;
     case 'rstart': runReact(); break;
